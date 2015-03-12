@@ -1,0 +1,17 @@
+{
+   "name": "ActivityGrid",
+   "description": "Display repository activity for multiple projects in a grid",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+
+      }
+   }
+}

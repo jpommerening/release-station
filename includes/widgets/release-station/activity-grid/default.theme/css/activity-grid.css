@@ -1,0 +1,85 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+@charset "UTF-8";
+
+div.activity-grid {
+}
+
+.activity-grid .activity-grid-tile.ng-enter {
+   transition: 0.3s ease-out;
+   transform-origin: 50% 0;
+   transform: scale(0.95);
+   opacity: 0;
+}
+
+.activity-grid .activity-grid-tile.ng-enter.ng-enter-active {
+   transform: scale(1.0);
+   opacity: 1;
+}
+
+.activity-grid path.gauge-ring-outer {
+   fill: #605854;
+   stroke: #504844;
+   stroke-width: 3;
+   stroke-linejoin: round;
+   opacity: 0.3;
+}
+
+.activity-grid path.gauge-ring-inner {
+   fill: #ccc;
+}
+
+.activity-grid path.gauge-fill {
+   fill: #8cd59f;
+}
+
+.activity-grid path.gauge-glow {
+   fill: #d3f8c2;
+}
+
+.activity-grid path.gauge-progress {
+   stroke: #ccc;
+   stroke-width: 2;
+   stroke-linecap: round;
+}
+
+.activity-grid dl.dl-horizontal > dt {
+   width: 80px;
+}
+
+.activity-grid dt:after {
+   content: ":";
+}
+
+.activity-grid dl.dl-horizontal > dd {
+   margin-left: 100px;
+}
+
+/* palette
+ * lightyellow                    palegreen                                   teal
+ * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
+
+.activity-grid g.gauge-text.ng-enter {
+   transition: 0.6s ease-out;
+   transform: translate(-23px, 0);
+   opacity: 0;
+}
+
+.activity-grid g.gauge-text.ng-leave {
+   transition: 0.6s ease-out;
+   transform: translate(0, 0);
+   opacity: 1;
+}
+
+.activity-grid g.gauge-text.ng-enter.ng-enter-active {
+   transform: translate(0, 0);
+   opacity: 1;
+}
+
+.activity-grid g.gauge-text.ng-leave.ng-leave-active {
+   transform: translate(23px, 0);
+   opacity: 0;
+}

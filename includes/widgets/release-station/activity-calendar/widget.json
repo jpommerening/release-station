@@ -1,0 +1,17 @@
+{
+   "name": "ActivityCalendar",
+   "description": "Display project activity in a calendar view",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+
+      }
+   }
+}
