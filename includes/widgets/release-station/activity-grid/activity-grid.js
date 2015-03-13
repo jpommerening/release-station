@@ -5,14 +5,16 @@
  */
 define( [
    'require',
-   'jquery',
+   './gauge-directive',
    'angular',
-   'angular-animate'
-], function( require, $, ng ) {
+   'angular-animate',
+], function( require, gauge, ng ) {
    'use strict';
 
    var moduleName = 'activityGrid';
    var module     = ng.module( moduleName, [ 'ngAnimate' ] );
+
+   gauge.createForModule( module );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

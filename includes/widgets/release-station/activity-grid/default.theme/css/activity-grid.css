@@ -20,23 +20,18 @@ div.activity-grid {
    opacity: 1;
 }
 
-.activity-grid path.gauge-ring-outer {
-   fill: #605854;
-   stroke: #504844;
-   stroke-width: 3;
-   stroke-linejoin: round;
-   opacity: 0.3;
-}
-
-.activity-grid path.gauge-ring-inner {
+.activity-grid .gauge-inner-fill,
+.activity-grid .ax-gauge-back {
    fill: #ccc;
 }
 
-.activity-grid path.gauge-fill {
+.activity-grid .gauge-fill,
+.activity-grid .ax-gauge-fill {
    fill: #8cd59f;
 }
 
-.activity-grid path.gauge-glow {
+.activity-grid .gauge-glow,
+.activity-grid .ax-gauge-glow {
    fill: #d3f8c2;
 }
 
@@ -46,12 +41,12 @@ div.activity-grid {
    stroke-linecap: round;
 }
 
-.activity-grid dl.dl-horizontal > dt {
-   width: 80px;
-}
-
 .activity-grid dt:after {
    content: ":";
+}
+
+.activity-grid dl.dl-horizontal > dt {
+   width: 80px;
 }
 
 .activity-grid dl.dl-horizontal > dd {

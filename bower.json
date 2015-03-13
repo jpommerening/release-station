@@ -1,21 +1,22 @@
 {
-  "name": "release-station",
-  "version": "0.1.0",
-  "description": "All the repos, all the releases, all in one place",
-  "license": "MIT",
-  "dependencies": {
-    "requirejs": "2.1.x",
-    "requirejs-plugins": "1.0.x",
-    "laxar": "LaxarJS/laxar#0.x",
-    "laxar_uikit": "LaxarJS/laxar_uikit#0.x",
-    "laxar_patterns": "LaxarJS/laxar_patterns#0.x",
-    "angular-animate": "1.2.x"
-  },
-  "devDependencies": {
-    "es5-shim": "2.3.x",
-    "jasmine": "1.3.x"
-  },
-  "resolutions": {
-    "angular": "1.3.x"
-  }
+   "name": "release-station",
+      "version": "0.1.0",
+      "description": "All the repos, all the releases, all in one place",
+      "license": "MIT",
+      "dependencies": {
+         "requirejs": "2.1.x",
+         "requirejs-plugins": "1.0.x",
+         "laxar": "LaxarJS/laxar#0.x",
+         "laxar_uikit": "LaxarJS/laxar_uikit#0.x",
+         "laxar_patterns": "LaxarJS/laxar_patterns#0.x",
+         "angular-animate": "1.3.x"
+      },
+      "devDependencies": {
+         "es5-shim": "2.3.x",
+         "jasmine": "1.3.x"
+      },
+      "resolutions": {
+         "angular": "1.3.x",
+         "angular-animate": "1.3.x"
+      }
 }

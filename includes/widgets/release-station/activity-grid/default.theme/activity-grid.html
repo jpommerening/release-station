@@ -1,42 +1,42 @@
 <div class="activity-grid-tile col col-md-6 col-sm-12 col-xs-12"
      ng-repeat="project in projects">
-   <svg class="col-md-4 col-sm-8 col-xs-12"
+   <svg class="col-md-4 col-sm-4 col-xs-6"
         version="1.1" xmlns="http://www.w3.org/2000/svg"
         viewbox="0 0 100 100">
       <g transform="translate(50, 50)">
          <g transform="rotate(45)">
-            <g mask="url({{toUrl('./default.theme/gauge-defs.svg')}}#ring-mask)">
+            <g mask="url(#ax-gauge-ring-mask)">
                <!--
                <path class="gauge-ring-outer"
                      d="M 0 49 A 49 49 0 1 1 49 0
                         L 32 0 A 32 32 0 1 0 0 32
                         z" />
                -->
-               <path class="gauge-ring-inner"
+               <path class="ax-gauge-back"
                      d="M 0 50 A 50 50 0 1 1 50 0
                         L 0 0 z" />
-               <path class="gauge-fill"
-                     d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
-                        L 0 0 z" />
+               <path class="ax-gauge-fill"
+                     ng-attr-d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
+                                L 0 0 z" />
 
             </g>
-            <g filter="url({{toUrl('./default.theme/gauge-defs.svg')}}#glow)">
-               <path class="gauge-glow"
-                     mask="url({{toUrl('./default.theme/gauge-defs.svg')}}#ring-mask)"
-                     d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
-                        L 0 0 z" />
+            <g filter="url(#ax-gauge-glow)">
+               <path class="ax-gauge-glow"
+                     mask="url(#ax-gauge-ring-mask)"
+                     ng-attr-d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
+                                L 0 0 z" />
             </g>
             <g>
                <path ng-repeat="stat in project.metrics.stats"
                      ng-if="$index == project.metrics.current"
+                     ng-attr-d="{{arcPath(30, 0, project.metrics.value * stat.contribution * 1.5)}}"
+                     ng-attr-transform="rotate({{project.metrics.value * stat.contributionStart * 270}} 0 0)"
                      class="gauge-progress"
-                     d="{{arcPath(30, 0, project.metrics.value * stat.contribution * 1.5)}}"
-                     transform="rotate({{project.metrics.value * stat.contributionStart * 270}} 0 0)"
                      fill="none">
                </path>
             </g>
          </g>
-         <g mask="url({{toUrl('./default.theme/gauge-defs.svg')}}#text-mask)">
+         <g mask="url(#ax-gauge-text-mask)">
             <!-- this circle is just here to grow the group to the desired
                  dimensions and avoid clipping when animating the text frames -->
             <circle cx="0" cy="0" r="28" fill="none"/>
@@ -69,7 +69,7 @@
          </g>
       </g>
    </svg>
-   <div class="col-md-4 col-sm-4 col-xs-6">
+   <div class="col-md-4 col-sm-4 col-xs-3">
       <h3>Issues</h3>
       <dl class="dl-horizontal">
          <dt>Open</dt>
@@ -82,7 +82,7 @@
          <dd>123</dd>
       </dl>
    </div>
-   <div class="col-md-4 col-sm-4 col-xs-6">
+   <div class="col-md-4 col-sm-4 col-xs-3">
       <h3>Versions</h3>
       <dl class="dl-horizontal">
          <dt>Major</dt>
@@ -92,5 +92,20 @@
          <dt>Patch</dt>
          <dd>2</dd>
       </dl>
+      <div ax-gauge="project.metrics.value">
+         <g ng-repeat="stat in project.metrics.stats"
+            ng-if="$index == project.metrics.current"
+            class="gauge-text">
+            <text x="0" y="-5"
+                  text-anchor="middle"
+                  style="font-size: 1.2em">{{stat.value}}</text>
+            <text x="0" y="4"
+                  text-anchor="middle"
+                  style="font-size: 0.6em">
+               <tspan ng-repeat="line in stat.text"
+                      ng-attr-dy="{{$index && '0.9em'}}" x="0">{{line}}</tspan>
+            </text>
+         </g>
+      </div>
    </div>
 </div>
