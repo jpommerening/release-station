@@ -6,13 +6,12 @@
 define( [
    'require',
    './gauge-directive',
-   'angular',
-   'angular-animate',
+   'angular'
 ], function( require, gauge, ng ) {
    'use strict';
 
    var moduleName = 'activityGrid';
-   var module     = ng.module( moduleName, [ 'ngAnimate' ] );
+   var module     = ng.module( moduleName, [] );
 
    gauge.createForModule( module );
 
@@ -66,7 +65,8 @@ define( [
             value: 0.5 + Math.random() * (1/1.5),
             stats: stats(1),
             current: 0,
-            previous: 2
+            prev: 3,
+            next: 1
          }
       }, {
          owner: 'LaxarJS',
@@ -76,7 +76,8 @@ define( [
             value: 0.3 + Math.random() * (1/1.3),
             stats: stats(0.7),
             current: 0,
-            previous: 2
+            prev: 3,
+            next: 1
          }
       } ];
 
@@ -84,18 +85,9 @@ define( [
       var gaugeFill;
       var gaugeGlow;
 
-      var scrollStats = $interval(function() {
-         $scope.projects.forEach(function(project) {
-            project.metrics.previous = project.metrics.current;
-            project.metrics.current = (project.metrics.current + 1) % project.metrics.stats.length;
-         });
-      }, 5000);
-
       $scope.eventBus.subscribe('beginLifecycleRequest', beginLifecycle);
 
       $scope.eventBus.subscribe('endLifecycleRequest', endLifecycle);
-
-      $scope.arcPath = arcPath;
    }
 
    function beginLifecycle() {
@@ -103,33 +95,6 @@ define( [
 
    function endLifecycle() {
    }
-
-   function arcPath(radius, from, to) {
-      from = from * Math.PI;
-      to = to * Math.PI;
-
-      var x0 = -Math.sin(from) * radius;
-      var y0 = Math.cos(from) * radius;
-      var x1 = -Math.sin(to) * radius;
-      var y1 = Math.cos(to) * radius;
-
-      return [
-         "M", x0, y0,
-         "A", radius, radius, 0, ((to-from) > Math.PI) ? 1 : 0, 1, x1, y1
-      ].join(" ");
-   }
-
-   /*
-   function setArc(pathSeg, rad) {
-      pathSeg.x = -Math.sin(rad) * pathSeg.r1;
-      pathSeg.y = Math.cos(rad) * pathSeg.r2;
-      pathSeg.largeArcFlag = rad > Math.PI;
-   }
-
-   function setGauge(element, value) {
-      // value = 1.0  -> rad = 270deg = 1.5rad
-      setArc(element.pathSegList[1], Math.PI * value * 1.5);
-   }*/
 
    module.controller( 'ActivityGridController', Controller );
 

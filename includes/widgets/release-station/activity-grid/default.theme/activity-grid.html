@@ -1,31 +1,14 @@
 <div class="activity-grid-tile col col-md-6 col-sm-12 col-xs-12"
      ng-repeat="project in projects">
-   <svg class="col-md-4 col-sm-4 col-xs-6"
-        version="1.1" xmlns="http://www.w3.org/2000/svg"
-        viewbox="0 0 100 100">
-      <g transform="translate(50, 50)">
-         <g transform="rotate(45)">
-            <g mask="url(#ax-gauge-ring-mask)">
-               <!--
-               <path class="gauge-ring-outer"
-                     d="M 0 49 A 49 49 0 1 1 49 0
-                        L 32 0 A 32 32 0 1 0 0 32
-                        z" />
-               -->
-               <path class="ax-gauge-back"
-                     d="M 0 50 A 50 50 0 1 1 50 0
-                        L 0 0 z" />
-               <path class="ax-gauge-fill"
-                     ng-attr-d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
-                                L 0 0 z" />
-
-            </g>
-            <g filter="url(#ax-gauge-glow)">
-               <path class="ax-gauge-glow"
-                     mask="url(#ax-gauge-ring-mask)"
-                     ng-attr-d="{{arcPath(50, 0, 1.5 * project.metrics.value)}}
-                                L 0 0 z" />
-            </g>
+   <div class="col-md-4 col-sm-4 col-xs-6">
+      <ol ax-gauge="project.metrics.value" ax-gauge-interval="5000">
+         <li ax-gauge-pane
+             ng-repeat="stat in project.metrics.stats">
+            <span style="font-size: 2em">{{stat.value}}</span><br/>
+            <span>{{stat.text.join(' ')}}</span>
+         </li>
+      </ol>
+            <!--
             <g>
                <path ng-repeat="stat in project.metrics.stats"
                      ng-if="$index == project.metrics.current"
@@ -35,25 +18,6 @@
                      fill="none">
                </path>
             </g>
-         </g>
-         <g mask="url(#ax-gauge-text-mask)">
-            <!-- this circle is just here to grow the group to the desired
-                 dimensions and avoid clipping when animating the text frames -->
-            <circle cx="0" cy="0" r="28" fill="none"/>
-            <g ng-repeat="stat in project.metrics.stats"
-               ng-if="$index == project.metrics.current"
-               class="gauge-text">
-               <text x="0" y="-5"
-                     text-anchor="middle"
-                     style="font-size: 1.2em">{{stat.value}}</text>
-               <text x="0" y="4"
-                     text-anchor="middle"
-                     style="font-size: 0.6em">
-                  <tspan ng-repeat="line in stat.text"
-                         ng-attr-dy="{{$index && '0.9em'}}" x="0">{{line}}</tspan>
-               </text>
-            </g>
-         </g>
          <g>
             <text class="gauge-text-scope"
                   x="0" y="24"
@@ -67,8 +31,8 @@
                <tspan x="0" dy="10">Week</tspan>
             </text>
          </g>
-      </g>
-   </svg>
+            -->
+   </div>
    <div class="col-md-4 col-sm-4 col-xs-3">
       <h3>Issues</h3>
       <dl class="dl-horizontal">
@@ -92,20 +56,5 @@
          <dt>Patch</dt>
          <dd>2</dd>
       </dl>
-      <div ax-gauge="project.metrics.value">
-         <g ng-repeat="stat in project.metrics.stats"
-            ng-if="$index == project.metrics.current"
-            class="gauge-text">
-            <text x="0" y="-5"
-                  text-anchor="middle"
-                  style="font-size: 1.2em">{{stat.value}}</text>
-            <text x="0" y="4"
-                  text-anchor="middle"
-                  style="font-size: 0.6em">
-               <tspan ng-repeat="line in stat.text"
-                      ng-attr-dy="{{$index && '0.9em'}}" x="0">{{line}}</tspan>
-            </text>
-         </g>
-      </div>
    </div>
 </div>

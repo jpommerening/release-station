@@ -9,7 +9,7 @@ div.activity-grid {
 }
 
 .activity-grid .activity-grid-tile.ng-enter {
-   transition: 0.3s ease-out;
+   transition: transform 0.3s ease-out;
    transform-origin: 50% 0;
    transform: scale(0.95);
    opacity: 0;
@@ -20,17 +20,14 @@ div.activity-grid {
    opacity: 1;
 }
 
-.activity-grid .gauge-inner-fill,
 .activity-grid .ax-gauge-back {
    fill: #ccc;
 }
 
-.activity-grid .gauge-fill,
 .activity-grid .ax-gauge-fill {
    fill: #8cd59f;
 }
 
-.activity-grid .gauge-glow,
 .activity-grid .ax-gauge-glow {
    fill: #d3f8c2;
 }
@@ -57,24 +54,64 @@ div.activity-grid {
  * lightyellow                    palegreen                                   teal
  * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
 
-.activity-grid g.gauge-text.ng-enter {
-   transition: 0.6s ease-out;
-   transform: translate(-23px, 0);
+.ax-gauge {
+   position: relative;
+   width: 100%;
+   left: 0;
+   right: 0;
+   margin: 0;
+}
+
+.ax-gauge > svg {
+   position: relative;
+   width: 100%;
+   left: 0;
+   right: 0;
+}
+
+.ax-gauge-inner {
+   position: absolute;
+   width: 100%;
+   left: 0;
+   padding: 0;
+   list-style-type: none;
+}
+
+.ax-gauge-inner > li {
+   position: absolute;
+   width: 40%;
+   margin: 30%;
+   left: 0;
+   line-height: 0.85;
+   font-size: 1vw;
+   display: block;
+   text-align: center;
+   -webkit-transition: -webkit-transform 0.6s ease-out, opacity 0.6s ease-in-out;
+   transition: transform 0.6s ease-out, opacity 0.6s ease-in-out;
+   -webkit-transform: translate3d(-23px, 0, 0);
+   transform: translate3d(-23px, 0, 0);
    opacity: 0;
 }
 
-.activity-grid g.gauge-text.ng-leave {
-   transition: 0.6s ease-out;
-   transform: translate(0, 0);
+.ac-gauge-inner > li.next {
+}
+
+.ax-gauge-inner > li.active {
+   -webkit-transform: translate3d(0, 0, 0);
+   transform: translate3d(0, 0, 0);
    opacity: 1;
 }
 
-.activity-grid g.gauge-text.ng-enter.ng-enter-active {
-   transform: translate(0, 0);
-   opacity: 1;
-}
-
-.activity-grid g.gauge-text.ng-leave.ng-leave-active {
-   transform: translate(23px, 0);
+.ax-gauge-inner > li.prev {
+   -webkit-transform: translate3d(23px, 0, 0);
+   transform: translate3d(23px, 0, 0);
    opacity: 0;
+}
+
+div.ax-gauge-pane {
+   position: absolute;
+   left: 0;
+   margin: 33%;
+   line-height: 0.55;
+   text-align: center;
 }
