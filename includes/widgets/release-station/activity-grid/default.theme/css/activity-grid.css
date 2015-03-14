@@ -8,17 +8,9 @@
 div.activity-grid {
 }
 
-.activity-grid .activity-grid-tile.ng-enter {
-   transition: transform 0.3s ease-out;
-   transform-origin: 50% 0;
-   transform: scale(0.95);
-   opacity: 0;
-}
-
-.activity-grid .activity-grid-tile.ng-enter.ng-enter-active {
-   transform: scale(1.0);
-   opacity: 1;
-}
+/* palette
+ * lightyellow                    palegreen                                   teal
+ * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
 
 .activity-grid .ax-gauge-back {
    fill: #ccc;
@@ -38,6 +30,35 @@ div.activity-grid {
    stroke-linecap: round;
 }
 
+.activity-grid .ax-gauge-inner {
+   font-size: 0.9em;
+   line-height: 0.85;
+}
+
+@media (max-width: 767px) {
+   .activity-grid .ax-gauge-inner {
+      font-size: 3.5vw;
+   }
+}
+
+@media (min-width: 768px) {
+   .activity-grid .ax-gauge-inner {
+      font-size: 1.3em;
+   }
+}
+
+@media (min-width: 992px) {
+   .activity-grid .ax-gauge-inner {
+      font-size: 0.9em;
+   }
+}
+
+@media (min-width: 1200px) {
+   .activity-grid .ax-gauge-inner {
+      font-size: 1.05em;
+   }
+}
+
 .activity-grid dt:after {
    content: ":";
 }
@@ -50,15 +71,14 @@ div.activity-grid {
    margin-left: 100px;
 }
 
-/* palette
- * lightyellow                    palegreen                                   teal
- * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
+/**
+ * ax-gauge
+ */
 
 .ax-gauge {
    position: relative;
    width: 100%;
    left: 0;
-   right: 0;
    margin: 0;
 }
 
@@ -66,10 +86,9 @@ div.activity-grid {
    position: relative;
    width: 100%;
    left: 0;
-   right: 0;
 }
 
-.ax-gauge-inner {
+ol.ax-gauge-inner {
    position: absolute;
    width: 100%;
    left: 0;
@@ -77,13 +96,11 @@ div.activity-grid {
    list-style-type: none;
 }
 
-.ax-gauge-inner > li {
+ol.ax-gauge-inner > li {
    position: absolute;
    width: 40%;
    margin: 30%;
    left: 0;
-   line-height: 0.85;
-   font-size: 1vw;
    display: block;
    text-align: center;
    -webkit-transition: -webkit-transform 0.6s ease-out, opacity 0.6s ease-in-out;
@@ -93,25 +110,17 @@ div.activity-grid {
    opacity: 0;
 }
 
-.ac-gauge-inner > li.next {
+ol.ac-gauge-inner > li.next {
 }
 
-.ax-gauge-inner > li.active {
+ol.ax-gauge-inner > li.active {
    -webkit-transform: translate3d(0, 0, 0);
    transform: translate3d(0, 0, 0);
    opacity: 1;
 }
 
-.ax-gauge-inner > li.prev {
+ol.ax-gauge-inner > li.prev {
    -webkit-transform: translate3d(23px, 0, 0);
    transform: translate3d(23px, 0, 0);
    opacity: 0;
-}
-
-div.ax-gauge-pane {
-   position: absolute;
-   left: 0;
-   margin: 33%;
-   line-height: 0.55;
-   text-align: center;
 }
