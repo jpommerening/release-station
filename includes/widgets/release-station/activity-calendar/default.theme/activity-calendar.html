@@ -9,7 +9,11 @@
    <tbody>
       <tr ng-repeat="week in weeks">
          <td ng-repeat="day in week"
-             ng-class="{ weekend: day.isWeekend, 'not-in-month': !day.isInMonth, today: day.isToday }">
+             ng-class="{ today: day.isToday,
+                         past: day.isPast,
+                         future: day.isFuture,
+                         weekend: day.isWeekend,
+                         'not-in-month': !day.isInMonth }">
             <div class="day">{{day.date.format('D')}}</div>
             <span ng-if="day.commits">{{day.commits}} commits<br/></span>
             <span ng-if="day.releases">{{day.releases}} releases<br/></span>

@@ -16,19 +16,10 @@
 
 .activity-calendar td {
    padding: 4px;
-   background: #8cd59f;
    position: relative;
    text-align: left;
    vertical-align: top;
    height: 3.4em;
-}
-
-.activity-calendar td:hover {
-   background: #bcefb5;
-}
-
-.activity-calendar td.weekend:hover {
-   background: #ddd;
 }
 
 .activity-calendar th {
@@ -37,12 +28,28 @@
    color: #ddd;
 }
 
+.activity-calendar td.past,
+.activity-calendar td.today {
+   background: #8cd59f;
+}
+
+.activity-calendar td.past:hover,
+.activity-calendar td.today:hover {
+   background: #bcefb5;
+}
+
 .activity-calendar td.today {
    border: 3px solid #d84765;
 }
 
-.activity-calendar td.weekend {
+.activity-calendar td.weekend,
+.activity-calendar td.future {
    background: #eee;
+}
+
+.activity-calendar td.weekend:hover,
+.activity-calendar td.future:hover {
+   background: #ddd;
 }
 
 .activity-calendar td.not-in-month,
@@ -50,6 +57,13 @@
 .activity-calendar td.not-in-month .day {
    background: transparent;
    color: #ddd;
+   opacity: 0.6;
+}
+
+.activity-calendar td.not-in-month:hover,
+.activity-calendar td.not-in-month:hover .day {
+   background: #ddd;
+   color: white;
    opacity: 0.6;
 }
 
