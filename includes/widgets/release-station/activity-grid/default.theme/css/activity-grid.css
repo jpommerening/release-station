@@ -92,6 +92,8 @@ ol.ax-gauge-inner {
    position: absolute;
    width: 100%;
    left: 0;
+   top: 0;
+   bottom: 0;
    padding: 0;
    list-style-type: none;
 }

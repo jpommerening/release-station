@@ -124,7 +124,7 @@ define( [
 
    var template = '' +
       '<div class="ax-gauge">' +
-         '<ol class="ax-gauge-inner" ng-transclude />' +
+         '<ol class="ax-gauge-inner" style="mask: url(#ax-gauge-inner-mask)" ng-transclude />' +
          '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewbox="-50 -50 100 100">' +
             '<g transform="rotate(45)">' +
                '<g mask="url(#ax-gauge-ring-mask)">' +
@@ -167,11 +167,15 @@ define( [
                '<feComponentTransfer>' +
                   '<feFuncA type="linear" slope="0.4" />' +
                '</feComponentTransfer>' +
-               '<feBlend mode="screen"/>' +
+               '<feBlend mode="screen" />' +
             '</filter>' +
-            '<filter id="ax-gauge-pane">' +
-               '<feGaussianBlur stdDeviation="2" />' +
-            '</filter>' +
+            '<radialGradient id="ax-gauge-inner-fill">' +
+               '<stop offset="85%" stop-color="white" />' +
+               '<stop offset="100%" stop-color="black" />' +
+            '</radialGradient>' +
+            '<mask id="ax-gauge-inner-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">' +
+               '<circle cx=".5" cy=".5" r=".3" fill="url(#ax-gauge-inner-fill)" />' +
+            '</mask>' +
          '</defs>' +
       '</svg>';
 
