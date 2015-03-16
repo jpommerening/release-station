@@ -23,6 +23,14 @@
    height: 3.4em;
 }
 
+.activity-calendar td:hover {
+   background: #bcefb5;
+}
+
+.activity-calendar td.weekend:hover {
+   background: #ddd;
+}
+
 .activity-calendar th {
    padding: 4px;
    font-size: 1.3em;
