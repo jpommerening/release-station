@@ -21,7 +21,7 @@ define( [
       var today = moment(now).startOf('day');
       var startOfMonth = moment(now).startOf('month');
       var endOfMonth = moment(now).endOf('month');
-      var startOfCalendar = moment(startOfMonth).weekday(-7);
+      var startOfCalendar = moment(startOfMonth).weekday(0);
       var endOfCalendar = moment(endOfMonth).weekday(7);
 
       $scope.month = startOfMonth;
@@ -34,9 +34,10 @@ define( [
             date: moment(date),
             isWeekend: date.day() % 6 === 0,
             isInMonth: date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ),
-            commits: Math.floor(Math.random()*4.1),
-            issues: Math.floor(Math.random()*2.1),
-            releases: Math.floor(Math.random()*1.1)
+            isToday: date.isSame( today ),
+            commits: date.isBefore( today ) ? Math.floor(Math.random()*4.1) : 0,
+            issues: date.isBefore( today ) ? Math.floor(Math.random()*2.1) : 0,
+            releases: date.isBefore( today ) ? Math.floor(Math.random()*1.1) : 0
          } );
          date.add(1, 'day');
          if( week.length === 7 ) {

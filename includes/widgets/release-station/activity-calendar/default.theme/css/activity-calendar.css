@@ -16,14 +16,24 @@
 
 .activity-calendar td {
    padding: 4px;
-   background: lightgreen;
+   background: #8cd59f;
    position: relative;
    text-align: left;
    vertical-align: top;
+   height: 3.4em;
+}
+
+.activity-calendar td.today {
+   border: 3px solid #d84765;
 }
 
 .activity-calendar td.weekend {
    background: #eee;
+}
+
+.activity-calendar th.day-of-week {
+   font-size: 1.3em;
+   color: #ddd;
 }
 
 .activity-calendar td.not-in-month,
@@ -31,7 +41,7 @@
 .activity-calendar td.not-in-month .day {
    background: transparent;
    color: #ddd;
-   opacity: 0.5;
+   opacity: 0.6;
 }
 
 .activity-calendar td > .day {
