@@ -23,17 +23,18 @@
    height: 3.4em;
 }
 
+.activity-calendar th {
+   padding: 4px;
+   font-size: 1.3em;
+   color: #ddd;
+}
+
 .activity-calendar td.today {
    border: 3px solid #d84765;
 }
 
 .activity-calendar td.weekend {
    background: #eee;
-}
-
-.activity-calendar th.day-of-week {
-   font-size: 1.3em;
-   color: #ddd;
 }
 
 .activity-calendar td.not-in-month,

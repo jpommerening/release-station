@@ -27,17 +27,21 @@ define( [
       $scope.month = startOfMonth;
       $scope.weeks = [];
 
+      function getRandomForDate(date, amount) {
+         return ( date.isSame( today ) || date.isBefore( today ) ) ? Math.floor(Math.random()*amount) : 0;
+      }
+
       var week = [];
       var date = moment(startOfCalendar);
       while( date.isBefore(endOfCalendar) ) {
          week.push( {
             date: moment(date),
             isWeekend: date.day() % 6 === 0,
-            isInMonth: date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ),
+            isInMonth: date.isSame( startOfMonth ) || ( date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ) ),
             isToday: date.isSame( today ),
-            commits: date.isBefore( today ) ? Math.floor(Math.random()*4.1) : 0,
-            issues: date.isBefore( today ) ? Math.floor(Math.random()*2.1) : 0,
-            releases: date.isBefore( today ) ? Math.floor(Math.random()*1.1) : 0
+            commits: getRandomForDate( date, 4.1 ),
+            issues: getRandomForDate( date, 2.5 ),
+            releases: getRandomForDate( date, 1.1 )
          } );
          date.add(1, 'day');
          if( week.length === 7 ) {
