@@ -5,6 +5,45 @@
  */
 @charset "UTF-8";
 
-.activity-calendar-widget {
-   /* :) */
+.activity-calendar {
+}
+
+.activity-calendar table {
+   width: 100%;
+   border-spacing: 4px;
+   border-collapse: separate;
+}
+
+.activity-calendar td {
+   padding: 4px;
+   background: lightgreen;
+   position: relative;
+   text-align: left;
+   vertical-align: top;
+}
+
+.activity-calendar td.weekend {
+   background: #eee;
+}
+
+.activity-calendar td.not-in-month,
+.activity-calendar td.weekend.not-in-month,
+.activity-calendar td.not-in-month .day {
+   background: transparent;
+   color: #ddd;
+   opacity: 0.5;
+}
+
+.activity-calendar td > .day {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   padding: 0;
+   max-height: 100%;
+   overflow: hidden;
+   font-size: 3em;
+   font-weight: bold;
+   line-height: 0.8;
+   text-align: right;
+   color: white;
 }

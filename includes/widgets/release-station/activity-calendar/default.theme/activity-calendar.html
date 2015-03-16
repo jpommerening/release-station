@@ -1,1 +1,15 @@
 <!-- :) -->
+
+<table>
+   <tbody>
+      <tr ng-repeat="week in weeks">
+         <td ng-repeat="day in week"
+             ng-class="{ weekend: day.isWeekend, 'not-in-month': !day.isInMonth }">
+            <div class="day">{{day.date.format('D')}}</div>
+            <span ng-if="day.commits">{{day.commits}} commits<br/></span>
+            <span ng-if="day.releases">{{day.releases}} releases<br/></span>
+            <span ng-if="day.issues">{{day.issues}} issues<br/></span>
+         </td>
+      </tr>
+   </tbody>
+</table>

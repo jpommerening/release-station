@@ -4,8 +4,9 @@
  * http://laxarjs.org/license
  */
 define( [
-   'angular'
-], function( ng ) {
+   'angular',
+   'moment'
+], function( ng, moment ) {
    'use strict';
 
    var moduleName = 'activityCalendar';
@@ -16,7 +17,33 @@ define( [
    Controller.$inject = [ '$scope' ];
 
    function Controller( $scope ) {
-      /* :) */
+      var now = moment();
+      var today = moment(now).startOf('day');
+      var startOfMonth = moment(now).startOf('month');
+      var endOfMonth = moment(now).endOf('month');
+      var startOfCalendar = moment(startOfMonth).weekday(-7);
+      var endOfCalendar = moment(endOfMonth).weekday(7);
+
+      $scope.month = startOfMonth;
+      $scope.weeks = [];
+
+      var week = [];
+      var date = moment(startOfCalendar);
+      while( date.isBefore(endOfCalendar) ) {
+         week.push( {
+            date: moment(date),
+            isWeekend: date.day() % 6 === 0,
+            isInMonth: date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ),
+            commits: Math.floor(Math.random()*4.1),
+            issues: Math.floor(Math.random()*2.1),
+            releases: Math.floor(Math.random()*1.1)
+         } );
+         date.add(1, 'day');
+         if( week.length === 7 ) {
+            $scope.weeks.push( week );
+            week = [];
+         }
+      }
    }
 
    module.controller( 'ActivityCalendarController', Controller );
