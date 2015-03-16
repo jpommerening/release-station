@@ -37,7 +37,7 @@ div.activity-grid {
 
 @media (max-width: 767px) {
    .activity-grid .ax-gauge-inner {
-      font-size: 3.5vw;
+      font-size: 5.5vw;
    }
 }
 

@@ -1,39 +1,39 @@
 <div class="activity-grid-tile col col-md-6 col-sm-12 col-xs-12"
      ng-repeat="project in projects">
-   <div class="col-md-4 col-sm-4 col-xs-6">
-      <ol ax-gauge="project.metrics.value" ax-gauge-interval="5000">
+   <div class="col-md-4 col-sm-4 col-xs-12">
+      <ol ax-gauge="project.metrics.value" ax-gauge-interval="4600">
          <li ax-gauge-pane
              ng-repeat="stat in project.metrics.stats">
             <span style="font-size: 2em">{{stat.value}}</span><br/>
             <span>{{stat.text.join(' ')}}</span>
          </li>
       </ol>
-            <!--
-            <g>
-               <path ng-repeat="stat in project.metrics.stats"
-                     ng-if="$index == project.metrics.current"
-                     ng-attr-d="{{arcPath(30, 0, project.metrics.value * stat.contribution * 1.5)}}"
-                     ng-attr-transform="rotate({{project.metrics.value * stat.contributionStart * 270}} 0 0)"
-                     class="gauge-progress"
-                     fill="none">
-               </path>
-            </g>
-         <g>
-            <text class="gauge-text-scope"
-                  x="0" y="24"
-                  text-anchor="middle"
-                  style="font-size: 0.5em">activity</text>
-            <text class="gauge-text-scope"
-                  x="0" y="34"
-                  text-anchor="middle"
-                  style="font-size: 0.8em">
-               <tspan x="0">Last</tspan>
-               <tspan x="0" dy="10">Week</tspan>
-            </text>
-         </g>
-            -->
+      <!--
+      <g>
+         <path ng-repeat="stat in project.metrics.stats"
+               ng-if="$index == project.metrics.current"
+               ng-attr-d="{{arcPath(30, 0, project.metrics.value * stat.contribution * 1.5)}}"
+               ng-attr-transform="rotate({{project.metrics.value * stat.contributionStart * 270}} 0 0)"
+               class="gauge-progress"
+               fill="none">
+         </path>
+      </g>
+      <g>
+         <text class="gauge-text-scope"
+               x="0" y="24"
+               text-anchor="middle"
+               style="font-size: 0.5em">activity</text>
+         <text class="gauge-text-scope"
+               x="0" y="34"
+               text-anchor="middle"
+               style="font-size: 0.8em">
+            <tspan x="0">Last</tspan>
+            <tspan x="0" dy="10">Week</tspan>
+         </text>
+      </g>
+      -->
    </div>
-   <div class="col-md-4 col-sm-4 col-xs-3">
+   <div class="col-md-4 col-sm-4 col-xs-6">
       <h3>Issues</h3>
       <dl class="dl-horizontal">
          <dt>Open</dt>
@@ -46,7 +46,7 @@
          <dd>123</dd>
       </dl>
    </div>
-   <div class="col-md-4 col-sm-4 col-xs-3">
+   <div class="col-md-4 col-sm-4 col-xs-6">
       <h3>Versions</h3>
       <dl class="dl-horizontal">
          <dt>Major</dt>

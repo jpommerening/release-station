@@ -23,7 +23,6 @@ define( [
          scope: {
             value: '=' + directiveName,
             interval: '=' + directiveName + 'Interval'
-
          },
          link: function( scope, element, attrs ) {
             var defs = $document.find( '#ax-gauge-defs' );
@@ -50,12 +49,16 @@ define( [
                }
             } );
          },
-         controller: function( $scope ) {
+         controller: function GaugeController( $scope ) {
             var panes = [];
 
-            var scrollInterval = $interval(function() {
-               setActivePane( $scope.active + 1 );
-            }, 5000 );
+            if( $scope.interval ) {
+               var scrollInterval = $interval(function() {
+                  setActivePane( $scope.active + 1 );
+               }, $scope.interval );
+
+               $scope.$on( '$destroy', $interval.cancel.bind( $interval, scrollInterval ) );
+            }
 
             function setActivePane( num ) {
                var length = panes.length;
@@ -73,13 +76,15 @@ define( [
                panes[ $scope.next ].next = true;
             };
 
-            this.addPane = function( scope ) {
+            this.setActivePane = setActivePane;
+
+            this.addPane = function addPane( scope ) {
                scope.next = scope.prev = false;
-               scope.active = panes.length === 0;
+               scope.active = !(panes.length);
                panes.push( scope );
             };
 
-            this.removePane = function( scope ) {
+            this.removePane = function removePane( scope ) {
                scope.active = scope.next = scope.prev = false;
                panes.splice( panes.indexOf( scope ), 1 );
             };
@@ -163,6 +168,9 @@ define( [
                   '<feFuncA type="linear" slope="0.4" />' +
                '</feComponentTransfer>' +
                '<feBlend mode="screen"/>' +
+            '</filter>' +
+            '<filter id="ax-gauge-pane">' +
+               '<feGaussianBlur stdDeviation="2" />' +
             '</filter>' +
          '</defs>' +
       '</svg>';
