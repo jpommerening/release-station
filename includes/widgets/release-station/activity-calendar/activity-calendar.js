@@ -22,7 +22,7 @@ define( [
       var startOfMonth = moment( now ).startOf( 'month' );
       var endOfMonth = moment( now ).endOf( 'month' );
       var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
-      var endOfCalendar = moment( startOfCalendar ).add(6, 'weeks');
+      var endOfCalendar = moment( startOfCalendar ).add( 6, 'weeks' );
 
       var weeks = generateCalendar( startOfCalendar, endOfCalendar );
 
@@ -60,7 +60,7 @@ define( [
       function nextMonth( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
          var endOfMonth = moment( date ).endOf( 'month' );
-         var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add(1, 'day');
+         var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add( 1, 'day' );
          var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 3 ? 14 : 7 );
 
          var weeks = generateCalendar( startOfCalendar, endOfCalendar );
@@ -76,7 +76,7 @@ define( [
       function triggerAnimation( today, startOfMonth, endOfMonth, targets ) {
          /* this animation specific stuff should go into a directive */
          setTimeout( function() {
-            $scope.$apply( function() {
+            $scope.$applyAsync( function() {
                $scope.active= true;
                updateMetaData( $scope.weeks, today, startOfMonth, endOfMonth, targets );
             } );
@@ -86,11 +86,11 @@ define( [
             $scope.$apply( function() {
                if( $scope.pushedRows ) {
                   $scope.pushedRows = 0;
-                  $scope.weeks.splice(0, $scope.weeks.length - $scope.visibleRows);
+                  $scope.weeks.splice( 0, $scope.weeks.length - $scope.visibleRows );
                }
                if( $scope.unshiftedRows ) {
                   $scope.unshiftedRows = 0;
-                  $scope.weeks.splice($scope.visibleRows);
+                  $scope.weeks.splice( $scope.visibleRows );
                }
                $scope.active = false;
             } );
@@ -104,14 +104,6 @@ define( [
    module.controller( 'ActivityCalendarController', Controller );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function getWeek( date ) {
-      var startOfWeek = moment( date ).startOf( 'day' ).weekday( -7 );
-
-      return new Array( 7 ).map( function( value, index ) {
-         return { date: moment( startOfWeek ).days( index ) };
-      } );
-   }
 
    function generateCalendar( startOfCalendar, endOfCalendar ) {
       var date = moment( startOfCalendar );
@@ -132,6 +124,8 @@ define( [
       return weeks;
    }
 
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function updateMetaData( weeks, today, startOfMonth, endOfMonth, targets ) {
       weeks.forEach( function( week ) {
          week.forEach( function( day ) {
@@ -151,6 +145,8 @@ define( [
          } );
       } );
    }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function updateEventData( weeks, today ) {
       function getRandomForDate( date, amount ) {
