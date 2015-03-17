@@ -28,6 +28,7 @@ define( [
             var defs = $document.find( '#ax-gauge-defs' );
             var fill = element.find( '.ax-gauge-fill' )[0];
             var glow = element.find( '.ax-gauge-glow' )[0];
+            var progress = element.find( '.ax-gauge-progress' )[0];
 
             if( defs.length === 0 ) {
                defs = ng.element( svgGlobalDefs );
@@ -36,11 +37,22 @@ define( [
 
             numInstances++;
 
-            scope.active = scope.prev = scope.next = 0;
+            scope.active = scope.prev = scope.next = scope.length = 0;
 
             scope.$watch( 'value', function( newValue, oldValue ) {
                setGauge( fill, newValue );
                setGauge( glow, newValue );
+            } );
+            scope.$watch( 'active', function( newValue, oldValue ) {
+               if( scope.length < 1 ) return;
+               var start = (newValue / scope.length) * 1.5 * Math.PI;
+               var angle = ((newValue + 1) / scope.length) * 1.5 * Math.PI;
+
+               var radius = progress.pathSegList.getItem(0).y;
+
+               console.log( start, angle, radius );
+
+               setArc( progress.pathSegList.getItem(1), angle );
             } );
 
             element.on( '$destroy', function() {
@@ -61,7 +73,7 @@ define( [
             }
 
             function setActivePane( num ) {
-               var length = panes.length;
+               var length = $scope.length = panes.length;
 
                panes.forEach( function( pane ) {
                   pane.active = pane.next = pane.prev = false;
@@ -82,11 +94,13 @@ define( [
                scope.next = scope.prev = false;
                scope.active = !(panes.length);
                panes.push( scope );
+               $scope.length = panes.length;
             };
 
             this.removePane = function removePane( scope ) {
                scope.active = scope.next = scope.prev = false;
                panes.splice( panes.indexOf( scope ), 1 );
+               $scope.length = panes.length;
             };
          }
       };
@@ -135,6 +149,8 @@ define( [
                   '<path class="ax-gauge-glow" mask="url(#ax-gauge-ring-mask)"' +
                        ' d="M 0 50 A 50 50 0 1 0 0 50 L 0 0 z" />' +
                '</g>' +
+               '<path class="ax-gauge-progress"' +
+                    ' d="M 0 30 A 30 30 0 1 0 0 30" fill="none" stroke-width="3" />' +
             '</g>' +
          '</svg>' +
       '</div>';
