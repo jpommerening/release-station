@@ -86,12 +86,18 @@
    padding: 0;
    max-height: 100%;
    overflow: hidden;
-   font-size: 3em;
+   font-size: 2em;
    font-weight: bold;
    line-height: 0.8;
    text-align: right;
    background: transparent;
    color: white;
+}
+
+@media (min-width: 768px) {
+   .activity-calendar td .day {
+      font-size: 3em;
+   }
 }
 
 .activity-calendar td > a {

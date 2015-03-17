@@ -1,7 +1,7 @@
 <table>
    <thead>
       <tr>
-         <th ng-repeat="day in weeks[0]" class="day-of-week">{{day.date.format('ddd')}}</th>
+         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ 'hidden-xs': day.weekend }">{{day.date.format('ddd')}}</th>
       </tr>
    </thead>
 </table>
@@ -18,7 +18,8 @@
                             past: day.isPast,
                             future: day.isFuture,
                             weekend: day.weekend,
-                            'not-in-month': !day.isInMonth }">
+                            'not-in-month': !day.isInMonth,
+                            'hidden-xs': day.weekend }">
                <a href="" ng-click="day.target(day.date)">
                   <div class="day">{{day.date.format('D')}}</div>
                   <span ng-if="day.commits">{{day.commits}} commits<br/></span>
