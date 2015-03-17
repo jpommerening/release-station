@@ -14,6 +14,12 @@
    border-collapse: separate;
 }
 
+.activity-calendar th {
+   padding: 4px;
+   font-size: 1.3em;
+   color: #ddd;
+}
+
 .activity-calendar td {
    padding: 4px;
    position: relative;
@@ -22,10 +28,18 @@
    height: 3.4em;
 }
 
-.activity-calendar th {
-   padding: 4px;
-   font-size: 1.3em;
-   color: #ddd;
+.activity-calendar td .day {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   padding: 0;
+   max-height: 100%;
+   overflow: hidden;
+   font-size: 3em;
+   font-weight: bold;
+   line-height: 0.8;
+   text-align: right;
+   color: white;
 }
 
 .activity-calendar td.past,
@@ -53,30 +67,13 @@
 }
 
 .activity-calendar td.not-in-month,
-.activity-calendar td.weekend.not-in-month,
 .activity-calendar td.not-in-month .day {
    background: transparent;
-   color: #ddd;
-   opacity: 0.6;
+   color: #f4f4f4;
 }
 
 .activity-calendar td.not-in-month:hover,
 .activity-calendar td.not-in-month:hover .day {
-   background: #ddd;
-   color: white;
-   opacity: 0.6;
-}
-
-.activity-calendar td > .day {
-   position: absolute;
-   bottom: 0;
-   right: 0;
-   padding: 0;
-   max-height: 100%;
-   overflow: hidden;
-   font-size: 3em;
-   font-weight: bold;
-   line-height: 0.8;
-   text-align: right;
+   background: #f4f4f4;
    color: white;
 }
