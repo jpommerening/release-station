@@ -1,6 +1,11 @@
 var require = {
    baseUrl: 'bower_components',
    deps: [
+   /* 'moment/lang/en',
+      'moment/lang/de'
+      'moment/lang/ja',
+      'moment/lang/fr' */
+      'moment/lang/en-gb'
    ],
    shim: {
       angular: {
