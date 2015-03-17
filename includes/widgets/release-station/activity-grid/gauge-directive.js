@@ -150,7 +150,7 @@ define( [
                        ' d="M 0 50 A 50 50 0 1 0 0 50 L 0 0 z" />' +
                '</g>' +
                '<path class="ax-gauge-progress"' +
-                    ' d="M 0 30 A 30 30 0 1 0 0 30" fill="none" stroke-width="3" />' +
+                    ' d="M 0 30 A 30 30 0 1 0 0 30" fill="none" />' +
             '</g>' +
          '</svg>' +
       '</div>';
