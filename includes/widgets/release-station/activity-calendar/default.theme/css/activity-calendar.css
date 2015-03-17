@@ -75,8 +75,8 @@
 }
 
 .activity-calendar table.active td {
-   -webkit-transition: color 0.3s linear, background-color 0.7s linear;
-   transition: color 0.3s linear, background-color 0.7s linear;
+   -webkit-transition: color 0.7s linear, background-color 0.7s linear;
+   transition: color 0.7s linear, background-color 0.7s linear;
 }
 
 .activity-calendar td .day {

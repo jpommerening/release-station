@@ -18,11 +18,11 @@ define( [
 
    function Controller( $scope ) {
       var now = moment();
-      var today = moment(now).startOf('day');
-      var startOfMonth = moment(now).startOf('month');
-      var endOfMonth = moment(now).endOf('month');
-      var startOfCalendar = moment(startOfMonth).weekday( startOfMonth.weekday() > 2 ? 0 : -7);
-      var endOfCalendar = moment(endOfMonth).weekday(7);
+      var today = moment( now ).startOf( 'day' );
+      var startOfMonth = moment( now ).startOf( 'month' );
+      var endOfMonth = moment( now ).endOf( 'month' );
+      var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
+      var endOfCalendar = moment( startOfCalendar ).add(6, 'weeks');
 
       var weeks = generateCalendar( startOfCalendar, endOfCalendar );
 
@@ -37,12 +37,15 @@ define( [
 
       $scope.weeks = weeks;
 
+      $scope.pushedRows = 0;
+      $scope.unshiftedRows = 0;
+      $scope.visibleRows = 6;
+
       function previousMonth( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
          var endOfMonth = moment( date ).endOf( 'month' );
-
-         var startOfCalendar = moment(startOfMonth).weekday( startOfMonth.weekday() > 2 ? 0 : -7);
-         var endOfCalendar = moment($scope.weeks[0][0].date);
+         var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
+         var endOfCalendar = moment( $scope.weeks[0][0].date );
 
          var weeks = generateCalendar( startOfCalendar, endOfCalendar );
 
@@ -51,28 +54,14 @@ define( [
          $scope.weeks.unshift.apply( $scope.weeks, weeks );
          $scope.unshiftedRows = weeks.length;
 
-         /* this animation specific stuff should go into a directive */
-         setTimeout( function() {
-            $scope.$apply( function() {
-               $scope.active = true;
-               updateMetaData( $scope.weeks, today, startOfMonth, endOfMonth, targets );
-            } );
-         }, 10 );
-
-         setTimeout( function() {
-            $scope.$apply( function() {
-               $scope.unshiftedRows = 0;
-               $scope.active = false;
-               $scope.weeks.splice(6);
-            } );
-         }, 700 );
+         triggerAnimation( today, startOfMonth, endOfMonth, targets );
       }
 
       function nextMonth( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
          var endOfMonth = moment( date ).endOf( 'month' );
-         var startOfCalendar = moment($scope.weeks[$scope.weeks.length-1][6].date).add(1, 'day');
-         var endOfCalendar = moment(endOfMonth).weekday( endOfMonth.weekday() > 3 ? 14 : 7);
+         var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add(1, 'day');
+         var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 3 ? 14 : 7 );
 
          var weeks = generateCalendar( startOfCalendar, endOfCalendar );
 
@@ -81,6 +70,10 @@ define( [
          $scope.weeks.push.apply( $scope.weeks, weeks );
          $scope.pushedRows = weeks.length;
 
+         triggerAnimation( today, startOfMonth, endOfMonth, targets );
+      }
+
+      function triggerAnimation( today, startOfMonth, endOfMonth, targets ) {
          /* this animation specific stuff should go into a directive */
          setTimeout( function() {
             $scope.$apply( function() {
@@ -91,11 +84,17 @@ define( [
 
          setTimeout( function() {
             $scope.$apply( function() {
-               $scope.pushedRows = 0;
+               if( $scope.pushedRows ) {
+                  $scope.pushedRows = 0;
+                  $scope.weeks.splice(0, $scope.weeks.length - $scope.visibleRows);
+               }
+               if( $scope.unshiftedRows ) {
+                  $scope.unshiftedRows = 0;
+                  $scope.weeks.splice($scope.visibleRows);
+               }
                $scope.active = false;
-               $scope.weeks.splice(0, $scope.weeks.length - 6);
             } );
-         }, 700 );
+         }, 750 );
       }
 
       function thisMonth( date ) {
@@ -156,6 +155,7 @@ define( [
    function updateEventData( weeks, today ) {
       function getRandomForDate( date, amount ) {
          if( (date.day() % 6) === 0) amount /= 3.2;
+         if( date.isSame(today) ) amount /= 1.5;
          return ( date.isSame( today ) || date.isBefore( today ) ) ? Math.floor(Math.random()*amount) : 0;
       }
 
