@@ -6,7 +6,11 @@
    </thead>
 </table>
 <div>
-   <table ng-class="{ prev: prev, active: active, next: next }">
+   <table ng-class="{ active: active,
+                      'push-4': pushedRows === 4,
+                      'push-5': pushedRows === 5,
+                      'unshift-4': unshiftedRows === 4,
+                      'unshift-5': unshiftedRows === 5 }">
       <tbody>
          <tr ng-repeat="week in weeks">
             <td ng-repeat="day in week"

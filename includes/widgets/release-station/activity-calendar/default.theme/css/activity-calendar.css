@@ -14,28 +14,42 @@
    height: 436px; /* 6 * 68px height + 7 * 4px spacing */
 }
 
-.activity-calendar > div > table.prev {
+.activity-calendar > div > table.unshift-4 {
    -webkit-transform: translate3d(0, -288px, 0);
    transform: translate3d(0, -288px, 0);
 }
 
-.activity-calendar > div > table.prev.active {
+.activity-calendar > div > table.unshift-5 {
+   -webkit-transform: translate3d(0, -360px, 0);
+   transform: translate3d(0, -360px, 0);
+}
+
+.activity-calendar > div > table.unshift-4.active,
+.activity-calendar > div > table.unshift-5.active {
    -webkit-transition: -webkit-transform 0.6s ease-in-out;
    transition: transform 0.6s ease-in-out;
    -webkit-transform: translate3d(0, 0, 0);
    transform: translate3d(0, 0, 0);
 }
 
-.activity-calendar > div > table.next {
+.activity-calendar > div > table.push-4,
+.activity-calendar > div > table.push-5 {
    -webkit-transform: translate3d(0, 0, 0);
    transform: translate3d(0, 0, 0);
 }
 
-.activity-calendar > div > table.next.active {
+.activity-calendar > div > table.push-4.active {
    -webkit-transition: -webkit-transform 0.6s ease-in-out;
    transition: transform 0.6s ease-in-out;
    -webkit-transform: translate3d(0, -288px, 0);
    transform: translate3d(0, -288px, 0);
+}
+
+.activity-calendar > div > table.push-5.active {
+   -webkit-transition: -webkit-transform 0.6s ease-in-out;
+   transition: transform 0.6s ease-in-out;
+   -webkit-transform: translate3d(0, -360px, 0);
+   transform: translate3d(0, -360px, 0);
 }
 
 .activity-calendar table {

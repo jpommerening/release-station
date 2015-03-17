@@ -21,7 +21,7 @@ define( [
       var today = moment(now).startOf('day');
       var startOfMonth = moment(now).startOf('month');
       var endOfMonth = moment(now).endOf('month');
-      var startOfCalendar = moment(startOfMonth).weekday(-7);
+      var startOfCalendar = moment(startOfMonth).weekday( startOfMonth.weekday() > 2 ? 0 : -7);
       var endOfCalendar = moment(endOfMonth).weekday(7);
 
       var weeks = generateCalendar( startOfCalendar, endOfCalendar );
@@ -49,7 +49,7 @@ define( [
          updateEventData( weeks, today );
 
          $scope.weeks.unshift.apply( $scope.weeks, weeks );
-         $scope.prev = true;
+         $scope.unshiftedRows = weeks.length;
 
          /* this animation specific stuff should go into a directive */
          setTimeout( function() {
@@ -61,7 +61,7 @@ define( [
 
          setTimeout( function() {
             $scope.$apply( function() {
-               $scope.prev = false;
+               $scope.unshiftedRows = 0;
                $scope.active = false;
                $scope.weeks.splice(6);
             } );
@@ -72,14 +72,14 @@ define( [
          var startOfMonth = moment( date ).startOf( 'month' );
          var endOfMonth = moment( date ).endOf( 'month' );
          var startOfCalendar = moment($scope.weeks[$scope.weeks.length-1][6].date).add(1, 'day');
-         var endOfCalendar = moment(endOfMonth).weekday(7);
+         var endOfCalendar = moment(endOfMonth).weekday( endOfMonth.weekday() > 3 ? 14 : 7);
 
          var weeks = generateCalendar( startOfCalendar, endOfCalendar );
 
          updateEventData( weeks, today );
 
          $scope.weeks.push.apply( $scope.weeks, weeks );
-         $scope.next = true;
+         $scope.pushedRows = weeks.length;
 
          /* this animation specific stuff should go into a directive */
          setTimeout( function() {
@@ -91,9 +91,9 @@ define( [
 
          setTimeout( function() {
             $scope.$apply( function() {
-               $scope.next = false;
+               $scope.pushedRows = 0;
                $scope.active = false;
-               $scope.weeks.splice(0, 4);
+               $scope.weeks.splice(0, $scope.weeks.length - 6);
             } );
          }, 700 );
       }
