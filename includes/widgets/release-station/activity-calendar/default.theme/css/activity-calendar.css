@@ -8,6 +8,36 @@
 .activity-calendar {
 }
 
+.activity-calendar > div {
+   position: relative;
+   overflow: hidden;
+   height: 436px; /* 6 * 68px height + 7 * 4px spacing */
+}
+
+.activity-calendar > div > table.prev {
+   -webkit-transform: translate3d(0, -288px, 0);
+   transform: translate3d(0, -288px, 0);
+}
+
+.activity-calendar > div > table.prev.active {
+   -webkit-transition: -webkit-transform 0.6s ease-in-out;
+   transition: transform 0.6s ease-in-out;
+   -webkit-transform: translate3d(0, 0, 0);
+   transform: translate3d(0, 0, 0);
+}
+
+.activity-calendar > div > table.next {
+   -webkit-transform: translate3d(0, 0, 0);
+   transform: translate3d(0, 0, 0);
+}
+
+.activity-calendar > div > table.next.active {
+   -webkit-transition: -webkit-transform 0.6s ease-in-out;
+   transition: transform 0.6s ease-in-out;
+   -webkit-transform: translate3d(0, -288px, 0);
+   transform: translate3d(0, -288px, 0);
+}
+
 .activity-calendar table {
    width: 100%;
    border-spacing: 4px;
@@ -25,7 +55,14 @@
    position: relative;
    text-align: left;
    vertical-align: top;
-   height: 3.4em;
+   width: 14.5%;
+   height: 68px;
+   max-height: 68px;
+}
+
+.activity-calendar table.active td {
+   -webkit-transition: color 0.3s linear, background-color 0.7s linear;
+   transition: color 0.3s linear, background-color 0.7s linear;
 }
 
 .activity-calendar td .day {
@@ -39,7 +76,14 @@
    font-weight: bold;
    line-height: 0.8;
    text-align: right;
+   background: transparent;
    color: white;
+}
+
+.activity-calendar td > a {
+   display: block;
+   height: 100%;
+   width: 100%;
 }
 
 .activity-calendar td.past,
@@ -67,13 +111,19 @@
 }
 
 .activity-calendar td.not-in-month,
-.activity-calendar td.not-in-month .day {
+.activity-calendar td.not-in-month .day,
+.activity-calendar td.not-in-month a {
    background: transparent;
-   color: #f4f4f4;
+   color: #f1f1f1;
 }
 
-.activity-calendar td.not-in-month:hover,
-.activity-calendar td.not-in-month:hover .day {
-   background: #f4f4f4;
+.activity-calendar td.not-in-month:hover .day,
+.activity-calendar td.not-in-month:hover a {
+   background: transparent;
+   color: white;
+}
+
+.activity-calendar td.not-in-month:hover {
+   background: #f1f1f1;
    color: white;
 }

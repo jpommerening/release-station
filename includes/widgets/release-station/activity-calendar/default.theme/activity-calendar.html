@@ -1,24 +1,28 @@
-<!-- :) -->
-
 <table>
    <thead>
       <tr>
          <th ng-repeat="day in weeks[0]" class="day-of-week">{{day.date.format('ddd')}}</th>
       </tr>
    </thead>
-   <tbody>
-      <tr ng-repeat="week in weeks">
-         <td ng-repeat="day in week"
-             ng-class="{ today: day.isToday,
-                         past: day.isPast,
-                         future: day.isFuture,
-                         weekend: day.isWeekend,
-                         'not-in-month': !day.isInMonth }">
-            <div class="day">{{day.date.format('D')}}</div>
-            <span ng-if="day.commits">{{day.commits}} commits<br/></span>
-            <span ng-if="day.releases">{{day.releases}} releases<br/></span>
-            <span ng-if="day.issues">{{day.issues}} issues<br/></span>
-         </td>
-      </tr>
-   </tbody>
 </table>
+<div>
+   <table ng-class="{ prev: prev, active: active, next: next }">
+      <tbody>
+         <tr ng-repeat="week in weeks">
+            <td ng-repeat="day in week"
+                ng-class="{ today: day.isToday,
+                            past: day.isPast,
+                            future: day.isFuture,
+                            weekend: day.weekend,
+                            'not-in-month': !day.isInMonth }">
+               <div class="day">{{day.date.format('D')}}</div>
+               <a href="" ng-click="day.target(day.date)">
+                  <span ng-if="day.commits">{{day.commits}} commits<br/></span>
+                  <span ng-if="day.releases">{{day.releases}} releases<br/></span>
+                  <span ng-if="day.issues">{{day.issues}} issues<br/></span>
+               </a>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
