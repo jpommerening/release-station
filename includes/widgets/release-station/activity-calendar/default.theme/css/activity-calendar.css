@@ -39,9 +39,10 @@
 }
 
 .activity-calendar table {
-   width: 100%;
+   table-layout: fixed;
    border-spacing: 4px;
    border-collapse: separate;
+   width: 100%;
 }
 
 .activity-calendar th {
@@ -55,7 +56,6 @@
    position: relative;
    text-align: left;
    vertical-align: top;
-   width: 14.5%;
    height: 68px;
    max-height: 68px;
 }

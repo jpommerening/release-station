@@ -15,8 +15,8 @@
                             future: day.isFuture,
                             weekend: day.weekend,
                             'not-in-month': !day.isInMonth }">
-               <div class="day">{{day.date.format('D')}}</div>
                <a href="" ng-click="day.target(day.date)">
+                  <div class="day">{{day.date.format('D')}}</div>
                   <span ng-if="day.commits">{{day.commits}} commits<br/></span>
                   <span ng-if="day.releases">{{day.releases}} releases<br/></span>
                   <span ng-if="day.issues">{{day.issues}} issues<br/></span>

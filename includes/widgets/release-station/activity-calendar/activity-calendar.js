@@ -40,7 +40,8 @@ define( [
       function previousMonth( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
          var endOfMonth = moment( date ).endOf( 'month' );
-         var startOfCalendar = moment(startOfMonth).weekday(-7);
+
+         var startOfCalendar = moment(startOfMonth).weekday( startOfMonth.weekday() > 2 ? 0 : -7);
          var endOfCalendar = moment($scope.weeks[0][0].date);
 
          var weeks = generateCalendar( startOfCalendar, endOfCalendar );
@@ -154,6 +155,7 @@ define( [
 
    function updateEventData( weeks, today ) {
       function getRandomForDate( date, amount ) {
+         if( (date.day() % 6) === 0) amount /= 3.2;
          return ( date.isSame( today ) || date.isBefore( today ) ) ? Math.floor(Math.random()*amount) : 0;
       }
 
