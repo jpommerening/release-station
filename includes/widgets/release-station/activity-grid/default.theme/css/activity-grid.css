@@ -8,9 +8,22 @@
 div.activity-grid {
 }
 
+.activity-grid h3 {
+   font-weight: bold;
+   margin-bottom: 0.2em;
+}
+
+.activity-grid h3 span {
+   font-weight: normal;
+}
+
 /* palette
  * lightyellow                    palegreen                                   teal
  * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
+
+.activity-grid .ax-gauge {
+   margin-top: 0.8em;
+}
 
 .activity-grid .ax-gauge-back {
    fill: #ccc;
