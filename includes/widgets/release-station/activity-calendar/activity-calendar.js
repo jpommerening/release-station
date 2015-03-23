@@ -76,7 +76,7 @@ define( [
       function triggerAnimation( today, startOfMonth, endOfMonth, targets ) {
          /* this animation specific stuff should go into a directive */
          setTimeout( function() {
-            $scope.$applyAsync( function() {
+            $scope.$apply( function() {
                $scope.active= true;
                updateMetaData( $scope.weeks, today, startOfMonth, endOfMonth, targets );
             } );
