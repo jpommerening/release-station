@@ -5,7 +5,7 @@
  */
 define( [
    'angular'
-], function( ng, template ) {
+], function( ng ) {
    'use strict';
 
    var directiveName = 'axGauge';
@@ -47,10 +47,6 @@ define( [
                if( scope.length < 1 ) return;
                var start = (newValue / scope.length) * 1.5 * Math.PI;
                var angle = ((newValue + 1) / scope.length) * 1.5 * Math.PI;
-
-               var radius = progress.pathSegList.getItem(0).y;
-
-               console.log( start, angle, radius );
 
                setArc( progress.pathSegList.getItem(1), angle );
             } );
