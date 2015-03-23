@@ -1,18 +1,18 @@
 {
    "places": {
       "entry": {
-         "redirectTo": "page1"
+         "redirectTo": "grid"
       },
 
-      "page1": {
+      "grid": {
          "page":  "page1",
          "targets": {
             "cancel": "entry",
-            "next": "page2"
+            "next": "calendar"
          }
       },
 
-      "page2": {
+      "calendar/:date": {
          "page":  "page2",
          "targets": {
             "cancel": "entry",

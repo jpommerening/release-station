@@ -11,7 +11,18 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-
+         "calendar": {
+            "type": "object",
+            "description": "",
+            "properties": {
+               "parameter": {
+                  "type": "string",
+                  "description": "The place parameter to use for selecting dates",
+                  "format": "topic",
+                  "default": "date"
+               }
+            }
+         }
       }
    }
 }
