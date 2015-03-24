@@ -29,85 +29,74 @@ define( [
       $scope.active = false;
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var data = event.data;
-         var date = data[ parameter ] ? moment( data[ parameter ] ) : today;
-
-         goToDate( date );
+         var date = event.data[ parameter ] ? moment( event.data[ parameter ] ) : today;
+         selectDate( date );
       } );
 
       function constructDateUrl( date ) {
          var data = {};
          data[ parameter ] = date.format( 'YYYY-MM-DD' );
-
          return flowService.constructAbsoluteUrl( '_self', data );
       }
 
-      function goToDate( date ) {
-         var startOfMonth = moment( selected ).startOf( 'month' );
-         var endOfMonth = moment( selected ).endOf( 'month' );
+      function constructDayObject( date ) {
+         return {
+            date: date,
+            weekend: date.day() % 6 === 0,
+            url: constructDateUrl( date )
+         };
+      }
 
-         var startOfPreviousMonth = moment( startOfMonth ).subtract( 1, 'month' );
-         var endOfNextMonth = moment( endOfMonth ).add( 1, 'month' );
+      function selectDate( date ) {
+         var startOfMonth = moment( date ).startOf( 'month' );
+         var endOfMonth = moment( date ).endOf( 'month' );
+
+         var startOfSelectedMonth = moment( selected ).startOf( 'month' );
+         var endOfSelectedMonth = moment( selected ).endOf( 'month' );
+
+         var startOfPreviousMonth = moment( startOfSelectedMonth ).subtract( 1, 'month' );
+         var endOfNextMonth = moment( endOfSelectedMonth ).add( 1, 'month' );
 
          selected = date;
 
-         if( !$scope.weeks.length ) {
-            initMonth( date );
-         } else if( date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
-            initMonth( date );
-         } else if( date.isBefore( startOfMonth ) ) {
-            previousMonth( date );
-         } else if( date.isAfter( endOfMonth ) ) {
-            nextMonth( date );
+         var weeks;
+
+         if( $scope.weeks.length == 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
+            weeks = initMonth( startOfMonth, endOfMonth );
+            $scope.weeks = weeks;
+         } else if( date.isBefore( startOfSelectedMonth ) ) {
+            weeks = previousMonth( startOfMonth, endOfMonth );
+            $scope.weeks.unshift.apply( $scope.weeks, weeks );
+            $scope.unshiftedRows = weeks.length;
+         } else if( date.isAfter( endOfSelectedMonth ) ) {
+            weeks = nextMonth( startOfMonth, endOfMonth );
+            $scope.weeks.push.apply( $scope.weeks, weeks );
+            $scope.pushedRows = weeks.length;
          } else {
-            /* thisMonth( date ) */
+            // this month
+            return;
          }
+
+         updateEventData( weeks, today );
+         triggerAnimation( today, startOfMonth, endOfMonth );
       }
 
-      function initMonth( date ) {
-         var startOfMonth = moment( date ).startOf( 'month' );
-         var endOfMonth = moment( date ).endOf( 'month' );
+      function initMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
          var endOfCalendar = moment( startOfCalendar ).add( 6, 'weeks' );
-
-         var weeks = generateCalendar( startOfCalendar, endOfCalendar, constructDateUrl );
-
-         updateMetaData( weeks, today, selected, startOfMonth, endOfMonth );
-         updateEventData( weeks, today );
-
-         $scope.weeks = weeks;
+         return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function previousMonth( date ) {
-         var startOfMonth = moment( date ).startOf( 'month' );
-         var endOfMonth = moment( date ).endOf( 'month' );
+      function previousMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
          var endOfCalendar = moment( $scope.weeks[0][0].date );
-
-         var weeks = generateCalendar( startOfCalendar, endOfCalendar, constructDateUrl );
-
-         updateEventData( weeks, today );
-
-         $scope.weeks.unshift.apply( $scope.weeks, weeks );
-         $scope.unshiftedRows = weeks.length;
-
-         triggerAnimation( today, startOfMonth, endOfMonth );
+         return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function nextMonth( date ) {
-         var startOfMonth = moment( date ).startOf( 'month' );
-         var endOfMonth = moment( date ).endOf( 'month' );
+      function nextMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add( 1, 'day' );
          var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 3 ? 14 : 7 );
-
-         var weeks = generateCalendar( startOfCalendar, endOfCalendar, constructDateUrl );
-
-         updateEventData( weeks, today );
-
-         $scope.weeks.push.apply( $scope.weeks, weeks );
-         $scope.pushedRows = weeks.length;
-
-         triggerAnimation( today, startOfMonth, endOfMonth );
+         return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
       function triggerAnimation( today, startOfMonth, endOfMonth ) {
@@ -139,17 +128,12 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function generateCalendar( startOfCalendar, endOfCalendar, constructDateUrl ) {
+   function generateCalendar( startOfCalendar, endOfCalendar, callback ) {
       var date = moment( startOfCalendar );
       var week = [];
       var weeks = [];
       while( date.isBefore( endOfCalendar ) ) {
-         week.push( {
-            date: moment( date ),
-            weekend: date.day() % 6 === 0,
-            url: constructDateUrl( date )
-         } );
-
+         week.push( callback( moment( date ) ) );
          date.add( 1, 'day' );
          if( week.length === 7 ) {
             weeks.push( week );
@@ -166,9 +150,9 @@ define( [
          week.forEach( function( day ) {
             var date = day.date;
             day.isInMonth = date.isSame( startOfMonth ) || ( date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ) );
-            day.isPast = date.isBefore( today );
             day.isToday = date.isSame( today );
             day.isSelected = date.isSame( selected );
+            day.isPast = date.isBefore( today );
             day.isFuture = date.isAfter( today );
          } );
       } );
