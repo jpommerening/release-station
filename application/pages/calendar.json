@@ -64,6 +64,9 @@
          }
       ],
 
+      "navigation": [
+      ],
+
       "headline": [
          {
             "widget": "laxarjs/ax-headline-widget",

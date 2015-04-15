@@ -46,7 +46,7 @@
                "headline": {
                   "level": 3,
                   "i18nHtmlText": {
-                     "en_US": "Authorize with GitHub"
+                     "en_US": "Authenticate with GitHub"
                   }
                }
             }
@@ -54,6 +54,15 @@
       ],
 
       "authPopup.content": [
+         {
+            "widget": "laxarjs/ax-command-bar-widget",
+            "features": {
+               "ok": {
+                  "enabled": true,
+                  "action": "authenticate"
+               }
+            }
+         }
       ],
 
       "login": [
@@ -61,7 +70,7 @@
             "widget": "release-station/github-login-widget",
             "features": {
                "auth": {
-                  "action": "authenticate",
+                  "action": "openPopup",
                   "resource": "accessToken"
                },
                "user": {
