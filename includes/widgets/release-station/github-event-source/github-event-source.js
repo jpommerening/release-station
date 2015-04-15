@@ -35,23 +35,16 @@ define( [
          }
       };
 
-      var ids = [];
-      function onEvent( event ) {
-         if( event.id && ids.indexOf( event.id ) >= 0 ) {
-            return;
-         }
-         ids.push( event.id );
-         eventsPublisher.push( event );
-      }
-
-      function onError( error ) {
-         $scope.eventBus.publish( 'didEncounterError.EVENT_STREAM', error );
-      }
+      var EventStream = {
+         'http': HttpEventStream,
+         'https': HttpEventStream,
+         'socket.io': SocketEventStream
+      };
 
       var baseOptions = {
-         onEvent: onEvent,
-         onError: onError,
-         headers: {}
+         headers: {},
+         onEvent: deduplicate( eventsPublisher.push ),
+         onError: $scope.eventBus.publish.bind( $scope.eventBus, 'didEncounterError.EVENT_STREAM' )
       };
 
       var streams = $scope.features.events.sources.map( function( source ) {
@@ -60,13 +53,7 @@ define( [
          options.url = source.url;
          options.events = source.events;
 
-         switch( source.type ) {
-            case 'http':
-            case 'https':
-               return new HttpEventStream( options );
-            case 'socket.io':
-               return new SocketEventStream( options );
-         }
+         return new EventStream[ source.type ]( options );
       } );
 
       if( authResourceName ) {
@@ -114,6 +101,21 @@ define( [
    }
 
    module.controller( 'GitHubEventSourceController', Controller );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function deduplicate( callback ) {
+      var ids = [];
+      return function( event ) {
+         if( !event.id ) {
+            // TODO: deep compare
+         } else if( ids.indexOf( event.id ) >= 0 ) {
+            return;
+         }
+         ids.push( event.id );
+         return callback( event );
+      };
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
