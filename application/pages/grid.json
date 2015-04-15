@@ -1,8 +1,19 @@
 {
    "layout": "application",
+   "extends": "auth_base",
 
    "areas": {
       "activities": [
+         {
+            "widget": "release-station/github-event-source",
+            "features": {
+               "auth": {
+                  "action": "authenticate",
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               }
+            }
+         }
       ],
 
       "header": [

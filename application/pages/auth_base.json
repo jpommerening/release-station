@@ -1,0 +1,74 @@
+{
+   "areas": {
+      "activities": [
+         {
+            "widget": "release-station/oauth-activity",
+            "features": {
+               "provider": {
+                  "url": "https://github-live-events.herokuapp.com/auth",
+                  "clientId": "91ef4687546730fb6b2d",
+                  "sessionStorageId": "release-station"
+               },
+               "auth": {
+                  "onActions": [ "authenticate" ],
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               }
+            }
+         }
+      ],
+
+      "popups": [
+         {
+            "widget": "laxarjs/ax-popup-widget",
+            "id": "authPopup",
+            "features": {
+               "content": {
+                  "layout": "popup"
+               },
+               "open": {
+                  "onActions": [ "openPopup" ]
+               },
+               "close": {
+                  "onActions": [ "closePopup" ]
+               },
+               "closeIcon": {
+                  "enabled": true
+               }
+            }
+         }
+      ],
+
+      "authPopup.header": [
+         {
+            "widget": "laxarjs/ax-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 3,
+                  "i18nHtmlText": {
+                     "en_US": "Authorize with GitHub"
+                  }
+               }
+            }
+         }
+      ],
+
+      "authPopup.content": [
+      ],
+
+      "login": [
+         {
+            "widget": "release-station/github-login-widget",
+            "features": {
+               "auth": {
+                  "action": "authenticate",
+                  "resource": "accessToken"
+               },
+               "user": {
+                  "resource": "user"
+               }
+            }
+         }
+      ]
+   }
+}

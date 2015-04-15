@@ -5,7 +5,7 @@
       },
 
       "grid": {
-         "page":  "page1",
+         "page":  "grid",
          "targets": {
             "cancel": "entry",
             "next": "calendar"
@@ -13,10 +13,10 @@
       },
 
       "calendar/:date": {
-         "page":  "page2",
+         "page":  "calendar",
          "targets": {
             "cancel": "entry",
-            "previous": "page1"
+            "previous": "grid"
          }
       }
    }
