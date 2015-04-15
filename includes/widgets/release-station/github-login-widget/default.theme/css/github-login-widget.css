@@ -5,11 +5,9 @@
  */
 @charset "UTF-8";
 
-.git-hub-login-widget {
-   position: relative;
-}
-
 .git-hub-login-widget div.icon.circular {
+   position: relative;
+   float: right;
    width: 55px;
    height: 55px;
    border-radius: 50%;
