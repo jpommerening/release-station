@@ -108,7 +108,7 @@
 
 .activity-calendar td.past,
 .activity-calendar td.today {
-   background: #8cd59f;
+   background: #a4e3aa;
 }
 
 .activity-calendar td.past:hover,
@@ -116,8 +116,24 @@
    background: #bcefb5;
 }
 
+/* palette
+ * lightyellow                    palegreen                                   teal
+ * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
+
+.activity-calendar td.activity-0 { background: #ffffe0; }
+.activity-calendar td.activity-1 { background: #eafdd1; }
+.activity-calendar td.activity-2 { background: #d3f8c2; }
+.activity-calendar td.activity-3 { background: #bcefb5; }
+.activity-calendar td.activity-4 { background: #a4e3aa; }
+.activity-calendar td.activity-5 { background: #8cd59f; }
+.activity-calendar td.activity-6 { background: #72c396; }
+.activity-calendar td.activity-7 { background: #57af8e; }
+.activity-calendar td.activity-8 { background: #399887; }
+.activity-calendar td.activity-9 { background: #008080; }
+
+
 .activity-calendar td.today {
-   border: 3px solid #d84765;
+   border: 4px solid #ef738b;
 }
 
 .activity-calendar td.weekend,
