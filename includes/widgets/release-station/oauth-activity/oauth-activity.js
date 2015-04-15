@@ -13,76 +13,112 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$location', 'axFlowService' ];
+   Controller.$inject = [ '$scope', '$http', '$q', '$location', 'axFlowService' ];
 
-   function Controller( $scope, $http, $location, flowService ) {
+   function Controller( $scope, $http, $q, $location, flowService ) {
       var oauthProvider = $scope.features.provider;
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
-      var oauthRandomState = oauthStorage.getItem( 'nonce' ) || generateRandomString();
-      var oauthTarget = oauthStorage.getItem( 'target' ) || flowService.constructAbsoluteUrl( '_self' );
 
       var authResourceName = $scope.features.auth.resource;
       var authFlagName = $scope.features.auth.flag;
 
-      var authData = oauthStorage.getItem( 'data' ) || undefined;
-      var authState = oauthStorage.getItem( 'state' ) || false;
-      var authRetries = oauthStorage.getItem( 'retries' ) || 0;
+      var auth = {
+         data: oauthStorage.getItem( 'data' ),
+         state: oauthStorage.getItem( 'state' ) || generateRandomString()
+      };
 
-      var authenticating = false;
-
-      function getAccessToken( code ) {
-         /* discard the nonce */
-         oauthRandomState = generateRandomString();
-         oauthStorage.removeItem( 'nonce' );
-         obtainAccessToken( $http, oauthProvider.accessTokenUrl, {
-            client_id: oauthProvider.clientId,
-            client_secret: oauthProvider.clientSecret,
-            code: code
-         } ).success( function( data ) {
-            authData = data;
-         } ).error( function( data, status, headers ) {
-            authData = data;
-
-            $scope.eventBus.publish( 'didEncounterError.HTTP_POST-OAUTH_TOKEN', {
-               code: status,
-               message: 'Failed to obtain an OAuth access token.',
-               data: data
-            } );
-         } ).then( function() {
-            oauthStorage.setItem( 'data', authData );
-         } );
-      }
-
-      if( !authState && helper.hash.access_token ) {
-         authData = helper.hash;
-         oauthStorage.setItem( 'data', authData );
-      }
-      if( !authState && helper.search.code && (helper.search.state === oauthRandomState) &&
-          !authenticating ) {
-         authenticating = true;
-         $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-            getAccessToken( helper.search.code );
-         } );
-      }
+      var promise = $q( function( resolve, reject ) {
+         if( helper.search.code && (helper.search.state === auth.state) ) {
+            resolve( getAccessToken( search.code ) );
+         } else if( helper.hash.access_token ) {
+            resolve( helper.hash );
+         } else if( auth.data ) {
+            resolve( auth.data );
+         } else {
+            reject();
+         }
+      } );
 
       $scope.features.auth.onActions.forEach( function( action ) {
-         $scope.eventBus.subscribe( 'takeActionRequest.' + action, authenticate );
+         $scope.eventBus.subscribe( 'takeActionRequest.' + action, redirectToAuthProvider );
       } );
+
+      $scope.eventBus.subscribe( 'saveRequest.' + authResourceName, saveAuthResource );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-         publishAuthResource()
+         promise.then( function( data ) {
+            return auth.data = data;
+         } ).then( publishAuthResource )
             .then( validateAuthResource )
-            .then( publishAuthFlag, retryAuthentication );
+            .then( publishAuthFlag )
+            .then( saveAuthResource );
       } );
 
-      function retryAuthentication() {
-         if( authRetries < 2 ) {
-            authRetries += 1;
-            authData = undefined;
-            oauthStorage.setItem( 'retries', authRetries );
-            oauthStorage.removeItem( 'data' );
-            authenticate();
-         }
+      function publishAuthResource( data ) {
+         return $scope.eventBus.publish( 'didReplace.' + authResourceName, {
+            resource: authResourceName,
+            data: data
+         } );
+      }
+
+      function publishAuthFlag( state ) {
+         return $scope.eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + state, {
+            flag: authFlagName,
+            state: state
+         } );
+      }
+
+      function saveAuthResource() {
+         $scope.eventBus.publish( 'willSave.' + authResourceName, {
+            resource: authResourceName
+         } );
+
+         oauthStorage.setItem( 'data', auth.data );
+
+         return $scope.eventBus.publish( 'didSave.' + authResourceName, {
+            resource: authResourceName,
+            outcome: 'SUCCESS'
+         } );
+      }
+
+      function redirectToAuthProvider() {
+         var parameters = {
+            client_id: oauthProvider.clientId,
+            redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
+            response_type: oauthProvider.clientSecret ? 'code' : 'token',
+            scope: oauthProvider.scope,
+            state: auth.state
+         };
+
+         oauthStorage.setItem( 'state', auth.state );
+
+         window.location.href = oauthProvider.url + '?' + encodeArguments( parameters ).join( '&' );
+      }
+
+      function getAccessToken( code ) {
+         // discard the previous random state
+         auth.state = generateRandomString();
+         oauthStorage.removeItem( 'state' );
+
+         // ask the provider for an access token
+         $http( {
+            method: 'POST',
+            ur: oauthProvider.accessTokenUrl,
+            params: {
+               client_id: oauthProvider.clientId,
+               client_secret: oauthProvider.clientSecret,
+               code: code
+            },
+            headers: {
+               'Accept': 'application/x-www-urlencoded, application/json'
+            },
+            transformResponse: $http.defaults.transformResponse.concat( [ function( data, headers ) {
+               var urlencoded = /^application\/x-www-urlencoded(; *)?$/.test( headers( 'Content-Type' ) );
+               return urlencoded ? decodeArguments( data ) : data;
+            } ] )
+         } ).then( function( response ) {
+            return response.data;
+         } );
       }
 
       function validateAuthResource() {
@@ -98,74 +134,13 @@ define( [
             } );
 
             if( failures.length > 0 ) {
-               throw new Error( 'Error validating access token' );
+               return false;
+            } else {
+               return true;
             }
-
-            authState = true;
-            oauthStorage.setItem( 'state', authState );
-
-            return replies;
          } );
       }
 
-      function publishAuthFlag() {
-         return $scope.eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + authState, {
-            flag: authFlagName,
-            state: authState
-         } );
-      }
-
-      function publishAuthResource() {
-         return $scope.eventBus.publish( 'didReplace.' + authResourceName, {
-            resource: authResourceName,
-            data: authData
-         } );
-      }
-
-      function authenticate() {
-         if( typeof authData === 'undefined' && !authenticating ) {
-            authenticating = true;
-
-            var oauthParameters = {
-               client_id: oauthProvider.clientId,
-               redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
-               response_type: oauthProvider.clientSecret ? 'code' : 'token',
-               scope: oauthProvider.scope,
-               state: oauthRandomState
-            };
-
-            oauthStorage.setItem( 'target', oauthTarget );
-            oauthStorage.setItem( 'nonce', oauthRandomState );
-
-            window.location.href = oauthProvider.url + '?' + encodeArguments( oauthParameters ).join( '&' );
-         }
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function obtainAccessToken( $http, url, params ) {
-      return $http( {
-         method: 'POST',
-         url: url,
-         params: {
-            client_id: params.client_id,
-            client_secret: params.client_secret,
-            code: params.code
-         },
-         headers: {
-            'Accept': 'application/x-www-urlencoded, application/json'
-         },
-         transformResponse: $http.defaults.transformResponse.concat( [ function( data, headers ) {
-            var contentType = headers( 'Content-Type' );
-
-            if( typeof data === 'string' && /^application\/x-www-urlencoded(; *)?$/.test( contentType ) ) {
-               data = decodeArguments( data );
-            }
-
-            return data;
-         } ] )
-      } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

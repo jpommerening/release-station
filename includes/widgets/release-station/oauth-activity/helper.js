@@ -19,10 +19,9 @@ define( [], (function() {
 
    function decodeQuery( str ) {
       var object = {};
+      var index = (str.indexOf( '?' ) + 1) || (str.indexOf( '#' ) + 1);
 
-      if( str[ 0 ] === '?' || str[ 0 ] === '#' ) {
-         str = str.substr( 1 );
-      }
+      str = str.substr( index );
 
       str.split( '&' ) .forEach( function( parameter ) {
          var parts = parameter.split( '=', 2 );
