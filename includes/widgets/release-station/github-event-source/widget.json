@@ -1,0 +1,121 @@
+{
+   "name": "GitHubEventSource",
+   "description": "Query events (commits, tags, issues) from GitHub",
+
+   "integration": {
+      "technology": "angular",
+      "type": "activity"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "events": {
+            "type": "object",
+            "description": "Configuration for publishing GitHub events.",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish events.",
+                  "format": "topic",
+                  "default": "events"
+               },
+               "sources": {
+                  "type": "array",
+                  "description": "Event sources.",
+                  "default": [],
+                  "items": {
+                     "type": "object",
+                     "description": "The event source",
+                     "required": [ "type", "url" ],
+                     "properties": {
+                        "url": {
+                           "type": "string",
+                           "description": "The URL associated with the resource."
+                        },
+                        "type": {
+                           "type": "string",
+                           "description": "The resource type. Either 'socket.io' or 'http'."
+                        },
+                        "events": {
+                           "type": "array",
+                           "description": "Which events to monitor. Refer to the 'Event names' (lower_case) listed at https://developer.github.com/v3/activity/events/types/ for details.",
+                           "items": {
+                              "type": "string"
+                           },
+                           "default": [ "*" ]
+                        }
+                     }
+                  }
+               },
+               "repositories": {
+                  "type": "array",
+                  "description": "Which repositories to monitor for events.",
+                  "items": {
+                     "type": "string"
+                  },
+                  "default": []
+               },
+               "organizations": {
+                  "type": "array",
+                  "description": "Which organizations to monitor for events.",
+                  "items": {
+                     "type": "string"
+                  },
+                  "default": []
+               },
+               "names": {
+                  "type": "array",
+                  "description": "Which events to monitor.",
+                  "items": {
+                     "type": "string"
+                  },
+                  "default": [ "*" ]
+               }
+            }
+         },
+         "auth": {
+            "type": "object",
+            "description": "Authorization with the GitHub API",
+            "properties": {
+               "token": {
+                  "type": "string",
+                  "description": "Use the given OAuth access token to connect to the GitHub API (and do not initiate OAuth authorization)."
+               },
+               "action": {
+                  "type": "string",
+                  "description": "Instead of using a static token, request this action and wait for the `auth.resource` to be published",
+                  "format": "topic"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the authorization resource to listen for.",
+                  "format": "topic"
+               },
+               "flag": {
+                  "type": "string",
+                  "description": "The name of the flag indicating the current authentication state.",
+                  "format": "topic"
+               }
+            }
+         },
+         "api": {
+            "type": "object",
+            "description": "The backend API to connect to.",
+            "properties": {
+               "url": {
+                  "type": "string",
+                  "description": "The URL of the GitHub API. Typically required when connecting to a proxy or GitHub Enterprise instance.",
+                  "default": "https://api.github.com"
+               },
+               "socketUrl": {
+                  "type": "string",
+                  "description": "The URL of a socket.io instance that publishes new events."
+               }
+            }
+         }
+      }
+   }
+}

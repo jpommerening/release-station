@@ -1,0 +1,14 @@
+<div class="icon circular" ng-class="{ unauthorized: !resource.user.login }">
+   <img ng-if="resources.user.login" ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}"/>
+   <a ng-click="authenticate()">
+      <img ng-if="!resources.user.login" ng-src="{{widgetUrl}}/default.theme/css/github-mark.png" title="Please log in"/>
+   </a>
+</div>
+<div class="popover bottom">
+   <div class="popover-title">
+      {{resources.user.name}}
+   </div>
+   <div class="popover-content">
+      hello
+   </div>
+</div>

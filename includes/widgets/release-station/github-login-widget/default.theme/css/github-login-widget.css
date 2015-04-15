@@ -1,0 +1,22 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org
+ */
+@charset "UTF-8";
+
+.git-hub-login-widget {
+   position: relative;
+}
+
+.git-hub-login-widget div.icon.circular {
+   width: 100%;
+   border-radius: 50%;
+   box-shadow:inset 0px 5px 10px 0px rgba( 0, 0, 0, 0.25 );
+   background-color: #e3e3e3;
+   padding: 0;
+}
+
+.git-hub-login-widget .icon img {
+   width: 100%;
+}

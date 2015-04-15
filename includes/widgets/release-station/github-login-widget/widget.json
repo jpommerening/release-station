@@ -1,0 +1,50 @@
+{
+   "name": "GitHubLoginWidget",
+   "description": "Trigger an OAuth authentication, vaidate the GitHub authentication and display login information.",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "auth": {
+            "type": "object",
+            "description": "Authorization with the GitHub API",
+            "required": [ "resource" ],
+            "properties": {
+               "action": {
+                  "type": "string",
+                  "description": "Instead of using a static token, request this action and wait for the `auth.resource` to be published",
+                  "format": "topic"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the authorization resource to listen for.",
+                  "format": "topic"
+               }
+            }
+         },
+         "user": {
+            "type": "object",
+            "description": "User information",
+            "required": [ "resource" ],
+            "properties": {
+               "url": {
+                  "type": "string",
+                  "description": "The GitHub API endpoint serving user information.",
+                  "default": "https://api.github.com/user"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource to publish user information.",
+                  "format": "topic"
+               }
+            }
+         }
+      }
+   }
+}

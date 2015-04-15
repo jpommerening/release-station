@@ -1,11 +1,13 @@
 var require = {
    baseUrl: 'bower_components',
    deps: [
-   /* 'moment/lang/en',
-      'moment/lang/de'
-      'moment/lang/ja',
-      'moment/lang/fr' */
-      'moment/lang/en-gb'
+   /* 'moment/locale/en',
+      'moment/locale/de'
+      'moment/locale/fr'
+      'moment/locale/es'
+      'moment/locale/ja'
+      'moment/locale/zh-cn' */
+      'moment/locale/en-gb'
    ],
    shim: {
       angular: {
@@ -95,6 +97,7 @@ var require = {
       'angular-animate': 'angular-animate/angular-animate',
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
+      'socket.io': 'socket.io-client/socket.io',
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',

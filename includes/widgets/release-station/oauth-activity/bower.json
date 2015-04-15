@@ -1,0 +1,14 @@
+{
+   "name": "laxarjs/ax-oauth-activity",
+   "version": "0.1.0",
+   "description": "Authenticate with external OAuth providers",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "LaxarJS/laxar#0.x",
+      "laxar_patterns": "LaxarJS/laxar_patterns#0.x"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}
