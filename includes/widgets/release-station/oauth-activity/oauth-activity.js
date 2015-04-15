@@ -133,7 +133,7 @@ define( [
                }
             } );
 
-            if( failures.length > 0 ) {
+            if( failures.length > 0 || replies <= 0 ) {
                return false;
             } else {
                return true;
