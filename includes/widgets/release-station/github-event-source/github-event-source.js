@@ -78,21 +78,39 @@ define( [
       if( authFlagName ) {
          $scope.eventBus.subscribe( 'didChangeFlag.' + authFlagName, function() {
             baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
+            connect();
          } );
       }
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
          eventsPublisher.replace( [] );
-         streams.forEach( function( stream ) {
-            stream.connect( stream.options.url );
-         } );
+         if( authData ) {
+            baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
+            connect();
+         }
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
+         disconnect();
+      } );
+
+      // connect the streams
+      function connect() {
+         streams.forEach( function( stream ) {
+            stream.connect( stream.options.url );
+         } );
+      }
+
+      // disconnect the streams
+      function disconnect() {
          streams.forEach( function( stream ) {
             stream.disconnect();
          } );
-      } );
+      }
+
+      // cross the streams (!!!NEVER, EVER, CALL THIS!!!)
+      function cross() {
+      }
    }
 
    module.controller( 'GitHubEventSourceController', Controller );
