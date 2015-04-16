@@ -10,7 +10,7 @@ window.laxar = ( function() {
       description: 'All the repos, all the releases, all in one place',
 
       portal: {
-         theme: 'laxar_demo',
+         theme: 'cube',
          useMergedCss: mode === 'RELEASE'
       },
 

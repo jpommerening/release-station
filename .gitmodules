@@ -7,3 +7,6 @@
 [submodule "includes/widgets/laxarjs/ax-command-bar-widget"]
 	path = includes/widgets/laxarjs/ax-command-bar-widget
 	url = git@github.com:LaxarJS/ax-command-bar-widget.git
+[submodule "includes/themes/cube.theme"]
+	path = includes/themes/cube.theme
+	url = git@github.com:LaxarJS/cube.theme
