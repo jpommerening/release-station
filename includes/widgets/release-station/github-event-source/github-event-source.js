@@ -61,7 +61,7 @@ define( [
       if( authFlagName ) {
          $scope.eventBus.subscribe( 'didChangeFlag.' + authFlagName, function() {
             baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
-            connect();
+            connectStreams( streams );
          } );
       }
 
@@ -69,34 +69,46 @@ define( [
          eventsPublisher.replace( [] );
          if( authData ) {
             baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
-            connect();
+            connectStreams( streams );
          }
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
-         disconnect();
+         disconnectStreams( streams );
       } );
-
-      // connect the streams
-      function connect() {
-         streams.forEach( function( stream ) {
-            stream.connect( stream.options.url );
-         } );
-      }
-
-      // disconnect the streams
-      function disconnect() {
-         streams.forEach( function( stream ) {
-            stream.disconnect();
-         } );
-      }
-
-      // cross the streams (!!!NEVER, EVER, CALL THIS!!!)
-      function cross() {
-      }
    }
 
    module.controller( 'GitHubEventSourceController', Controller );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Connect the given list of streams.
+    */
+   function connectStreams( streams ) {
+      streams.forEach( function( stream ) {
+         stream.connect( stream.options.url );
+      } );
+
+      console.log( streams );
+   }
+
+   /**
+    * Disconnect the given list of streams.
+    */
+   function disconnectStreams( streams ) {
+      streams.forEach( function( stream ) {
+         stream.disconnect();
+      } );
+   }
+
+   /**
+    * Cross the given list of streams.
+    * (!!!NEVER EVER CALL THIS!!!)
+    */
+   function crossStreams( streams ) {
+      haha, jk;
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
