@@ -71,7 +71,8 @@
             "features": {
                "auth": {
                   "action": "openPopup",
-                  "resource": "accessToken"
+                  "resource": "accessToken",
+                  "flag": "authenticated"
                },
                "user": {
                   "resource": "user"

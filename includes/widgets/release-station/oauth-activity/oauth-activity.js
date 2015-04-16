@@ -21,11 +21,16 @@ define( [
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
       var authOnActions = $scope.features.auth.onActions;
+      var authToken = $scope.features.auth.token;
       var authResourceName = $scope.features.auth.resource;
       var authFlagName = $scope.features.auth.flag;
 
       var auth = {
-         data: oauthStorage.getItem( 'data' ),
+         data: oauthStorage.getItem( 'data' ) || authToken && {
+            access_token: authToken,
+            token_type: 'bearer',
+            scopes: ''
+         },
          state: oauthStorage.getItem( 'state' ) || generateRandomString(),
          save: false
       };

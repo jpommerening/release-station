@@ -21,8 +21,13 @@ define( [
       var userUrl = $scope.features.user.url;
 
       $scope.widgetUrl = require.toUrl('.');
+      $scope.showPopover = false;
+      $scope.authenticated = false;
       $scope.authenticate = function() {
          $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.auth.action, {} );
+      };
+      $scope.togglePopover = function() {
+         $scope.showPopover = !$scope.showPopover;
       };
 
       var userPublisher = patterns.resources.replacePublisherForFeature( $scope, 'user', {
@@ -38,6 +43,13 @@ define( [
       patterns.validation.handlerFor( $scope )
          .registerResourceFromFeature( 'auth', {
             onValidate: authResourceValidator( $http, $q, userUrl )
+         } );
+
+      patterns.flags.handlerFor( $scope )
+         .registerFlagFromFeature( 'auth.flag', {
+            onChange: function( state ) {
+               $scope.authenticated = state;
+            }
          } );
 
       function fetchUserData( event ) {

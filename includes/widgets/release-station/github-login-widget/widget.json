@@ -25,6 +25,11 @@
                   "type": "string",
                   "description": "The name of the authorization resource to listen for.",
                   "format": "topic"
+               },
+               "flag": {
+                  "type": "string",
+                  "description": "The name of the flag indicating the current authentication state.",
+                  "format": "topic"
                }
             }
          },

@@ -8,7 +8,6 @@
             "widget": "release-station/github-event-source",
             "features": {
                "auth": {
-                  "action": "authenticate",
                   "resource": "accessToken",
                   "flag": "authenticated"
                },

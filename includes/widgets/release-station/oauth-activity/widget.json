@@ -62,6 +62,10 @@
                   },
                   "default": []
                },
+               "token": {
+                  "type": "string",
+                  "description": "Use the given OAuth2 access token (instead of using the OAuth provider)."
+               },
                "resource": {
                   "type": "string",
                   "description": "The name under which to publish the OAuth access token.",

@@ -21,12 +21,7 @@ define( [
    function Controller( $scope, $http, $q ) {
       var authResourceName = $scope.features.auth.resource;
       var authFlagName = $scope.features.auth.flag;
-      var authAction = $scope.features.auth.action;
-      var authData = $scope.features.auth.token && {
-         access_token: $scope.features.auth.token,
-         token_type: 'bearer',
-         scopes: ''
-      };
+      var authData;
 
       var eventsPublisher = {
          replace: throttleReplacements( patterns.resources.replacePublisherForFeature( $scope, 'events' ) ),

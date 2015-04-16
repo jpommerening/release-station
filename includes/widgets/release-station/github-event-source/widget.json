@@ -80,15 +80,6 @@
             "type": "object",
             "description": "Authorization with the GitHub API",
             "properties": {
-               "token": {
-                  "type": "string",
-                  "description": "Use the given OAuth access token to connect to the GitHub API (and do not initiate OAuth authorization)."
-               },
-               "action": {
-                  "type": "string",
-                  "description": "Instead of using a static token, request this action and wait for the `auth.resource` to be published",
-                  "format": "topic"
-               },
                "resource": {
                   "type": "string",
                   "description": "The name of the authorization resource to listen for.",

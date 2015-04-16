@@ -72,6 +72,7 @@
    vertical-align: top;
    height: 68px;
    max-height: 68px;
+   font-size: 0.9em;
 }
 
 .activity-calendar table.active td {
@@ -83,6 +84,7 @@
    position: absolute;
    bottom: 0;
    right: 0;
+   margin: 0;
    padding: 0;
    max-height: 100%;
    overflow: hidden;

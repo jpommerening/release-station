@@ -5,20 +5,32 @@
  */
 @charset "UTF-8";
 
-.git-hub-login-widget div.icon.circular {
-   position: relative;
-   float: right;
-   top: 10px;
+.git-hub-login-widget .icon {
    width: 55px;
    height: 55px;
-   border-radius: 50%;
-   box-shadow: inset 0px 5px 10px 0px rgba( 0, 0, 0, 0.25 );
-   background-color: #e3e3e3;
-   padding: 0;
 }
 
-.git-hub-login-widget .icon img {
-   width: 100%;
+.git-hub-login-widget div.icon {
+   position: relative;
+   float: right;
+   padding: 0;
+   top: 10px;
+}
+
+.git-hub-login-widget div.icon:not(.authenticated) {
+   background-image: url(github-mark.png);
+   background-size: 55px 55px;
+   cursor: pointer;
+}
+
+.git-hub-login-widget .authenticated div.icon {
+   background-image: none;
+   background-color: #e3e3e3;
+   box-shadow: inset 0px 5px 10px 0px rgba( 0, 0, 0, 0.25 );
+}
+
+.git-hub-login-widget .circular {
+   border-radius: 50%;
 }
 
 .git-hub-login-widget .popover {

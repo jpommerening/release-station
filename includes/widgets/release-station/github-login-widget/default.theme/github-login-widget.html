@@ -1,16 +1,15 @@
-<div class="icon circular" ng-class="{ unauthorized: !resource.user.login }">
-   <a ng-click="showMenu = !showMenu">
-      <img ng-if="resources.user.login" ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}"/>
+<div ng-class="{ authenticated: authenticated }"
+     ng-click="authenticated || authenticate()"
+     class="icon circular">
+   <a ng-if="authenticated" ng-click="togglePopover()" href="">
+      <img ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}" class="icon"/>
    </a>
-   <a ng-click="authenticate()">
-      <img ng-if="!resources.user.login" ng-src="{{widgetUrl}}/default.theme/css/github-mark.png" title="Please log in"/>
-   </a>
-   <div ng-if="showMenu" class="popover bottom fade in">
+   <div ng-if="showPopover" class="popover bottom fade in">
       <div class="arrow"></div>
       <h3 class="popover-title">{{resources.user.name}}
          <span class="small">
             (<a href="{{resources.user.html_url}}"
-               title="{{resources.user.name}} on GitHub">@{{resources.user.login}}</a>)
+                title="{{resources.user.name}} on GitHub">@{{resources.user.login}}</a>)
          </span>
       </h3>
       <div class="popover-content">
