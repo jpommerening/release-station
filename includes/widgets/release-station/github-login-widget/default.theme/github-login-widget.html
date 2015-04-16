@@ -5,13 +5,15 @@
    <a ng-click="authenticate()">
       <img ng-if="!resources.user.login" ng-src="{{widgetUrl}}/default.theme/css/github-mark.png" title="Please log in"/>
    </a>
-   <div ng-if="showMenu" class="menu-container">
+   <div ng-if="showMenu" class="popover bottom fade in">
       <div class="arrow"></div>
-      <h3>{{resources.user.name}}
+      <h3 class="popover-title">{{resources.user.name}}
          <span class="small">
             (<a href="{{resources.user.html_url}}"
                title="{{resources.user.name}} on GitHub">@{{resources.user.login}}</a>)
          </span>
       </h3>
+      <div class="popover-content">
+      </div>
    </div>
 </div>

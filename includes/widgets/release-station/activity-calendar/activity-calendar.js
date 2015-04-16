@@ -58,11 +58,13 @@ define( [
          var event;
          while( event = events.pop() ) {
             var bucket = eventBucket( buckets, moment.parseZone( event.created_at ) );
+            var type = event.type;
+            var payload = event.payload;
 
             pushItem( bucket, 'events', event );
-            switch( event.type ) {
+            switch( type ) {
                case 'PushEvent':
-                  event.payload.commits.forEach( function( commit ) {
+                  payload.commits.forEach( function( commit ) {
                      if( commit.distinct ) {
                         pushItem( bucket, 'commits', commit );
                      }
@@ -72,10 +74,10 @@ define( [
                   console.log( event );
                   break;
                case 'IssuesEvent':
-                  if( event.payload.action === 'opened' ) {
-                     pushItem( bucket, 'issues_opened', event.payload );
-                  } else if( event.payload.action === 'closed' ) {
-                     pushItem( bucket, 'issues_closed', event.payload );
+                  if( payload.action === 'opened' || payload.action === 'reopened') {
+                     pushItem( bucket, 'issues_opened', payload.issue );
+                  } else if( payload.action === 'closed' ) {
+                     pushItem( bucket, 'issues_closed', payload.issue );
                   }
                   break;
             }
@@ -96,7 +98,8 @@ define( [
             today = moment().startOf( 'day' );
             tomorrow = moment( today ).add( 1, 'day' );
 
-            // updateEventData( $scope.weeks, $scope.resources.events, today );
+            // refresh
+            selectDate( selected );
 
             endOfDay = callTomorrow( toNextDay );
          } );
@@ -159,7 +162,8 @@ define( [
             $scope.weeks.push.apply( $scope.weeks, weeks );
             $scope.pushedRows = weeks.length;
          } else {
-            // this month
+            weeks = $scope.weeks;
+            updateMetaData( weeks, today, selected, startOfMonth, endOfMonth );
             return;
          }
 

@@ -111,8 +111,9 @@ define( [
             // TODO: deep compare
          } else if( ids.indexOf( event.id ) >= 0 ) {
             return;
+         } else {
+            ids.push( event.id );
          }
-         ids.push( event.id );
          return callback( event );
       };
    }

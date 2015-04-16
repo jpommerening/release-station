@@ -1,7 +1,10 @@
 <table>
    <thead>
       <tr>
-         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ 'hidden-xs': day.weekend }">{{day.date.format('dddd')}}</th>
+         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ 'hidden-xs': day.weekend }">
+            <span class="hidden-sm hidden-xs">{{day.date.format('dddd')}}</span>
+            <span class="hidden-lg hidden-md">{{day.date.format('ddd')}}</span>
+         </th>
       </tr>
    </thead>
 </table>
