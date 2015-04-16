@@ -70,6 +70,11 @@ define( [
                      }
                   } );
                   break;
+               case 'CreateEvent':
+                  if( payload.ref_type === 'tag' ) {
+                     pushItem( bucket, 'tags', payload );
+                  }
+                  break;
                case 'ReleaseEvent':
                   console.log( event );
                   break;

@@ -17,32 +17,32 @@
                      {
                         "type": "http",
                         "url": "https://api.github.com/repos/LaxarJS/laxar/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "socket.io",
                         "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "http",
                         "url": "https://api.github.com/repos/LaxarJS/laxar_uikit/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "socket.io",
                         "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar_uikit/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "http",
                         "url": "https://api.github.com/repos/LaxarJS/laxar_patterns/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "socket.io",
                         "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar_patterns/events",
-                        "events": [ "push", "issues", "release" ]
+                        "events": [ "push", "issues", "release", "create" ]
                      }
                   ]
                }
