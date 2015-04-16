@@ -1,6 +1,6 @@
 {
    "name": "GitHubLoginWidget",
-   "description": "Trigger an OAuth authentication, vaidate the GitHub authentication and display login information.",
+   "description": "Trigger an OAuth authentication, validate the access token with GitHub and display login information.",
 
    "integration": {
       "technology": "angular",
@@ -18,7 +18,7 @@
             "properties": {
                "action": {
                   "type": "string",
-                  "description": "Instead of using a static token, request this action and wait for the `auth.resource` to be published",
+                  "description": "The name of the action to request to authenticate.",
                   "format": "topic"
                },
                "resource": {
