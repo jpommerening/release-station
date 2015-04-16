@@ -13,8 +13,8 @@
       "properties": {
          "provider": {
             "type": "object",
-            "description": "OAuth2 endpoint configuration",
-            "required": [ "url" ],
+            "description": "The OAuth2 endpoint configuration.",
+            "required": [ "url", "clientId" ],
             "properties": {
                "url": {
                   "type": "string",
@@ -50,12 +50,12 @@
          },
          "auth": {
             "type": "object",
-            "description": "Authenticate with the OAuth provider.",
+            "description": "Authenticate with the OAuth2 provider.",
             "required": [ "resource" ],
             "properties": {
                "onActions": {
                   "type": "array",
-                  "description": "Names of the actions that trigger OAuth.",
+                  "description": "Names of the actions that trigger OAuth2 authentication.",
                   "items": {
                      "type": "string",
                      "format": "topic"

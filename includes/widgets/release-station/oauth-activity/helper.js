@@ -1,11 +1,13 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org
  */
-// This helper exists to extract OAuth parameters
-// before Angular works its magic.
 define( [], (function() {
    'use strict';
+
+   // This helper exists to extract OAuth parameters from the `window.location`
+   // before Angular works its magic.
 
    var hash = decodeQuery( window.location.hash );
    var search = decodeQuery( window.location.search );

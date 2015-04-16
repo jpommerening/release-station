@@ -1,6 +1,7 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org
  */
 define( [
    'angular',
@@ -19,16 +20,18 @@ define( [
       var oauthProvider = $scope.features.provider;
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
+      var authOnActions = $scope.features.auth.onActions;
       var authResourceName = $scope.features.auth.resource;
       var authFlagName = $scope.features.auth.flag;
 
       var auth = {
          data: oauthStorage.getItem( 'data' ),
-         state: oauthStorage.getItem( 'state' ) || generateRandomString()
+         state: oauthStorage.getItem( 'state' ) || generateRandomString(),
+         save: false
       };
 
       var promise = $q( function( resolve, reject ) {
-         if( helper.search.code && (helper.search.state === auth.state) ) {
+         if( helper.search.code && ( helper.search.state === auth.state ) ) {
             resolve( getAccessToken( search.code ) );
          } else if( helper.hash.access_token ) {
             resolve( helper.hash );
@@ -39,19 +42,30 @@ define( [
          }
       } );
 
-      $scope.features.auth.onActions.forEach( function( action ) {
+      authOnActions.forEach( function( action ) {
          $scope.eventBus.subscribe( 'takeActionRequest.' + action, redirectToAuthProvider );
       } );
 
       $scope.eventBus.subscribe( 'saveRequest.' + authResourceName, saveAuthResource );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-         promise.then( function( data ) {
-            return auth.data = data;
-         } ).then( publishAuthResource )
+         promise
+            .then( function( data ) {
+               if( auth.data !== data ) {
+                  auth.save = true;
+                  auth.data = data;
+               }
+
+               return data;
+            } )
+            .then( publishAuthResource )
             .then( validateAuthResource )
             .then( publishAuthFlag )
-            .then( saveAuthResource );
+            .then( function() {
+               if( auth.save ) {
+                  return saveAuthResource();
+               }
+            } );
       } );
 
       function publishAuthResource( data ) {
@@ -69,10 +83,6 @@ define( [
       }
 
       function saveAuthResource() {
-         $scope.eventBus.publish( 'willSave.' + authResourceName, {
-            resource: authResourceName
-         } );
-
          oauthStorage.setItem( 'data', auth.data );
 
          return $scope.eventBus.publish( 'didSave.' + authResourceName, {

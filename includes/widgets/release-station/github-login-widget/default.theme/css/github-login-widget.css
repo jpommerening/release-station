@@ -8,6 +8,7 @@
 .git-hub-login-widget div.icon.circular {
    position: relative;
    float: right;
+   top: 10px;
    width: 55px;
    height: 55px;
    border-radius: 50%;
@@ -30,6 +31,14 @@
 
 .git-hub-login-widget .popover .arrow {
    left: 287px;
+}
+
+@media (max-width: 767px) {
+   .git-hub-login-widget .popover {
+   }
+
+   .git-hub-login-widget .popover .arrow {
+   }
 }
 
 .git-hub-login-widget .popover h3 {
