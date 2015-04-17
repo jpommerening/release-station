@@ -1,20 +1,20 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
- * http://laxarjs.org/license
+ * http://laxarjs.org
  */
 define( [
-   '../activity-calendar',
+   '../github-events-activity',
    'laxar/laxar_testing'
 ], function( widgetModule, ax ) {
    'use strict';
 
-   describe( 'A ActivityCalendar', function() {
+   describe( 'A GitHubEventsActivity', function() {
 
       var testBed_;
 
       beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/activity-calendar' );
+         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/github-events-activity' );
          testBed_.featuresMock = {};
 
          testBed_.useWidgetJson();

@@ -5,7 +5,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "release-station/github-event-source",
+            "widget": "release-station/github-events-activity",
             "features": {
                "auth": {
                   "resource": "accessToken",
@@ -82,7 +82,7 @@
 
       "content1a": [
          {
-            "widget": "release-station/activity-calendar",
+            "widget": "release-station/activity-calendar-widget",
             "features": {
                "events": {
                   "resource": "events"

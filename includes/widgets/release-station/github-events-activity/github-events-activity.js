@@ -11,7 +11,7 @@ define( [
 ], function( ng, patterns, HttpEventStream, SocketEventStream ) {
    'use strict';
 
-   var moduleName = 'gitHubEventSource';
+   var moduleName = 'gitHubEventsActivity';
    var module     = ng.module( moduleName, [] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ define( [
       } );
    }
 
-   module.controller( 'GitHubEventSourceController', Controller );
+   module.controller( 'GitHubEventsActivityController', Controller );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

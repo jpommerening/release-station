@@ -4,17 +4,17 @@
  * http://laxarjs.org/license
  */
 define( [
-   '../activity-grid',
+   '../activity-grid-widget',
    'laxar/laxar_testing'
 ], function( widgetModule, ax ) {
    'use strict';
 
-   describe( 'A ActivityGrid', function() {
+   describe( 'A ActivityGridWidget', function() {
 
       var testBed_;
 
       beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/activity-grid' );
+         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/activity-grid-widget' );
          testBed_.featuresMock = {};
 
          testBed_.useWidgetJson();

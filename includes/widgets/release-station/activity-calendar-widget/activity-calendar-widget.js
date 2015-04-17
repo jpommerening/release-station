@@ -10,7 +10,7 @@ define( [
 ], function( ng, moment, patterns ) {
    'use strict';
 
-   var moduleName = 'activityCalendar';
+   var moduleName = 'activityCalendarWidget';
    var module     = ng.module( moduleName, [] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ define( [
       }
    }
 
-   module.controller( 'ActivityCalendarController', Controller );
+   module.controller( 'ActivityCalendarWidgetController', Controller );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

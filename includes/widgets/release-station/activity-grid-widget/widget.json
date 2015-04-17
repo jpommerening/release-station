@@ -1,5 +1,5 @@
 {
-   "name": "ActivityGrid",
+   "name": "ActivityGridWidget",
    "description": "Display repository activity for multiple projects in a grid",
 
    "integration": {

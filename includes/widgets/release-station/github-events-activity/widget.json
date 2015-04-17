@@ -1,5 +1,5 @@
 {
-   "name": "GitHubEventSource",
+   "name": "GitHubEventsActivity",
    "description": "Query events (commits, tags, issues) from GitHub",
 
    "integration": {

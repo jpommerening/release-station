@@ -1,5 +1,5 @@
 {
-   "name": "ActivityCalendar",
+   "name": "ActivityCalendarWidget",
    "description": "Display project activity in a calendar view",
 
    "integration": {

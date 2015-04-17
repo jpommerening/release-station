@@ -5,10 +5,9 @@
    "areas": {
       "activities": [
          {
-            "widget": "release-station/github-event-source",
+            "widget": "release-station/github-events-activity",
             "features": {
                "auth": {
-                  "action": "authenticate",
                   "resource": "accessToken",
                   "flag": "authenticated"
                }
@@ -45,7 +44,7 @@
 
       "content1a": [
          {
-            "widget": "release-station/activity-grid"
+            "widget": "release-station/activity-grid-widget"
          }
       ],
 

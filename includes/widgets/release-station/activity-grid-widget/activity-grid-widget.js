@@ -10,7 +10,7 @@ define( [
 ], function( require, gauge, ng ) {
    'use strict';
 
-   var moduleName = 'activityGrid';
+   var moduleName = 'activityGridWidget';
    var module     = ng.module( moduleName, [] );
 
    gauge.createForModule( module );
@@ -96,7 +96,7 @@ define( [
    function endLifecycle() {
    }
 
-   module.controller( 'ActivityGridController', Controller );
+   module.controller( 'ActivityGridWidgetController', Controller );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
