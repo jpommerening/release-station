@@ -5,9 +5,10 @@
  */
 define( [
    'angular',
+   'laxar',
    'laxar_patterns',
    'require'
-], function( ng, patterns, require ) {
+], function( ng, ax, patterns, require ) {
    'use strict';
 
    var moduleName = 'gitHubLoginWidget';
@@ -20,12 +21,12 @@ define( [
    function Controller( $scope, $http, $q ) {
       var userUrl = $scope.features.user.url;
 
-      $scope.widgetUrl = require.toUrl('.');
-      $scope.showPopover = false;
       $scope.authenticated = false;
       $scope.authenticate = function() {
          $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.auth.action, {} );
       };
+
+      $scope.showPopover = false;
       $scope.togglePopover = function() {
          $scope.showPopover = !$scope.showPopover;
       };
@@ -65,7 +66,7 @@ define( [
             url: userUrl,
             headers: headers
          } ).then( function( response ) {
-            console.log( 'Got user data', response.data );
+            ax.log.info( 'Got user data', response.data );
             userPublisher( response.data );
          }, function( response ) {
             userPublisher( {} );
@@ -95,16 +96,20 @@ define( [
                'Authorization': 'token ' + accessToken
             }
          } ).then( function( data ) {
-            return [
-               { en_US: 'Successfully validated access token <i>' + accessToken + '</i>. ' +
-                        'Received authentication success from ' + htmlApiLink + '.' }
-            ];
+            var i18nHtmlMessage = {
+               en_US: 'Successfully validated access token <i>' + accessToken + '</i>. ' +
+                      'Received authentication success from ' + htmlApiLink + '.'
+            };
+            ax.log.trace( i18nHtmlMessage.en_US );
+            return [ i18nHtmlMessage ];
          }, function( response ) {
             var statusText = response.status + ' ' + response.statusText;
-            return $q.reject( [
-                  { en_US: 'Validation of GitHub access token <i>' + accessToken + '</i> failed. ' +
-                           'Received HTTP status <i>' + statusText + '</i> from ' + htmlApiLink + '.' }
-            ] );
+            var i18nHtmlMessage = {
+               en_US: 'Validation of GitHub access token <i>' + accessToken + '</i> failed. ' +
+                      'Received HTTP status <i>' + statusText + '</i> from ' + htmlApiLink + '.'
+            };
+            ax.log.trace( i18nHtmlMessage.en_US );
+            return $q.reject( [ i18nHtmlMessage ] );
          } );
 
       };

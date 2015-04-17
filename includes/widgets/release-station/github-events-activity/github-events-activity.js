@@ -89,8 +89,6 @@ define( [
       streams.forEach( function( stream ) {
          stream.connect( stream.options.url );
       } );
-
-      console.log( streams );
    }
 
    /**
