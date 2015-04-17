@@ -15,18 +15,15 @@
    float: right;
    padding: 0;
    top: 10px;
-}
-
-.git-hub-login-widget div.icon:not(.authenticated) {
    background-image: url(github-mark.png);
    background-size: 55px 55px;
    cursor: pointer;
 }
 
-.git-hub-login-widget .authenticated div.icon {
+.git-hub-login-widget div.icon.authenticated {
    background-image: none;
-   background-color: #e3e3e3;
-   box-shadow: inset 0px 5px 10px 0px rgba( 0, 0, 0, 0.25 );
+   background-color: #eaeaea;
+   box-shadow: inset 0px 4px 8px -1px rgba( 0, 0, 0, 0.15 );
 }
 
 .git-hub-login-widget .circular {
