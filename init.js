@@ -4,7 +4,7 @@
  * laxarjs.github.io/release-station
  */
 require( [
-   'portal_angular_dependencies',
+   'laxar-application-dependencies',
    'laxar'
 ], function( widgetModules, ax ) {
    'use strict';

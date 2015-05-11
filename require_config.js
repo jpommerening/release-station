@@ -65,6 +65,11 @@ var require = {
    },
    packages: [
       {
+         name: 'laxar-application',
+         location: '..',
+         main: 'init'
+      },
+      {
          name: 'laxar',
          location: 'laxar',
          main: 'laxar'
@@ -124,6 +129,6 @@ var require = {
       'laxar-path-themes': '../includes/themes',
       'laxar-path-flow': '../application/flow/flow.json',
 
-      portal_angular_dependencies: '../var/static/portal_angular_dependencies'
+      'laxar-application-dependencies': '../var/static/laxar_application_dependencies'
    }
 };
