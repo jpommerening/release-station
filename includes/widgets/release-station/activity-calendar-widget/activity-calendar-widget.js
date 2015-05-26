@@ -7,8 +7,9 @@ define( [
    'angular',
    'moment',
    'laxar',
-   'laxar_patterns'
-], function( ng, moment, ax, patterns ) {
+   'laxar_patterns',
+   'event-pipeline'
+], function( ng, moment, ax, patterns, eventPipeline ) {
    'use strict';
 
    var moduleName = 'activityCalendarWidget';
@@ -31,63 +32,62 @@ define( [
       };
 
       // Track changes to the events resource and process them asynchronously,
-      // but don't keep a copy of all the unprocessed events.
 
-      $scope.eventBus.subscribe( 'didReplace.' + $scope.features.events.resource, function( event ) {
-         incoming = event.data;
-         $scope.resources.events = {};
-         processEvents( incoming, $scope.resources.events );
-      } );
-
-      $scope.eventBus.subscribe( 'didUpdate.' + $scope.features.events.resource, function( event ) {
-         patterns.json.applyPatch( incoming, event.patches );
-         processEvents( incoming, $scope.resources.events );
-      } );
-
-      function eventBucket( buckets, timestamp ) {
-         var key = timestamp.format( 'YYYY-MM-DD' );
-         return buckets[ key ] = (buckets[ key ] || {});
-      }
-
-      function pushItem( bucket, key, item ) {
-         return (bucket[ key ] = (bucket[ key ] || [])).push( item );
-      }
-
-      function processEvents( events, buckets ) {
-         var event;
-         ax.log.trace( 'Processing ' + events.length + ' events.' );
-         while( event = events.pop() ) {
-            var bucket = eventBucket( buckets, moment.parseZone( event.created_at ) );
-            var type = event.type;
-            var payload = event.payload;
-
-            pushItem( bucket, 'events', event );
+      eventPipeline( $scope, 'events' )
+         .filter( function( e ) {
+            return ( [
+               'PushEvent',
+               'CreateEvent',
+               'IssuesEvent'
+            ].indexOf( e.type ) >= 0 );
+         } )
+         .synthesize( function( e ) {
+            if( e.type === 'PushEvent' ) {
+               return e.payload.commits.filter( function( c ) {
+                  return c.distinct;
+               } ).map( function( c, i ) {
+                  return {
+                     id: e.id + '.' + i,
+                     type: 'CommitEvent',
+                     payload: c,
+                     actor: e.actor,
+                     repo: e.repo,
+                     org: e.org,
+                     public: e.public,
+                     created_at: e.created_at
+                  };
+               } );
+            } else {
+               return [];
+            }
+         } )
+         .classify( function( e ) {
+            return moment.parseZone( e.created_at ).format( 'YYYY-MM-DD' );
+         } )
+         .classify( function( e ) {
+            var type = e.type;
+            var payload = e.payload;
             switch( type ) {
-               case 'PushEvent':
-                  payload.commits.forEach( function( commit ) {
-                     if( commit.distinct ) {
-                        pushItem( bucket, 'commits', commit );
-                     }
-                  } );
-                  break;
+               case 'CommitEvent':
+                  return 'commits';
                case 'CreateEvent':
                   if( payload.ref_type === 'tag' ) {
-                     pushItem( bucket, 'tags', payload );
+                     return 'tags';
                   }
-                  break;
-               case 'ReleaseEvent':
-                  // TODO: Do something with releases
-                  break;
+                  return;
                case 'IssuesEvent':
-                  if( payload.action === 'opened' || payload.action === 'reopened') {
-                     pushItem( bucket, 'issues_opened', payload.issue );
+                  if( payload.action === 'opened' || payload.action === 'reopened' ) {
+                     return 'issues_opened';
                   } else if( payload.action === 'closed' ) {
-                     pushItem( bucket, 'issues_closed', payload.issue );
+                     return 'issues_closed';
                   }
-                  break;
+                  return;
             }
-         }
-      }
+         } )
+         .map( function( e ) {
+            console.log( e );
+            return e;
+         } );
 
       $scope.weeks = [];
 
@@ -123,23 +123,9 @@ define( [
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
          var date = event.data[ parameter ] ? moment( event.data[ parameter ] ) : today;
          selectDate( date );
+
+         console.log( eventBucket( $scope.resources.events, date ) );
       } );
-
-      function constructDateUrl( date ) {
-         var data = {};
-         data[ parameter ] = date.format( 'YYYY-MM-DD' );
-         return flowService.constructAbsoluteUrl( '_self', data );
-      }
-
-      function constructDayObject( date ) {
-         var base = eventBucket( $scope.resources.events, date );
-         var object = Object.create( base );
-         object.date = date;
-         object.weekend = date.day() % 6 === 0;
-         object.url = constructDateUrl( date );
-
-         return object;
-      }
 
       function selectDate( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
@@ -173,6 +159,20 @@ define( [
          }
 
          triggerAnimation( today, startOfMonth, endOfMonth );
+      }
+
+      function constructDayObject( date ) {
+         var base = eventBucket( $scope.resources.events, date );
+         var object = Object.create( base );
+         var parameters = {};
+
+         parameters[ parameter ] = date.format( 'YYYY-MM-DD' );
+
+         object.date = date;
+         object.weekend = date.day() % 6 === 0;
+         object.url = flowService.constructAbsoluteUrl( '_self', parameters );
+
+         return object;
       }
 
       function initMonth( startOfMonth, endOfMonth ) {
@@ -215,6 +215,15 @@ define( [
 
    module.controller( 'ActivityCalendarWidgetController', Controller );
 
+   function eventBucket( buckets, timestamp ) {
+      var key = timestamp.format( 'YYYY-MM-DD' );
+      return buckets[ key ] = (buckets[ key ] || {});
+   }
+
+   function pushItem( bucket, key, item ) {
+      return (bucket[ key ] = (bucket[ key ] || [])).push( item );
+   }
+
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function generateCalendar( startOfCalendar, endOfCalendar, callback ) {
@@ -238,7 +247,7 @@ define( [
       weeks.forEach( function( week ) {
          week.forEach( function( day ) {
             var date = day.date;
-            day.isInMonth = date.isSame( startOfMonth ) || ( date.isAfter( startOfMonth ) && date.isBefore( endOfMonth ) );
+            day.isInMonth = date.isSame( startOfMonth ) || date.isBetween( startOfMonth, endOfMonth );
             day.isToday = date.isSame( today );
             day.isSelected = date.isSame( selected );
             day.isPast = date.isBefore( today );
