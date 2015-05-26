@@ -24,7 +24,7 @@
             "id": "authPopup",
             "features": {
                "content": {
-                  "layout": "popup"
+                  "layout": "auth-popup"
                },
                "open": {
                   "onActions": [ "openPopup" ]

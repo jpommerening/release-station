@@ -26,22 +26,22 @@
                      },
                      {
                         "type": "http",
-                        "url": "https://api.github.com/repos/LaxarJS/laxar_uikit/events",
+                        "url": "https://api.github.com/repos/LaxarJS/laxar-uikit/events",
                         "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "socket.io",
-                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar_uikit/events",
+                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar-uikit/events",
                         "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "http",
-                        "url": "https://api.github.com/repos/LaxarJS/laxar_patterns/events",
+                        "url": "https://api.github.com/repos/LaxarJS/laxar-patterns/events",
                         "events": [ "push", "issues", "release", "create" ]
                      },
                      {
                         "type": "socket.io",
-                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar_patterns/events",
+                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar-patterns/events",
                         "events": [ "push", "issues", "release", "create" ]
                      }
                   ]
@@ -81,6 +81,9 @@
       ],
 
       "content1a": [
+      ],
+
+      "content1b": [
          {
             "widget": "release-station/activity-calendar-widget",
             "features": {

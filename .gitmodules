@@ -10,3 +10,6 @@
 [submodule "includes/themes/cube.theme"]
 	path = includes/themes/cube.theme
 	url = git@github.com:LaxarJS/cube.theme
+[submodule "includes/widgets/laxarjs/ax-messages-widget"]
+	path = includes/widgets/laxarjs/ax-messages-widget
+	url = git@github.com:LaxarJS/ax-messages-widget.git
