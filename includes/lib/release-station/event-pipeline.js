@@ -24,7 +24,7 @@ define( [
     */
    function EventPipeline( context, feature ) {
       if( !(this instanceof EventPipeline) ) {
-         return new EventPipeline( context, features );
+         return new EventPipeline( context, feature );
       }
 
       var resource = this.resource = context.features[ feature ].resource;
