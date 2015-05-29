@@ -106,7 +106,7 @@ var require = {
       'bootstrap-affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
       trunk8: 'trunk8/trunk8',
 
-      'event-pipeline': '../includes/lib/event-pipeline/event-pipeline',
+      'release-station': '../includes/lib/release-station',
 
       'laxar': 'laxar/dist/laxar',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',

@@ -4,12 +4,12 @@
  * http://laxarjs.org/license
  */
 define( [
+   'laxar',
    'angular',
    'moment',
-   'laxar',
-   'laxar-patterns',
-   'event-pipeline'
-], function( ng, moment, ax, patterns, eventPipeline ) {
+   'release-station/event-pipeline',
+   'release-station/github-events'
+], function( ax, ng, moment, eventPipeline, githubEvents ) {
    'use strict';
 
    var moduleName = 'activityCalendarWidget';
@@ -25,48 +25,23 @@ define( [
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
 
-      var incoming = [];
-
+      $scope.weeks = [];
       $scope.resources = {
          events: {}
       };
 
-      // Track changes to the events resource and process them asynchronously,
+      $scope.pushedRows = 0;
+      $scope.unshiftedRows = 0;
+      $scope.visibleRows = 6;
+      $scope.active = false;
 
       eventPipeline( $scope, 'events' )
-         .filter( function( e ) {
-            return ( [
-               'PushEvent',
-               'CreateEvent',
-               'IssuesEvent'
-            ].indexOf( e.type ) >= 0 );
-         } )
-         .synthesize( function( e ) {
-            if( e.type === 'PushEvent' ) {
-               return e.payload.commits.filter( function( c ) {
-                  return c.distinct;
-               } ).map( function( c, i ) {
-                  return {
-                     id: e.id + '.' + i,
-                     type: 'CommitEvent',
-                     payload: c,
-                     actor: e.actor,
-                     repo: e.repo,
-                     org: e.org,
-                     public: e.public,
-                     created_at: e.created_at
-                  };
-               } );
-            } else {
-               return [];
-            }
-         } )
-         .classify( function( e ) {
-            return moment.parseZone( e.created_at ).format( 'YYYY-MM-DD' );
-         } )
-         .classify( function( e ) {
-            var type = e.type;
-            var payload = e.payload;
+         .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
+         .synthesize( githubEvents.generate.commits )
+         .classify( githubEvents.by.date )
+         .classify( function( event ) {
+            var type = event.type;
+            var payload = event.payload;
             switch( type ) {
                case 'CommitEvent':
                   return 'commits';
@@ -84,22 +59,10 @@ define( [
                   return;
             }
          } )
-         .map( function( e ) {
-            console.log( e );
-            return e;
-         } );
-
-      $scope.weeks = [];
-
-      $scope.pushedRows = 0;
-      $scope.unshiftedRows = 0;
-      $scope.visibleRows = 6;
-      $scope.active = false;
-
-      var endOfDay;
+         .forEach( console.log.bind( console ) );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
-         endOfDay = callTomorrow( function toNextDay() {
+         var endOfDay = callTomorrow( function toNextDay() {
             today = moment().startOf( 'day' );
             tomorrow = moment( today ).add( 1, 'day' );
 
@@ -107,6 +70,10 @@ define( [
             selectDate( selected );
 
             endOfDay = callTomorrow( toNextDay );
+         } );
+
+         $scope.$on( '$destroy', function() {
+            $timeout.cancel( endOfDay );
          } );
 
          function callTomorrow( callback ) {
@@ -117,7 +84,6 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function( event ) {
-         $timeout.cancel( endOfDay );
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {

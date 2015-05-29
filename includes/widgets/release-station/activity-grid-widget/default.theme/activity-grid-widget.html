@@ -1,39 +1,38 @@
 <div class="col-md-6 col-sm-12 col-xs-12"
-     ng-repeat="project in projects">
+     ng-repeat="project in projects | orderBy: 'gauge': true">
    <div class="col-md-4 col-sm-4 col-xs-12">
-      <ol ax-gauge="project.metrics.value" ax-gauge-interval="4600">
+      <ol ax-gauge="project.gauge" ax-gauge-interval="4600">
          <li ax-gauge-pane
-             ng-repeat="stat in project.metrics.stats">
-            <span style="font-size: 2em">{{stat.value}}</span><br/>
+             ng-repeat="stat in stats">
+            <span style="font-size: 2em">{{project.events[ stat.value ].length || 0}}</span><br/>
             <span>{{stat.text.join(' ')}}</span>
          </li>
       </ol>
    </div>
    <div class="col-md-8 col-sm-8 col-xs-12">
-      <h3><span>{{project.owner}}/</span>{{project.name}}</h3>
+      <h3>
+         <span>{{project.owner}}/</span>{{project.name}}
+         <a href="{{project.url}}" title="{{project.owner}}/{{project.name}} on GitHub"><i class="fa fa-github"></i></a>
+      </h3>
    </div>
    <div class="col-md-4 col-sm-4 col-xs-6">
       <h4>Issues</h4>
       <dl class="dl-horizontal">
-         <dt>Open</dt>
-         <dd>1</dd>
+         <dt>Opened</dt>
+         <dd>{{project.events.issues_opened.length || 0}}</dd>
          <dt>Closed</dt>
-         <dd>14</dd>
+         <dd>{{project.events.issues_closed.length || 0}}</dd>
       </dl>
       <dl class="dl-horizontal">
          <dt>Commits</dt>
-         <dd>123</dd>
+         <dd>{{project.events.commits.length || 0 }}</dd>
       </dl>
    </div>
    <div class="col-md-4 col-sm-4 col-xs-6">
       <h4>Versions</h4>
       <dl class="dl-horizontal">
-         <dt>Major</dt>
-         <dd>1</dd>
-         <dt>Minor</dt>
-         <dd>14</dd>
-         <dt>Patch</dt>
-         <dd>2</dd>
+         <dt>Tags</dt>
+         <dd>{{project.events.tags.length || 0}}</dd>
       </dl>
    </div>
 </div>

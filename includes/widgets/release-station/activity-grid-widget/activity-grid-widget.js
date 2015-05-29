@@ -4,10 +4,12 @@
  * http://laxarjs.org/license
  */
 define( [
-   'require',
+   'laxar',
+   'angular',
    './gauge-directive',
-   'angular'
-], function( require, gauge, ng ) {
+   'release-station/event-pipeline',
+   'release-station/github-events'
+], function( ax, ng, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
    var moduleName = 'activityGridWidget';
@@ -20,70 +22,89 @@ define( [
    Controller.$inject = [ '$scope', '$interval' ];
 
    function Controller( $scope, $interval ) {
-      $scope.toUrl = require.toUrl;
+      $scope.projects = [];
+      $scope.resources = {
+         events: {}
+      };
 
-      function stats(factor) {
-         var total = 0;
-         return ([
-            {
-               text: ['Commits'],
-               value: Math.floor(Math.random()*23*factor),
-               weight: 1
-            },
-            {
-               text: ['Issues', 'closed'],
-               value: Math.floor(Math.random()*5*factor),
-               weight: 2
-            },
-            {
-               text: ['Issues', 'opened'],
-               value: Math.floor(Math.random()*4*factor),
-               weight: 1
-            },
-            {
-               text: ['Version', 'released'],
-               value: Math.floor(1.5+Math.random()*factor),
-               weight: 3
+      $scope.stats = [
+         {
+            text: [ 'Commits' ],
+            value: 'commits'
+         },
+         {
+            text: [ 'Issues', 'opened' ],
+            value: 'issues_opened'
+         },
+         {
+            text: [ 'Issues', 'closed' ],
+            value: 'issues_closed'
+         }
+      ];
+
+      var projectById = {};
+
+      eventPipeline( $scope, 'events' )
+         .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
+         .synthesize( githubEvents.generate.commits )
+         .filter( githubEvents.by.date.after( '2015-01-01' ) )
+         .classify( githubEvents.by.repository )
+         .classify( function( event ) {
+            var type = event.type;
+            var payload = event.payload;
+            switch( type ) {
+               case 'CommitEvent':
+                  return 'commits';
+               case 'CreateEvent':
+                  if( payload.ref_type === 'tag' ) {
+                     return 'tags';
+                  }
+                  return;
+               case 'IssuesEvent':
+                  if( payload.action === 'opened' || payload.action === 'reopened' ) {
+                     return 'issues_opened';
+                  } else if( payload.action === 'closed' ) {
+                     return 'issues_closed';
+                  }
+                  return;
             }
-         ]).map(function(stat) {
-            stat.contributionStart = total;
-            stat.contribution = stat.weight * stat.value;
-            total += stat.contribution;
-            return stat;
-         }).map(function(stat) {
-            stat.contribution /= total;
-            stat.contributionStart /= total;
-            return stat;
-         });
-      }
 
-      $scope.projects = [ {
-         owner: 'LaxarJS',
-         name: 'laxar',
-         url: 'https://github.com/LaxarJS/laxar',
-         metrics: {
-            value: 0.5 + Math.random() * (1/1.5),
-            stats: stats(1),
-            current: 0,
-            prev: 3,
-            next: 1
-         }
-      }, {
-         owner: 'LaxarJS',
-         name: 'laxar_patterns',
-         url: 'https://github.com/LaxarJS/laxar_patterns',
-         metrics: {
-            value: 0.3 + Math.random() * (1/1.3),
-            stats: stats(0.7),
-            current: 0,
-            prev: 3,
-            next: 1
-         }
-      } ];
+            if( typeof projectById[ event.repo.id ] === 'undefined' ) {
+               var name = event.repo.name;
+               var part = name.split( '/' );
+               var events = $scope.resources.events[ name ] = {};
 
-      var gaugeProgress;
-      var gaugeFill;
-      var gaugeGlow;
+               projectById[ event.repo.id ] = $scope.projects.length;
+               var project = {
+                  id: event.repo.id,
+                  fullName: name,
+                  owner: part[ 0 ],
+                  name: part[ 1 ],
+                  url: event.repo.url,
+                  events: Object.create( events )
+               };
+
+               $scope.projects.push( project );
+
+               $scope.$watch( 'resources.events[ "' + name + '" ]', function( value ) {
+                  var sum = 0;
+                  if( value.commits ) {
+                     sum += value.commits.length;
+                  }
+                  if( value.issues_opened ) {
+                     sum += value.issues_opened.length;
+                  }
+                  if( value.issues_closed ) {
+                     sum += value.issues_closed.length;
+                  }
+                  if( value.tags ) {
+                     sum += value.tags.length;
+                  }
+                  project.gauge = 1 - (1 / Math.log(1 + sum));
+                  console.log( name, sum, project.gauge );
+               }, true );
+            }
+         } );
 
       $scope.eventBus.subscribe('beginLifecycleRequest', beginLifecycle);
 

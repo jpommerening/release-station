@@ -11,7 +11,27 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-
+         "events": {
+            "type": "object",
+            "description": "Which events to display in the grid.",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the events resource to pull events from",
+                  "format": "topic",
+                  "default": "events"
+               },
+               "types": {
+                  "type": "array",
+                  "description": "The types of events that should be listed (all other events will be ignored)",
+                  "items": {
+                     "type": "string"
+                  },
+                  "default": []
+               }
+            }
+         }
       }
    }
 }

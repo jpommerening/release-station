@@ -40,8 +40,10 @@ define( [
             scope.active = scope.prev = scope.next = scope.length = 0;
 
             scope.$watch( 'value', function( newValue, oldValue ) {
-               setGauge( fill, newValue );
-               setGauge( glow, newValue );
+               if( newValue > 0 ) {
+                  setGauge( fill, newValue );
+                  setGauge( glow, newValue );
+               }
             } );
             scope.$watch( 'active', function( newValue, oldValue ) {
                if( scope.length < 1 ) return;

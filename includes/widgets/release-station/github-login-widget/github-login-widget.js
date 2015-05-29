@@ -6,9 +6,8 @@
 define( [
    'angular',
    'laxar',
-   'laxar-patterns',
-   'require'
-], function( ng, ax, patterns, require ) {
+   'laxar-patterns'
+], function( ng, ax, patterns ) {
    'use strict';
 
    var moduleName = 'gitHubLoginWidget';

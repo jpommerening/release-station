@@ -13,7 +13,7 @@
       "properties": {
          "events": {
             "type": "object",
-            "description": "Which events to display in the grid.",
+            "description": "Which events to display in the calendar.",
             "required": [ "resource" ],
             "properties": {
                "resource": {
@@ -29,7 +29,6 @@
                      "type": "string"
                   },
                   "default": []
-
                }
             }
          },
