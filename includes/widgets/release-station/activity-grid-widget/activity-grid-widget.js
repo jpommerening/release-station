@@ -101,7 +101,6 @@ define( [
                      sum += value.tags.length;
                   }
                   project.gauge = 1 - (1 / Math.log(1 + sum));
-                  console.log( name, sum, project.gauge );
                }, true );
             }
          } );

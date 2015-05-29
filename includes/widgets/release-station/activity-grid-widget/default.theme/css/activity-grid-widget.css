@@ -17,6 +17,18 @@ div.activity-grid-widget {
    font-weight: normal;
 }
 
+.activity-grid-widget h3 > a.github {
+   -webkit-transition: opacity 0.4s;
+   transition: opacity 0.4s;
+   opacity: 0.2;
+   color: #717171;
+   text-shadow: 1px 1px 1px #ccc, 0 0 0 #000, 1px 1px 1px #ccc;
+}
+
+.activity-grid-widget h3:hover > a.github {
+   opacity: 1.0;
+}
+
 /* palette
  * lightyellow                    palegreen                                   teal
  * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
@@ -30,11 +42,11 @@ div.activity-grid-widget {
 }
 
 .activity-grid-widget .ax-gauge-fill {
-   fill: #8cd59f;
+   fill: #ff9900;
 }
 
 .activity-grid-widget .ax-gauge-glow {
-   fill: #d3f8c2;
+   fill: #f8c283;
 }
 
 .activity-grid-widget .ax-gauge-progress {

@@ -60,6 +60,8 @@
    font-family: "Exo 2",Arial,sans-serif;
    font-size: 2.8em;
    list-style-type: none;
+   margin: 0 1em 1.5ex 1em;
+   padding: 0;
 }
 
 .app-navigation a {
@@ -69,6 +71,6 @@
 
 ul.inline > li {
    display: inline-block;
-   padding-right: 1.2em;
-   padding-left: 1.2em;
+   padding-right: 6%;
+   padding-left: 6%;
 }
