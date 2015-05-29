@@ -22,7 +22,10 @@ window.laxar = ( function() {
          locales: {
             'default': 'en-US'
          }
-      }
+      },
+
+      controls: {},
+      widgets: {}
 
    };
 

@@ -77,10 +77,14 @@ module.exports = function( grunt ) {
          bower_components: {
             dest: 'var/listing/bower_components_resources.json',
             src: [
-               'bower_components/laxar_uikit/themes/**/*.css',
-               'bower_components/laxar_uikit/controls/**/*.+(css|html)'
+               'bower_components/laxar-uikit/dist/themes/**/*.css',
+               'bower_components/laxar-uikit/dist/controls/**/*.+(json|css|html)',
+               'bower_components/laxar-*-control/control.json',
+               'bower_components/laxar-*-control/*.theme/*.+(css|html)',
+               'bower_components/laxar-*-widget/widget.json',
+               'bower_components/laxar-*-widget/*.theme/*.+(css|html)'
             ],
-            embedContents: [ 'bower_components/laxar_uikit/controls/**/*.html' ]
+            embedContents: [ 'bower_components/laxar-uikit/dist/controls/**/*.html' ]
          },
          includes: {
             dest: 'var/listing/includes_resources.json',

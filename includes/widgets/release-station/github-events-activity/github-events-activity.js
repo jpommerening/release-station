@@ -5,7 +5,7 @@
  */
 define( [
    'angular',
-   'laxar_patterns',
+   'laxar-patterns',
    './http-event-stream',
    './socket-event-stream'
 ], function( ng, patterns, HttpEventStream, SocketEventStream ) {

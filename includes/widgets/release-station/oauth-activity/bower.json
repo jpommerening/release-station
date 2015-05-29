@@ -4,8 +4,8 @@
    "description": "Authenticate with external OAuth providers",
    "license": "MIT",
    "dependencies": {
-      "laxar": "LaxarJS/laxar#0.x",
-      "laxar_patterns": "LaxarJS/laxar_patterns#0.x"
+      "laxar": "^1.0.0",
+      "laxar-patterns": "^1.0.0"
    },
    "devDependencies": {
       "es5-shim": "2.3.x",

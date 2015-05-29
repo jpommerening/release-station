@@ -70,21 +70,6 @@ var require = {
          main: 'init'
       },
       {
-         name: 'laxar',
-         location: 'laxar',
-         main: 'laxar'
-      },
-      {
-         name: 'laxar_patterns',
-         location: 'laxar_patterns',
-         main: 'laxar_patterns'
-      },
-      {
-         name: 'laxar_uikit',
-         location: 'laxar_uikit',
-         main: 'laxar_uikit'
-      },
-      {
          name: 'moment',
          location: 'moment',
          main: 'moment'
@@ -123,6 +108,11 @@ var require = {
 
       'event-pipeline': '../includes/lib/event-pipeline/event-pipeline',
 
+      'laxar': 'laxar/dist/laxar',
+      'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
+      'laxar-uikit/controls': 'laxar-uikit/dist/controls',
+      'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
+
       // App Parts:
       'laxar-path-root': '..',
       'laxar-path-layouts': '../application/layouts',
@@ -130,6 +120,8 @@ var require = {
       'laxar-path-widgets': '../includes/widgets',
       'laxar-path-themes': '../includes/themes',
       'laxar-path-flow': '../application/flow/flow.json',
+
+      'laxar-path-default-theme': 'laxar-uikit/dist/themes/default.theme',
 
       'laxar-application-dependencies': '../var/static/laxar_application_dependencies'
    }

@@ -7,7 +7,7 @@ define( [
    'angular',
    'moment',
    'laxar',
-   'laxar_patterns',
+   'laxar-patterns',
    'event-pipeline'
 ], function( ng, moment, ax, patterns, eventPipeline ) {
    'use strict';
