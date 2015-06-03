@@ -79,6 +79,33 @@
                }
             }
          }
+      ],
+
+      "navigation": [
+         {
+            "widget": "release-station/navigation-widget",
+            "features": {
+               "navigation": {
+                  "items": [
+                     {
+                        "place": "grid",
+                        "title": "Grid",
+                        "icon": "fa-tachometer"
+                     },
+                     {
+                        "place": "calendar",
+                        "title": "Calendar",
+                        "icon": "fa-calendar"
+                     },
+                     {
+                        "place": "entry",
+                        "title": "Timeline",
+                        "icon": "fa-tags"
+                     }
+                  ]
+               }
+            }
+         }
       ]
    }
 }

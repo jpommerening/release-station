@@ -58,8 +58,7 @@ define( [
                   }
                   return;
             }
-         } )
-         .forEach( console.log.bind( console ) );
+         } );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
          var endOfDay = callTomorrow( function toNextDay() {
