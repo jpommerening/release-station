@@ -6,9 +6,9 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'GitHubEventsActivity Specification',
+      title: 'GitHubDataActivity Specification',
       tests: [
-         'github-events-activity.spec'
+         'github-data-activity.spec'
       ]
    };
 } )( this );

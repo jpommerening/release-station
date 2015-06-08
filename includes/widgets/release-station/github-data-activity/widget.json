@@ -1,6 +1,6 @@
 {
-   "name": "GitHubEventsActivity",
-   "description": "Query events (commits, tags, issues) from GitHub",
+   "name": "GitHubDataActivity",
+   "description": "Request repository data from GitHub",
 
    "integration": {
       "technology": "angular",
@@ -65,21 +65,6 @@
                   "type": "string",
                   "description": "The name of the flag indicating the current authentication state.",
                   "format": "topic"
-               }
-            }
-         },
-         "api": {
-            "type": "object",
-            "description": "The backend API to connect to.",
-            "properties": {
-               "url": {
-                  "type": "string",
-                  "description": "The URL of the GitHub API. Typically required when connecting to a proxy or GitHub Enterprise instance.",
-                  "default": "https://api.github.com"
-               },
-               "socketUrl": {
-                  "type": "string",
-                  "description": "The URL of a socket.io instance that publishes new events."
                }
             }
          }
