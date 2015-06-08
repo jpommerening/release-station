@@ -35,19 +35,16 @@ define( [
          if( this.onEvent_ ) {
             response.data.filter( this.eventFilter_ ).forEach( this.onEvent_ );
          }
-
-         return response;
       },
 
       handleErrors_: function( response ) {
          if( this.onError_ ) {
             this.onError_( response.data, response.status, response.headers );
          }
-
-         return response;
       },
 
       connect: function connect( url ) {
+         var interrupted = false;
          var pollInterval = this.pollInterval_;
          var etags = {};
 
@@ -70,7 +67,6 @@ define( [
             } );
 
             return poll( options, pollInterval, delay )
-               .then( handleEvents, handleErrors )
                .then( function( response ) {
                   var url = response.config.url;
                   var etag = response.headers( 'ETag' );
@@ -81,6 +77,8 @@ define( [
                      etags[ url ] = etag;
                   }
 
+                  handleEvents( response );
+
                   if( links.next ) {
                      return fetch( links.next );
                   }
@@ -88,11 +86,21 @@ define( [
                   if( interval && (interval * 1000) > pollInterval ) {
                      pollInterval = interval * 1000;
                   }
+               }, function( response ) {
+                  if( response instanceof InterruptedException ) {
+                     interrupted = true;
+                     return;
+                  }
+
+                  handleErrors( response );
                } );
          }
 
          function repeat() {
-            return fetch( url, pollInterval ).then( repeat );
+            if( !interrupted ) {
+               return fetch( url, pollInterval )
+                  .then( repeat );
+            }
          }
 
          fetch( url ).then( repeat );
@@ -106,6 +114,10 @@ define( [
       }
 
    };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function InterruptedException() {}
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -148,7 +160,7 @@ define( [
             var t = timeout = setTimeout( function() {
                cancel = null;
                if( t === timeout ) {
-                  resolve( $http( options ) );
+                  $http( options ).then( resolve, reject );
                } else {
                   reject( new Error( 'Polling client received multiple, concurrent requests.' ) );
                }
@@ -177,7 +189,7 @@ define( [
          poll: poll,
          cancel: function() {
             if( cancel ) {
-               cancel();
+               cancel( new InterruptedException() );
             }
             if( timeout ) {
                clearTimeout( timeout );
