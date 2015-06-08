@@ -70,7 +70,7 @@
             "widget": "release-station/github-login-widget",
             "features": {
                "auth": {
-                  "action": "openPopup",
+                  "action": "authenticate",
                   "resource": "accessToken",
                   "flag": "authenticated"
                },
