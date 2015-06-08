@@ -12,7 +12,54 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var gaugeDirective = [ '$document', '$interval', function( $document, $interval ) {
+   Controller.$inject = [ '$scope', '$interval' ];
+
+   function Controller( $scope, $interval ) {
+      var panes = [];
+
+      if( $scope.interval ) {
+         var scrollInterval = $interval(function() {
+            setActivePane( $scope.active + 1 );
+         }, $scope.interval );
+
+         $scope.$on( '$destroy', $interval.cancel.bind( $interval, scrollInterval ) );
+      }
+
+      function setActivePane( num ) {
+         var length = $scope.length = panes.length;
+
+         panes.forEach( function( pane ) {
+            pane.active = pane.next = pane.prev = false;
+         } );
+
+         $scope.prev = $scope.active % length;
+         $scope.active = num % length;
+         $scope.next = (num + 1) % length;
+
+         panes[ $scope.prev ].prev = true;
+         panes[ $scope.active ].active = true;
+         panes[ $scope.next ].next = true;
+      };
+
+      this.setActivePane = setActivePane;
+
+      this.addPane = function addPane( scope ) {
+         scope.next = scope.prev = false;
+         scope.active = !(panes.length);
+         panes.push( scope );
+         $scope.length = panes.length;
+      };
+
+      this.removePane = function removePane( scope ) {
+         scope.active = scope.next = scope.prev = false;
+         panes.splice( panes.indexOf( scope ), 1 );
+         $scope.length = panes.length;
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var gaugeDirective = [ '$document', function( $document ) {
       var numInstances = 0;
 
       return {
@@ -46,11 +93,9 @@ define( [
                }
             } );
             scope.$watch( 'active', function( newValue, oldValue ) {
-               if( scope.length < 1 ) return;
-               var start = (newValue / scope.length) * 1.5 * Math.PI;
-               var angle = ((newValue + 1) / scope.length) * 1.5 * Math.PI;
-
-               setArc( progress.pathSegList.getItem(1), angle );
+               if( scope.length > 0 ) {
+                  setProgress( progress, newValue, scope.length );
+               }
             } );
 
             element.on( '$destroy', function() {
@@ -59,57 +104,18 @@ define( [
                }
             } );
          },
-         controller: function GaugeController( $scope ) {
-            var panes = [];
-
-            if( $scope.interval ) {
-               var scrollInterval = $interval(function() {
-                  setActivePane( $scope.active + 1 );
-               }, $scope.interval );
-
-               $scope.$on( '$destroy', $interval.cancel.bind( $interval, scrollInterval ) );
-            }
-
-            function setActivePane( num ) {
-               var length = $scope.length = panes.length;
-
-               panes.forEach( function( pane ) {
-                  pane.active = pane.next = pane.prev = false;
-               } );
-
-               $scope.prev = $scope.active % length;
-               $scope.active = num % length;
-               $scope.next = (num + 1) % length;
-
-               panes[ $scope.prev ].prev = true;
-               panes[ $scope.active ].active = true;
-               panes[ $scope.next ].next = true;
-            };
-
-            this.setActivePane = setActivePane;
-
-            this.addPane = function addPane( scope ) {
-               scope.next = scope.prev = false;
-               scope.active = !(panes.length);
-               panes.push( scope );
-               $scope.length = panes.length;
-            };
-
-            this.removePane = function removePane( scope ) {
-               scope.active = scope.next = scope.prev = false;
-               panes.splice( panes.indexOf( scope ), 1 );
-               $scope.length = panes.length;
-            };
-         }
+         controller: Controller
       };
    } ];
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var gaugePaneDirective = [ function() {
       return {
          restrict: 'A',
          replace: true,
          require: '^' + directiveName,
-         template: '<li ng-class="{ active: active, prev: prev, next: next }" ng-transclude></li>',
+         template: paneTemplate,
          scope: {},
          transclude: true,
          link: function( scope, element, attrs, gaugeCtrl ) {
@@ -122,16 +128,28 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function setArc( pathSeg, rad ) {
-      pathSeg.x = -Math.sin( rad ) * pathSeg.r1;
-      pathSeg.y = Math.cos( rad ) * pathSeg.r2;
+   function setCoords( pathSeg, rad, r1, r2 ) {
+      pathSeg.x = -Math.sin( rad ) * r1;
+      pathSeg.y = Math.cos( rad ) * ( r2 || r1 );
+   }
+
+   function setArc( pathSeg, rad, start ) {
+      setCoords( pathSeg, rad + ( start || 0 ), pathSeg.r1, pathSeg.r2 );
       pathSeg.sweepFlag = true;
       pathSeg.largeArcFlag = rad > Math.PI;
    }
 
+   function setProgress( element, value, length ) {
+      var pathSeg = element.pathSegList.getItem( 1 );
+      var rad = Math.PI * 1.5 / length;
+      setCoords( element.pathSegList.getItem( 0 ), rad * value, pathSeg.r1, pathSeg.r2 );
+      setArc( pathSeg, rad, rad * value );
+   }
+
    function setGauge( element, value ) {
-      var rad = Math.PI * value * 1.5; // value = 1.0  -> rad = 270deg = 1.5rad
-      setArc(element.pathSegList.getItem(1), rad);
+      var pathSeg = element.pathSegList.getItem( 1 );
+      var rad = Math.PI * 1.5; // value = 1.0  -> rad = 270deg = 1.5rad
+      setArc( pathSeg, rad * value );
    }
 
    var template = '' +
@@ -152,6 +170,8 @@ define( [
             '</g>' +
          '</svg>' +
       '</div>';
+
+   var paneTemplate = '<li ng-class="{ active: active, prev: prev, next: next }" ng-transclude></li>';
 
    var svgGlobalDefs = '' +
       '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="0" height="0"' +
