@@ -13,3 +13,6 @@
 [submodule "includes/widgets/laxarjs/ax-messages-widget"]
 	path = includes/widgets/laxarjs/ax-messages-widget
 	url = git@github.com:LaxarJS/ax-messages-widget.git
+[submodule "includes/widgets/laxarjs/ax-developer-tools-widget"]
+	path = includes/widgets/laxarjs/ax-developer-tools-widget
+	url = git@github.com:LaxarJS/ax-developer-tools-widget.git

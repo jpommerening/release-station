@@ -2,6 +2,14 @@
    "areas": {
       "activities": [
          {
+            "widget": "laxarjs/ax-developer-tools-widget",
+            "features": {
+               "button": {
+                  "enabled": false
+               }
+            }
+         },
+         {
             "widget": "release-station/oauth-activity",
             "features": {
                "provider": {
