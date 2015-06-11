@@ -1,0 +1,45 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+@charset "UTF-8";
+
+.release-timeline-widget > div {
+   overflow: hidden;
+   white-space: nowrap;
+   background-color: #efefef;
+   box-shadow: inset 1px 2px 5px #ddd;
+   margin: 0 15px;
+   border-radius: 3px;
+}
+
+.release-timeline-widget ul.semver-list {
+   list-style-type: none;
+   margin: 5px;
+}
+
+.release-timeline-widget ul.semver-list > li {
+   max-width: 15%;
+   border: 1px solid;
+   width: 100px;
+   height: 30px;
+   margin: 0 0;
+   clear: both;
+}
+
+.release-timeline-widget ul.semver-list > li.major {
+   background-color: #7f9;
+}
+
+.release-timeline-widget ul.semver-list > li.minor {
+   background-color: #ef8;
+}
+
+.release-timeline-widget ul.semver-list > li.patch {
+   background-color: #efc;
+}
+
+.release-timeline-widget ul.inline > li {
+   display: inline-block;
+}

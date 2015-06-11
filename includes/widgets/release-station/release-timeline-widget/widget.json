@@ -1,0 +1,19 @@
+{
+   "name": "ReleaseTimelineWidget",
+   "description": "Display releases",
+
+   "integration": {
+      "technology": "angular",
+      "type": "widget"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "semver": {
+            "type": "object"
+         }
+      }
+   }
+}

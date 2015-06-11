@@ -16,7 +16,15 @@
          "page":  "calendar",
          "targets": {
             "cancel": "entry",
-            "previous": "grid"
+            "previous": "grid",
+            "next": "timeline"
+         }
+      },
+
+      "timeline/:repository": {
+         "page":  "timeline",
+         "targets": {
+            "cancel": "entry"
          }
       }
    }

@@ -12,6 +12,16 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Helper class to differentiate between interrupted polling and failed HTTP communication.
+    * If the polling is interrupted (for example when the user navigates to another page and the
+    * activity is destroyed), the polling promise will be rejected with an `InterruptedException`.
+    */
+   function InterruptedException() {}
+   InterruptedException.prototype = new Error( 'interrupted' );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function HttpEventStream( options ) {
       this.options = options || {};
 
@@ -73,6 +83,10 @@ define( [
                   var links = parseLinks( response.headers( 'Link' ) );
                   var interval = response.headers( 'X-Poll-Interval' );
 
+                  if( interval && (interval * 1000) > pollInterval ) {
+                     pollInterval = interval * 1000;
+                  }
+
                   if( etag && response.status === 200 ) {
                      etags[ url ] = etag;
                   }
@@ -82,17 +96,12 @@ define( [
                   if( links.next ) {
                      return fetch( links.next );
                   }
-
-                  if( interval && (interval * 1000) > pollInterval ) {
-                     pollInterval = interval * 1000;
-                  }
                }, function( response ) {
                   if( response instanceof InterruptedException ) {
                      interrupted = true;
-                     return;
+                  } else {
+                     handleErrors( response );
                   }
-
-                  handleErrors( response );
                } );
          }
 
@@ -109,15 +118,11 @@ define( [
       },
 
       disconnect: function disconnect() {
-         this.client_.cancel();
+         this.client_.cancel( new InterruptedException() );
          return this;
       }
 
    };
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function InterruptedException() {}
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -187,9 +192,9 @@ define( [
       return {
          fetch: fetch,
          poll: poll,
-         cancel: function() {
+         cancel: function( response ) {
             if( cancel ) {
-               cancel( new InterruptedException() );
+               cancel( response );
             }
             if( timeout ) {
                clearTimeout( timeout );

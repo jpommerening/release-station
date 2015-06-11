@@ -11,47 +11,6 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-         "events": {
-            "type": "object",
-            "description": "Configuration for publishing GitHub events.",
-            "required": [ "resource" ],
-            "properties": {
-               "resource": {
-                  "type": "string",
-                  "description": "The name of the resource under which to publish events.",
-                  "format": "topic",
-                  "default": "events"
-               },
-               "sources": {
-                  "type": "array",
-                  "description": "Event sources.",
-                  "default": [],
-                  "items": {
-                     "type": "object",
-                     "description": "The event source",
-                     "required": [ "type", "url" ],
-                     "properties": {
-                        "url": {
-                           "type": "string",
-                           "description": "The URL associated with the resource."
-                        },
-                        "type": {
-                           "type": "string",
-                           "description": "The resource type. Either 'socket.io' or 'http'."
-                        },
-                        "events": {
-                           "type": "array",
-                           "description": "Which events to monitor. Refer to the 'Event names' (lower_case) listed at https://developer.github.com/v3/activity/events/types/ for details.",
-                           "items": {
-                              "type": "string"
-                           },
-                           "default": [ "*" ]
-                        }
-                     }
-                  }
-               }
-            }
-         },
          "auth": {
             "type": "object",
             "description": "Authorization with the GitHub API",

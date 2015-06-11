@@ -88,6 +88,7 @@ var require = {
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
       'socket.io': 'socket.io-client/socket.io',
+      semver: 'semver/semver.browser',
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',

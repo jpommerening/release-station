@@ -1,0 +1,44 @@
+{
+   "layout": "application",
+   "extends": "auth_base",
+
+   "areas": {
+      "header": [
+         {
+            "widget": "laxarjs/ax-headline-widget",
+            "features": {
+               "headline": {
+                  "i18nHtmlText": {
+                     "en_US": "Release<span>Station</span>"
+                  }
+               }
+            }
+         }
+      ],
+
+      "headline": [
+         {
+            "widget": "laxarjs/ax-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 2,
+                  "i18nHtmlText": {
+                     "en_US": "Release Timeline"
+                  }
+               }
+            }
+         }
+      ],
+
+      "content1a": [
+         {
+            "widget": "release-station/release-timeline-widget",
+            "features": {
+            }
+         }
+      ],
+
+      "footer": [
+      ]
+   }
+}

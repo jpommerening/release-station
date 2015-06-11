@@ -98,7 +98,7 @@
                         "icon": "fa-calendar"
                      },
                      {
-                        "place": "entry",
+                        "place": "timeline",
                         "title": "Timeline",
                         "icon": "fa-tags"
                      }
