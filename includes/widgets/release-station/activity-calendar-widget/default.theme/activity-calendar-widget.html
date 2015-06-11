@@ -24,12 +24,12 @@
                             weekend: day.weekend,
                             'not-in-month': !day.isInMonth,
                             'hidden-xs': day.weekend }">
-               <a ng-href="{{day.url}}" tabindex="0">
-                  <h3 class="day">{{day.date.format('D')}}</h3>
+               <a ng-href="{{day.url}}" class="day" tabindex="0">
+                  <h3>{{day.date.format('D')}}</h3>
                   <ul>
-                     <!-- <li ng-if="day.releases">{{day.releases.length}} releases</li> -->
-                     <!-- <li ng-if="day.commits">{{day.commits.length}} commits</li> -->
+                     <li ng-if="day.releases">{{day.releases.length}} releases</li>
                      <li ng-if="day.tags">{{day.tags.length}} tags</li>
+                     <li ng-if="day.commits">{{day.commits.length}} commits</li>
                      <li ng-if="day.issues_opened">{{day.issues_opened.length}} issues opened</li>
                      <li ng-if="day.issues_closed">{{day.issues_closed.length}} issues closed</li>
                   </ul>

@@ -73,6 +73,7 @@
    height: 68px;
    max-height: 68px;
    font-size: 0.9em;
+   overflow: hidden;
 }
 
 .activity-calendar-widget table td {
@@ -85,14 +86,12 @@
    transition: color 0.7s linear, background-color 0.7s linear;
 }
 
-.activity-calendar-widget td .day {
+.activity-calendar-widget td h3 {
    position: absolute;
    bottom: 0;
    right: 0;
    margin: 0;
    padding: 0;
-   max-height: 100%;
-   overflow: hidden;
    font-size: 2em;
    font-weight: bold;
    line-height: 0.8;
@@ -101,16 +100,27 @@
    color: white;
 }
 
+.activity-calendar-widget td.selected h3 {
+   text-shadow: 0 0 0 #fff, 0 -1px 0 #ccc;
+}
+
 @media (min-width: 768px) {
-   .activity-calendar-widget td .day {
+   .activity-calendar-widget td h3 {
       font-size: 3em;
    }
 }
 
-.activity-calendar-widget td > a {
+.activity-calendar-widget td a.day {
+   position: relative;
    display: block;
-   height: 100%;
-   width: 100%;
+   height: 68px;
+   margin: -4px;
+   padding: 4px;
+   text-decoration: none;
+}
+
+.activity-calendar-widget td.selected a.day:focus {
+   outline: none;
 }
 
 .activity-calendar-widget td a {
@@ -142,10 +152,6 @@
 
 .activity-calendar-widget td.today.selected {
    background: linear-gradient(90deg, transparent, transparent 12%, #f90 12%), repeating-linear-gradient(-45deg, #f90, #f90 6%, #55b9f0 6%, #55b9f0 12%);
-}
-
-.activity-calendar-widget td.selected .day {
-   text-shadow: 0 0 0 #fff, 0 -1px 0 #ccc;
 }
 
 .activity-calendar-widget td.selected {

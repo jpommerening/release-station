@@ -136,6 +136,9 @@ define( [
          object.date = date;
          object.weekend = date.day() % 6 === 0;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
+         object.commits_url = object.url + '/commits';
+         object.tags_url = object.url + '/tags';
+         object.issues_url = object.url + '/issues';
 
          return object;
       }
