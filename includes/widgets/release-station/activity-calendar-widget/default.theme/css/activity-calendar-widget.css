@@ -75,6 +75,11 @@
    font-size: 0.9em;
 }
 
+.activity-calendar-widget table td {
+   -webkit-transition: color 0.2s, background-color 0.3s, box-shadow 0.5s;;
+   transition: color 0.2s, background-color 0.3s, box-shadow 0.5s;;
+}
+
 .activity-calendar-widget table.active td {
    -webkit-transition: color 0.7s linear, background-color 0.7s linear;
    transition: color 0.7s linear, background-color 0.7s linear;
@@ -108,6 +113,10 @@
    width: 100%;
 }
 
+.activity-calendar-widget td a {
+   color: #dde;
+}
+
 .activity-calendar-widget ul {
    padding: 0;
    margin: 0;
@@ -116,32 +125,43 @@
 
 .activity-calendar-widget td.past,
 .activity-calendar-widget td.today {
-   background: #a4e3aa;
+   background: #44a9e0;
 }
 
 .activity-calendar-widget td.past:hover,
 .activity-calendar-widget td.today:hover {
-   background: #bcefb5;
+   background: #55b9f0;
 }
 
-/* palette
- * lightyellow                    palegreen                                   teal
- * #ffffe0 #eafdd1 #d3f8c2 #bcefb5 #a4e3aa #8cd59f #72c396 #57af8e #399887 #008080 */
-
-.activity-calendar-widget td.activity-0 { background: #ffffe0; }
-.activity-calendar-widget td.activity-1 { background: #eafdd1; }
-.activity-calendar-widget td.activity-2 { background: #d3f8c2; }
-.activity-calendar-widget td.activity-3 { background: #bcefb5; }
-.activity-calendar-widget td.activity-4 { background: #a4e3aa; }
-.activity-calendar-widget td.activity-5 { background: #8cd59f; }
-.activity-calendar-widget td.activity-6 { background: #72c396; }
-.activity-calendar-widget td.activity-7 { background: #57af8e; }
-.activity-calendar-widget td.activity-8 { background: #399887; }
-.activity-calendar-widget td.activity-9 { background: #008080; }
-
-
 .activity-calendar-widget td.today {
-   border: 4px solid #ef738b;
+   background: linear-gradient(90deg, transparent, transparent 12%, #44a9e0 12%), repeating-linear-gradient(-45deg, #44a9e0, #44a9e0 6%, #f90 6%, #f90 12%);
+}
+.activity-calendar-widget td.today:hover {
+   background: linear-gradient(90deg, transparent, transparent 12%, #55b9f0 12%), repeating-linear-gradient(-45deg, #55b9f0, #55b9f0 6%, #f90 6%, #f90 12%);
+}
+
+.activity-calendar-widget td.today.selected {
+   background: linear-gradient(90deg, transparent, transparent 12%, #f90 12%), repeating-linear-gradient(-45deg, #f90, #f90 6%, #55b9f0 6%, #55b9f0 12%);
+}
+
+.activity-calendar-widget td.selected .day {
+   text-shadow: 0 0 0 #fff, 0 -1px 0 #ccc;
+}
+
+.activity-calendar-widget td.selected {
+   background-color: #fe9800;
+   box-shadow: 0 0 6px #f8c283, inset 2px 2px 7px #fdb124, inset -2px -2px 7px #fdb124;
+}
+
+.activity-calendar-widget td.selected:hover {
+   background-color: #fe9800;
+   box-shadow: 0 0 8px #fdb124, inset 2px 2px 7px #f8c283, inset -2px -2px 7px #f8c283;
+}
+
+.activity-calendar-widget td.weekend.selected,
+.activity-calendar-widget td.future.selected {
+   background-color: #ddd;
+   box-shadow: 0 0 8px #ddd;
 }
 
 .activity-calendar-widget td.weekend,
@@ -158,7 +178,7 @@
 .activity-calendar-widget td.not-in-month .day,
 .activity-calendar-widget td.not-in-month a {
    background: transparent;
-   color: #f1f1f1;
+   color: #f0f0f0;
 }
 
 .activity-calendar-widget td.not-in-month:hover .day,
@@ -168,6 +188,6 @@
 }
 
 .activity-calendar-widget td.not-in-month:hover {
-   background: #f1f1f1;
+   background: #f0f0f0;
    color: white;
 }
