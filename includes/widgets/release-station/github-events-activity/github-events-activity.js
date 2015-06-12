@@ -40,7 +40,7 @@ define( [
       var baseOptions = {
          headers: {},
          onEvent: deduplicate( eventsPublisher.push ),
-         onError: $scope.eventBus.publish.bind( $scope.eventBus, 'didEncounterError.EVENT_STREAM' )
+         onError: $scope.eventBus.publish.bind( $scope.eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
       var streams = $scope.features.events.sources.map( function( source ) {

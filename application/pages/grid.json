@@ -52,6 +52,15 @@
                   ]
                }
             }
+         },
+         {
+            "widget": "release-station/github-data-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               }
+            }
          }
       ],
 

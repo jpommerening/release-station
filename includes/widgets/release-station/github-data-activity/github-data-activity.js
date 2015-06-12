@@ -21,23 +21,11 @@ define( [
       var authFlagName = $scope.features.auth.flag;
       var authData;
       var headers = {};
+      var resources = {};
 
       window.eventBus = $scope.eventBus;
 
       var provideAction = 'provide';
-
-      function provideResource( resource, url ) {
-         return $http( {
-            method: 'GET',
-            url: url,
-            headers: headers
-         } ).then( function( response ) {
-            return $scope.eventBus.publish( 'didReplace.' + resource, {
-               resource: resource,
-               data: response.data
-            } );
-         } );
-      }
 
       if( authResourceName ) {
          $scope.eventBus.subscribe( 'didReplace.' + authResourceName, function( event ) {
@@ -58,47 +46,61 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
-         disconnectStreams( streams );
       } );
 
       $scope.eventBus.subscribe( 'takeActionRequest.' + provideAction, function( event ) {
          var action = event.action;
          var resource = event.data.resource;
          var url = event.data.url;
+         var topic = action + '-' + resource;
+         var data = {
+            resource: resource,
+            url: url
+         };
 
-         $scope.eventBus.publish( 'willTakeAction.' + action + '-' + resource, {
+         return $scope.eventBus.publish( 'willTakeAction.' + topic, {
             action: action,
-            data: {
-               resource: resource,
-               url: url
-            }
+            data: data
+         } ).then( function() {
+            return fetchAndReplaceResource( resource, url )
+               .then( function() {
+                  return 'SUCCESS';
+               }, function() {
+                  return 'ERROR';
+               } )
+               .then( function( outcome ) {
+                  return $scope.eventBus.publish( 'didTakeAction.' + topic + '.' + outcome, {
+                     action: action,
+                     outcome: outcome,
+                     data: data
+                  } );
+               } );
          } );
-
-         console.log( event );
-
-         provideResource( resource, url )
-            .then( function() {
-               return 'SUCCESS';
-            }, function() {
-               return 'ERROR';
-            } )
-            .then( function( outcome ) {
-               return {
-                  action: action,
-                  outcome: outcome,
-                  data: {
-                     resource: resource,
-                     url: url
-                  }
-               };
-            } )
-            .then( function( responseEvent ) {
-               $scope.eventBus.publish( 'didTakeAction.' + responseEvent.action + '-' + resource + '.' + responseEvent.outcome, responseEvent );
-            } );
       } );
 
-   }
+      function fetchAndReplaceResource( resource, url ) {
+         var promise = resources[ url ] || ( resources[ url ] = $http( {
+            method: 'GET',
+            url: url,
+            headers: headers
+         } ) );
 
+         return promise.then( function( response ) {
+            return $scope.eventBus.publish( 'didReplace.' + resource, {
+               resource: resource,
+               data: response.data
+            } );
+         }, function( response ) {
+            // Cache failures too, but prune them after 10 seconds
+            if( !resources[ url ].timeout ) {
+               resources[ url ].timeout = setTimeout( function() {
+                  delete resources[ url ];
+               }, 10000 );
+            }
+            throw response;
+         } );
+      }
+   }
 
    module.controller( 'GitHubDataActivityController', Controller );
 
