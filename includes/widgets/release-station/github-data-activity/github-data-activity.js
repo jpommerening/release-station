@@ -9,103 +9,137 @@ define( [
 ], function( ng, patterns ) {
    'use strict';
 
-   var moduleName = 'gitHubDataActivity';
-   var module     = ng.module( moduleName, [] );
-
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    Controller.$inject = [ '$scope', '$http', '$q' ];
 
    function Controller( $scope, $http, $q ) {
-      var authResourceName = $scope.features.auth.resource;
-      var authFlagName = $scope.features.auth.flag;
-      var authData;
-      var headers = {};
+      var baseOptions = {
+         method: 'GET',
+         headers: {}
+      };
+
+      var authorized = authHandler( $scope, $q, 'auth' ).then( setAuthHeader );
+
       var resources = {};
 
-      window.eventBus = $scope.eventBus;
+      var provideActions = [ 'provide-resource' ];
+      var provideHandler = createRequestHandler( $scope.eventBus, function( data ) {
+         return authorized.then( provideResource.bind( null, data ) );
+      } );
 
-      var provideAction = 'provide';
-
-      if( authResourceName ) {
-         $scope.eventBus.subscribe( 'didReplace.' + authResourceName, function( event ) {
-            authData = event.data;
-         } );
-      }
-
-      if( authFlagName ) {
-         $scope.eventBus.subscribe( 'didChangeFlag.' + authFlagName, function() {
-            headers[ 'Authorization' ] = 'token ' + authData.access_token;
-         } );
-      }
+      provideActions.forEach( function( action ) {
+         $scope.eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
+      } );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-         if( authData ) {
-            headers[ 'Authorization' ] = 'token ' + authData.access_token;
-         }
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
       } );
 
-      $scope.eventBus.subscribe( 'takeActionRequest.' + provideAction, function( event ) {
-         var action = event.action;
-         var resource = event.data.resource;
-         var url = event.data.url;
-         var topic = action + '-' + resource;
-         var data = {
-            resource: resource,
-            url: url
-         };
+      function setAuthHeader( data ) {
+         if( data && data.access_token ) {
+            baseOptions.headers[ 'Authorization' ] = 'token ' + data.access_token;
+         } else {
+            delete baseOptions.headers[ 'Authorization' ];
+         }
+      }
 
-         return $scope.eventBus.publish( 'willTakeAction.' + topic, {
-            action: action,
-            data: data
-         } ).then( function() {
-            return fetchAndReplaceResource( resource, url )
-               .then( function() {
-                  return 'SUCCESS';
-               }, function() {
-                  return 'ERROR';
-               } )
-               .then( function( outcome ) {
-                  return $scope.eventBus.publish( 'didTakeAction.' + topic + '.' + outcome, {
-                     action: action,
-                     outcome: outcome,
-                     data: data
-                  } );
-               } );
-         } );
-      } );
+      function provideResource( data ) {
+         var options = Object.create( baseOptions );
 
-      function fetchAndReplaceResource( resource, url ) {
-         var promise = resources[ url ] || ( resources[ url ] = $http( {
-            method: 'GET',
-            url: url,
-            headers: headers
-         } ) );
+         options.url = data.url;
 
-         return promise.then( function( response ) {
-            return $scope.eventBus.publish( 'didReplace.' + resource, {
-               resource: resource,
-               data: response.data
-            } );
-         }, function( response ) {
+         var promise = resources[ data.resource ] || ( resources[ data.resource ] = $http( options ) );
+
+         return promise.then( null, function( error ) {
             // Cache failures too, but prune them after 10 seconds
-            if( !resources[ url ].timeout ) {
-               resources[ url ].timeout = setTimeout( function() {
-                  delete resources[ url ];
+            if( !promise.timeout ) {
+               promise.timeout = setTimeout( function() {
+                  delete resources[ data.resource ];
                }, 10000 );
             }
-            throw response;
+            throw error;
          } );
       }
    }
 
-   module.controller( 'GitHubDataActivityController', Controller );
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function authHandler( context, q, name ) {
+      var feature = context.features[ name ];
+      var resource = feature.resource;
+      var flag = feature.flag;
+
+      return q( function( resolve, reject ) {
+         var data = {};
+         var state = !flag
+
+         if( !resource && !flag ) {
+            return resolve( data );
+         }
+
+         if( resource ) {
+            context.eventBus.subscribe( 'didReplace.' + resource, function( event ) {
+               data = event.data;
+               if( state ) {
+                  resolve( data );
+               }
+            } );
+         }
+
+         if( flag ) {
+            context.eventBus.subscribe( 'didChangeFlag.' + flag, function( event ) {
+               state = event.state;
+               if( !state ) {
+                  reject( data );
+               } else if( data ) {
+                  resolve( data );
+               }
+            } );
+         }
+      } );
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return module;
+   function createRequestHandler( eventBus, provider ) {
+      var OUTCOME_ERROR = patterns.actions.OUTCOME_ERROR;
+      var OUTCOME_SUCCESS = patterns.actions.OUTCOME_SUCCESS;
+
+      return function( event ) {
+         var action = event.action;
+         var data = event.data;
+         var resource = data.resource;
+         var topic = action + '-' + resource;
+
+         return eventBus.publish( 'willTakeAction.' + topic, {
+            action: action,
+            data: data
+         } ).then( function() {
+            return provider( data );
+         } ).then( function( response ) {
+            return eventBus.publish( 'didReplace.' + resource, {
+               resource: resource,
+               data: response.data
+            } );
+         } ).then( function() {
+            return OUTCOME_SUCCESS;
+         }, function() {
+            return OUTCOME_ERROR;
+         } ).then( function( outcome ) {
+            return eventBus.publish( 'didTakeAction.' + topic + '.' + outcome, {
+               action: action,
+               outcome: outcome,
+               data: data
+            } );
+         } );
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return ng.module( 'gitHubDataActivity', [] ).controller( 'GitHubDataActivityController', Controller );
 
 } );

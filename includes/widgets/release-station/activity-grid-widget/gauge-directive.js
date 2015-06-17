@@ -93,9 +93,11 @@ define( [
                }
             } );
             scope.$watch( 'active', function( newValue, oldValue ) {
+               /*
                if( scope.length > 0 ) {
                   setProgress( progress, newValue, scope.length );
                }
+               */
             } );
 
             element.on( '$destroy', function() {
@@ -165,8 +167,10 @@ define( [
                   '<path class="ax-gauge-glow" mask="url(#ax-gauge-ring-mask)"' +
                        ' d="M 0 50 A 50 50 0 1 0 0 50 L 0 0 z" />' +
                '</g>' +
+               /*
                '<path class="ax-gauge-progress"' +
                     ' d="M 0 30 A 30 30 0 1 0 0 30" fill="none" />' +
+               */
             '</g>' +
          '</svg>' +
       '</div>';
@@ -180,6 +184,7 @@ define( [
             '<mask id="ax-gauge-ring-mask" x="0" y="0" width="100" height="100">' +
                '<path fill="white" d="M 0 48 A 48 48 0 1 1 48 0 ' +
                                      'L 33 0 A 33 33 0 1 0 0 33 z" />' +
+               /*
                '<path stroke="black" stroke-width="3"' +
                     ' d="M 0 50 L 0 0 ' +
                         'M -50 50 L 0 0 ' +
@@ -195,6 +200,7 @@ define( [
                         'M -50 -50 L 0 0 ' +
                         'M 0 -50 L 0 0 ' +
                         'M 50 -50 L 0 0" />' +
+               */
             '</mask>' +
             '<filter id="ax-gauge-glow">' +
                '<feGaussianBlur in="SourceGraphic" stdDeviation="2" />' +

@@ -88,9 +88,9 @@ define( [
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
          var date = event.data[ parameter ] ? moment( event.data[ parameter ] ) : today;
          selectDate( date );
-
-         console.log( eventBucket( $scope.resources.events, date ) );
       } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function selectDate( date ) {
          var startOfMonth = moment( date ).startOf( 'month' );
@@ -126,6 +126,8 @@ define( [
          triggerAnimation( today, startOfMonth, endOfMonth );
       }
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function constructDayObject( date ) {
          var base = eventBucket( $scope.resources.events, date );
          var object = Object.create( base );
@@ -142,6 +144,8 @@ define( [
 
          return object;
       }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function initMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
@@ -179,6 +183,9 @@ define( [
             $scope.active = false;
          }, 750 );
       }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    }
 
    module.controller( 'ActivityCalendarWidgetController', Controller );

@@ -11,18 +11,19 @@ define( [
 ], function( ng, patterns, HttpEventStream, SocketEventStream ) {
    'use strict';
 
-   var moduleName = 'gitHubEventsActivity';
-   var module     = ng.module( moduleName, [] );
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var EventStream = {
+      'http': HttpEventStream,
+      'https': HttpEventStream,
+      'socket.io': SocketEventStream
+   };
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$q' ];
+   Controller.$inject = [ '$scope', '$q' ];
 
-   function Controller( $scope, $http, $q ) {
-      var authResourceName = $scope.features.auth.resource;
-      var authFlagName = $scope.features.auth.flag;
-      var authData;
-
+   function Controller( $scope, $q ) {
       var eventsPublisher = {
          replace: throttleReplacements( patterns.resources.replacePublisherForFeature( $scope, 'events' ) ),
          update: throttleUpdates( patterns.resources.updatePublisherForFeature( $scope, 'events' ) ),
@@ -31,54 +32,53 @@ define( [
          }
       };
 
-      var EventStream = {
-         'http': HttpEventStream,
-         'https': HttpEventStream,
-         'socket.io': SocketEventStream
-      };
-
       var baseOptions = {
          headers: {},
          onEvent: deduplicate( eventsPublisher.push ),
          onError: $scope.eventBus.publish.bind( $scope.eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
-      var streams = $scope.features.events.sources.map( function( source ) {
-         var options = Object.create( baseOptions );
+      var authorized = authHandler( $scope, $q, 'auth' ).then( setAuthHeader );
 
-         options.url = source.url;
-         options.events = source.events;
+      var streams = $scope.features.events.sources.map( provideStream );
 
-         return new EventStream[ source.type ]( options );
+      var provideActions = [ 'provide-events' ];
+      var provideHandler = createRequestHandler( $scope.eventBus, function( data ) {
+         return authorized.then( provideStream.bind( null, data ) );
       } );
 
-      if( authResourceName ) {
-         $scope.eventBus.subscribe( 'didReplace.' + authResourceName, function( event ) {
-            authData = event.data;
-         } );
-      }
-
-      if( authFlagName ) {
-         $scope.eventBus.subscribe( 'didChangeFlag.' + authFlagName, function() {
-            baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
-            connectStreams( streams );
-         } );
-      }
+      provideActions.forEach( function( action ) {
+         $scope.eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
+      } );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
          eventsPublisher.replace( [] );
-         if( authData ) {
-            baseOptions.headers[ 'Authorization' ] = 'token ' + authData.access_token;
+         authorized.then( function() {
             connectStreams( streams );
-         }
+         } );
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
          disconnectStreams( streams );
       } );
-   }
 
-   module.controller( 'GitHubEventsActivityController', Controller );
+      function setAuthHeader( data ) {
+         if( data && data.access_token ) {
+            baseOptions.headers[ 'Authorization' ] = 'token ' + data.access_token;
+         } else {
+            delete baseOptions.headers[ 'Authorization' ];
+         }
+      }
+
+      function provideStream( data ) {
+         var options = Object.create( baseOptions );
+
+         options.url = data.url;
+         options.events = data.events;
+
+         return new EventStream[ data.type ]( options );
+      }
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +87,10 @@ define( [
     */
    function connectStreams( streams ) {
       streams.forEach( function( stream ) {
-         stream.connect( stream.options.url );
+         if( !stream.connected ) {
+            stream.connect( stream.options.url );
+            stream.connected = true;
+         }
       } );
    }
 
@@ -96,7 +99,10 @@ define( [
     */
    function disconnectStreams( streams ) {
       streams.forEach( function( stream ) {
-         stream.disconnect();
+         if( stream.connected ) {
+            stream.disconnect();
+            stream.connected = false;
+         }
       } );
    }
 
@@ -106,6 +112,73 @@ define( [
     */
    function crossStreams( streams ) {
       haha, jk;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function authHandler( context, q, name ) {
+      var feature = context.features[ name ];
+      var resource = feature.resource;
+      var flag = feature.flag;
+
+      return q( function( resolve, reject ) {
+         var data = {};
+         var state = !flag
+
+         if( !resource && !flag ) {
+            return resolve( data );
+         }
+
+         if( resource ) {
+            context.eventBus.subscribe( 'didReplace.' + resource, function( event ) {
+               data = event.data;
+               if( state ) {
+                  resolve( data );
+               }
+            } );
+         }
+
+         if( flag ) {
+            context.eventBus.subscribe( 'didChangeFlag.' + flag, function( event ) {
+               state = event.state;
+               if( !state ) {
+                  reject( data );
+               } else if( data ) {
+                  resolve( data );
+               }
+            } );
+         }
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function createRequestHandler( eventBus, provider ) {
+      var OUTCOME_ERROR = patterns.actions.OUTCOME_ERROR;
+      var OUTCOME_SUCCESS = patterns.actions.OUTCOME_SUCCESS;
+
+      return function( event ) {
+         var action = event.action;
+         var data = event.data;
+         var topic = action;
+
+         return eventBus.publish( 'willTakeAction.' + topic, {
+            action: action,
+            data: data
+         } ).then( function() {
+            return provider( data );
+         } ).then( function() {
+            return OUTCOME_SUCCESS;
+         }, function() {
+            return OUTCOME_ERROR;
+         } ).then( function( outcome ) {
+            return eventBus.publish( 'didTakeAction.' + topic + '.' + outcome, {
+               action: action,
+               outcome: outcome,
+               data: data
+            } );
+         } );
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,6 +255,6 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return module;
+   return ng.module( 'gitHubEventsActivity', [] ).controller( 'GitHubEventsActivityController', Controller );
 
 } );

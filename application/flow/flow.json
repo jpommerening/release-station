@@ -21,7 +21,7 @@
          }
       },
 
-      "timeline/:repository": {
+      "timeline/:owner/:name/:version": {
          "page":  "timeline",
          "targets": {
             "cancel": "entry"

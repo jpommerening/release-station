@@ -6,7 +6,8 @@
    "dependencies": {
       "laxar": "^1.0.0",
       "laxar-patterns": "^1.0.0",
-      "laxar-uikit": "^1.0.0"
+      "laxar-uikit": "^1.0.0",
+      "semver": "^4.3.4"
    },
    "devDependencies": {
       "es5-shim": "2.3.x",

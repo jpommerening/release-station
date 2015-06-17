@@ -1,14 +1,17 @@
-<div class="col">
+<div ng-repeat="(major, track) in versions">
    <ul class="semver-list inline">
-      <li ng-repeat="version in versions"
+      <li ng-repeat="version in track"
           ng-click="log( version )"
-          ng-if="!version.prerelease.length && !version.build.length"
+          ng-if="!version.semver.prerelease.length && !version.semver.build.length"
           ng-class="{
-             major: version.minor == 0 && version.patch == 0,
-             minor: version.minor != 0 && version.patch == 0,
-             patch: version.patch != 0
+             major: version.semver.minor == 0 && version.semver.patch == 0,
+             minor: version.semver.minor != 0 && version.semver.patch == 0,
+             patch: version.semver.patch != 0,
+             selected: version.isSelected
           }">
-         {{version.version}}
+          <a ng-href="{{version.url}}" class="version" tabindex="0">
+             <h3>{{version.name}}</h3>
+          </a>
       </li>
    </ul>
 </div>

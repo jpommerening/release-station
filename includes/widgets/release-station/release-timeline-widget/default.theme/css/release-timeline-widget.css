@@ -10,7 +10,8 @@
    white-space: nowrap;
    background-color: #efefef;
    box-shadow: inset 1px 2px 5px #ddd;
-   margin: 0 15px;
+   margin: 8px 15px;
+   padding: 4px;
    border-radius: 3px;
 }
 
@@ -21,23 +22,54 @@
 
 .release-timeline-widget ul.semver-list > li {
    max-width: 15%;
-   border: 1px solid;
+   border: none;
    width: 100px;
-   height: 30px;
-   margin: 0 0;
+   height: 50px;
+   margin: 0 4px;
+   padding: 3px;
    clear: both;
+   background: #44a9e0;
+}
+
+.release-timeline-widget ul.semver-list > li:hover {
+   background: #55b9f0;
+}
+
+.release-timeline-widget ul.semver-list > li.selected {
+   background: #f90;
+   box-shadow: 0 0 6px #f8c283, inset 2px 2px 7px #fdb124, inset -2px -2px 7px #fdb124;
+}
+
+.release-timeline-widget ul.semver-list > li.selected:hover {
+   background: #fe9800;
+   box-shadow: 0 0 8px #fdb124, inset 2px 2px 7px #f8c283, inset -2px -2px 7px #f8c283;
+}
+
+.release-timeline-widget ul.semver-list > li a {
+   position: relative;
+   display: block;
+   height: 50px;
+   text-decoration: none;
+   margin: -3px;
+   padding: 3px;
+}
+
+.release-timeline-widget ul.semver-list > li h3 {
+   color: white;
+   font-weight: bold;
+   margin: 2px 4px;
+   font-size: 1.1em;
 }
 
 .release-timeline-widget ul.semver-list > li.major {
-   background-color: #7f9;
 }
 
 .release-timeline-widget ul.semver-list > li.minor {
-   background-color: #ef8;
 }
 
 .release-timeline-widget ul.semver-list > li.patch {
-   background-color: #efc;
+   margin-right: -4px;
+   border-right: 1px solid #55b9f0;
 }
 
 .release-timeline-widget ul.inline > li {

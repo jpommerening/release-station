@@ -6,10 +6,11 @@
 define( [
    'laxar',
    'angular',
+   'semver',
    './gauge-directive',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, gauge, eventPipeline, githubEvents ) {
+], function( ax, ng, semver, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
    var moduleName = 'activityGridWidget';
@@ -19,9 +20,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$interval' ];
+   Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
 
-   function Controller( $scope, $interval ) {
+   function Controller( $scope, $interval, axFlowService ) {
       $scope.projects = [];
       $scope.resources = {
          events: {}
@@ -39,12 +40,16 @@ define( [
          {
             text: [ 'Issues', 'closed' ],
             value: 'issues_closed'
+         },
+         {
+            text: [ 'Tags' ],
+            value: 'tags'
          }
       ];
 
       var projectById = {};
 
-      function updateRepositoryInfo( id, url ) {
+      function updateProjectInfo( id, url ) {
          var resource = 'repo' + id;
 
          function onReplace( event ) {
@@ -56,8 +61,8 @@ define( [
          }
 
          $scope.eventBus.subscribe( 'didReplace.' + resource, onReplace );
-         $scope.eventBus.publish( 'takeActionRequest.provide-' + resource, {
-            action: 'provide',
+         $scope.eventBus.publish( 'takeActionRequest.provide-resource-' + resource, {
+            action: 'provide-resource',
             data: {
                resource: resource,
                url: url
@@ -70,85 +75,120 @@ define( [
          .synthesize( githubEvents.generate.commits )
          .filter( githubEvents.by.date.after( '2015-01-01' ) )
          .classify( githubEvents.by.repository )
-         .classify( function( event ) {
-            var type = event.type;
-            var payload = event.payload;
+         .forEach( function( event ) {
+            var repo = event.repo;
 
-            if( typeof projectById[ event.repo.id ] === 'undefined' ) {
-               var name = event.repo.name;
+            if( typeof projectById[ repo.id ] === 'undefined' ) {
+               var name = repo.name;
                var part = name.split( '/' );
                var events = $scope.resources.events[ name ] = {};
 
-               projectById[ event.repo.id ] = $scope.projects.length;
+               projectById[ repo.id ] = $scope.projects.length;
                var project = {
-                  id: event.repo.id,
+                  id: repo.id,
                   name: part[ 1 ],
                   full_name: name,
                   owner: {
                      login: part[ 0 ]
                   },
-                  url: event.repo.url,
-                  events: Object.create( events )
+                  url: repo.url,
+                  events: events
                };
+               project.timeline_url = axFlowService.constructAbsoluteUrl( 'timeline', {
+                  owner: part[ 0 ],
+                  name: part[ 1 ]
+               } );
+
+               updateProjectInfo( repo.id, repo.url );
 
                $scope.projects.push( project );
 
-               setTimeout( function() {
-                  updateRepositoryInfo( project.id, project.url );
-               }, 1000 );
-
                $scope.$watch( 'resources.events[ "' + name + '" ]', function( value ) {
-                  var sum = 0;
-                  if( value.commits ) {
-                     sum += value.commits.length;
-                  }
-                  if( value.issues_opened ) {
-                     sum += value.issues_opened.length;
-                  }
-                  if( value.issues_closed ) {
-                     sum += value.issues_closed.length;
-                  }
-                  if( value.tags ) {
-                     sum += value.tags.length;
-                  }
-                  project.gauge = 1 - (1 / Math.log(1 + sum));
+                  project.gauge = getActivityEstimation( value );
                }, true );
             }
-
-            switch( type ) {
-               case 'CommitEvent':
-                  return 'commits';
-               case 'CreateEvent':
-                  if( payload.ref_type === 'tag' ) {
-                     return 'tags';
-                  }
-                  return;
-               case 'IssuesEvent':
-                  if( payload.action === 'opened' || payload.action === 'reopened' ) {
-                     return 'issues_opened';
-                  } else if( payload.action === 'closed' ) {
-                     return 'issues_closed';
-                  }
-                  return;
-            }
-
-         } );
+         } )
+         .classify( classifyEventByType );
 
       $scope.eventBus.subscribe('beginLifecycleRequest', beginLifecycle);
-
       $scope.eventBus.subscribe('endLifecycleRequest', endLifecycle);
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function beginLifecycle() {
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function endLifecycle() {
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    }
 
-   function beginLifecycle() {
-   }
+   function classifyEventByType( event ) {
+      var type = event.type;
+      var payload = event.payload;
 
-   function endLifecycle() {
-   }
+      if( type === 'IssuesEvent' ) {
+         if( payload.action === 'opened' || payload.action === 'reopened' ) {
+            return 'issues_opened';
+         } else if( payload.action === 'closed' ) {
+            return 'issues_closed';
+         }
+      } else if( type === 'CommitEvent' ) {
+         return 'commits';
+      } else if( type === 'CreateEvent' && payload.ref_type === 'tag' ) {
+         var version = semver.parse( payload.ref );
 
-   module.controller( 'ActivityGridWidgetController', Controller );
+         if( version.build.length ) {
+            return 'build';
+         } else if( version.prerelease.length ) {
+            return 'prerelease';
+         } else if( version.patch ) {
+            return 'patch';
+         } else if( version.minor ) {
+            return 'minor';
+         } else if( version.major ) {
+            return 'major';
+         } else {
+            return 'tags';
+         }
+      }
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function getActivityEstimation( events ) {
+      var sum = 0;
+      if( events.commits ) {
+         sum += events.commits.length;
+      }
+      if( events.issues_opened ) {
+         sum += events.issues_opened.length;
+      }
+      if( events.issues_closed ) {
+         sum += events.issues_closed.length;
+      }
+      if( events.major ) {
+         sum += events.major.length * 2;
+      }
+      if( events.minor ) {
+         sum += events.minor.length * 1.3;
+      }
+      if( events.patch ) {
+         sum += events.patch.length * 1.1;
+      }
+      if( events.major ) {
+         sum += events.major.length * 2;
+      }
+      return 1 - (1 / Math.log(1 + sum));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   module.controller( 'ActivityGridWidgetController', Controller );
 
    return module;
 
