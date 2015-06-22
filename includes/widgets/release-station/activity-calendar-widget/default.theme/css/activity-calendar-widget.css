@@ -274,19 +274,19 @@
 }
 
 .activity-calendar-widget td.not-in-month,
-.activity-calendar-widget td.not-in-month .day,
-.activity-calendar-widget td.not-in-month a {
+.activity-calendar-widget td.not-in-month a,
+.activity-calendar-widget td.not-in-month h3 {
    background: transparent;
-   color: #f0f0f0;
+   color: #eee;
 }
 
-.activity-calendar-widget td.not-in-month:hover .day,
-.activity-calendar-widget td.not-in-month:hover a {
+.activity-calendar-widget td.not-in-month:hover a,
+.activity-calendar-widget td.not-in-month:hover h3 {
    background: transparent;
    color: white;
 }
 
 .activity-calendar-widget td.not-in-month:hover {
-   background: #f0f0f0;
+   background: #eee;
    color: white;
 }
