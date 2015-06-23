@@ -17,7 +17,14 @@
 
 .release-history-widget ul.semver-list {
    list-style-type: none;
-   margin: 5px;
+   margin: 7px;
+   padding-bottom: 7px;
+   border-bottom: 1px dashed #ddd;
+}
+
+.release-history-widget ul.semver-list:last-child {
+   padding-bottom: 0px;
+   border-bottom: none;
 }
 
 .release-history-widget ul.semver-list > li {
