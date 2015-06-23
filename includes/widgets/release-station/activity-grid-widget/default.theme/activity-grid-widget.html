@@ -2,7 +2,7 @@
      ng-repeat="project in projects | orderBy: 'gauge': true" ng-if="$index < 12">
    <div class="col-md-8 col-sm-8 col-xs-12 pull-right">
       <h3>
-         <a ng-href="{{project.timeline_url}}"><span>{{project.owner.login}}/</span>{{project.name}}</a>
+         <a ng-href="{{project.repository_url}}"><span>{{project.owner.login}}/</span>{{project.name}}</a>
          <a ng-if="project.html_url"
             ng-href="{{project.html_url}}"
             class="github"

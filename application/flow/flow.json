@@ -1,14 +1,15 @@
 {
    "places": {
       "entry": {
-         "redirectTo": "calendar"
+         "redirectTo": "grid"
       },
 
       "grid": {
          "page":  "grid",
          "targets": {
             "cancel": "entry",
-            "next": "calendar"
+            "next": "calendar",
+            "repository": "history"
          }
       },
 
@@ -17,14 +18,15 @@
          "targets": {
             "cancel": "entry",
             "previous": "grid",
-            "next": "timeline"
+            "next": "history"
          }
       },
 
-      "timeline/:owner/:name/:version": {
-         "page":  "timeline",
+      "history/:owner/:name/:version": {
+         "page":  "history",
          "targets": {
-            "cancel": "entry"
+            "cancel": "entry",
+            "previous": "calendar"
          }
       }
    }

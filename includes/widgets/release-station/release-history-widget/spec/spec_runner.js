@@ -5,9 +5,9 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ReleaseTimelineWidget Specification',
+      title: 'ReleaseHistoryWidget Specification',
       tests: [
-         'release-timeline-widget.spec'
+         'release-history-widget.spec'
       ]
    };
 } )( this );

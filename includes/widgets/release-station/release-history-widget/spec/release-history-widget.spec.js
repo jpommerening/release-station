@@ -3,17 +3,17 @@
  * Released under the MIT license.
  */
 define( [
-   '../release-timeline-widget',
+   '../release-history-widget',
    'laxar/laxar_testing'
 ], function( widgetModule, ax ) {
    'use strict';
 
-   describe( 'A ReleaseTimelineWidget', function() {
+   describe( 'A ReleaseHistoryWidget', function() {
 
       var testBed_;
 
       beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/release-timeline-widget' );
+         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/release-history-widget' );
          testBed_.featuresMock = {};
 
          testBed_.useWidgetJson();

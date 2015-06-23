@@ -95,6 +95,6 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'releaseTimelineWidget', [] ).controller( 'ReleaseTimelineWidgetController', Controller );
+   return ng.module( 'releaseHistoryWidget', [] ).controller( 'ReleaseHistoryWidgetController', Controller );
 
 } );

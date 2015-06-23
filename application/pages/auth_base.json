@@ -106,8 +106,8 @@
                         "icon": "fa-calendar"
                      },
                      {
-                        "place": "timeline",
-                        "title": "Timeline",
+                        "place": "history",
+                        "title": "History",
                         "icon": "fa-tags"
                      }
                   ]

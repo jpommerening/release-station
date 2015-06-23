@@ -5,7 +5,7 @@
  */
 @charset "UTF-8";
 
-.release-timeline-widget > div {
+.release-history-widget > div {
    overflow: hidden;
    white-space: nowrap;
    background-color: #efefef;
@@ -15,12 +15,12 @@
    border-radius: 3px;
 }
 
-.release-timeline-widget ul.semver-list {
+.release-history-widget ul.semver-list {
    list-style-type: none;
    margin: 5px;
 }
 
-.release-timeline-widget ul.semver-list > li {
+.release-history-widget ul.semver-list > li {
    max-width: 15%;
    border: none;
    width: 100px;
@@ -31,21 +31,21 @@
    background: #44a9e0;
 }
 
-.release-timeline-widget ul.semver-list > li:hover {
+.release-history-widget ul.semver-list > li:hover {
    background: #55b9f0;
 }
 
-.release-timeline-widget ul.semver-list > li.selected {
+.release-history-widget ul.semver-list > li.selected {
    background: #f90;
    box-shadow: 0 0 6px #f8c283, inset 2px 2px 7px #fdb124, inset -2px -2px 7px #fdb124;
 }
 
-.release-timeline-widget ul.semver-list > li.selected:hover {
+.release-history-widget ul.semver-list > li.selected:hover {
    background: #fe9800;
    box-shadow: 0 0 8px #fdb124, inset 2px 2px 7px #f8c283, inset -2px -2px 7px #f8c283;
 }
 
-.release-timeline-widget ul.semver-list > li a {
+.release-history-widget ul.semver-list > li a {
    position: relative;
    display: block;
    height: 50px;
@@ -54,24 +54,24 @@
    padding: 3px;
 }
 
-.release-timeline-widget ul.semver-list > li h3 {
+.release-history-widget ul.semver-list > li h3 {
    color: white;
    font-weight: bold;
    margin: 2px 4px;
    font-size: 1.1em;
 }
 
-.release-timeline-widget ul.semver-list > li.major {
+.release-history-widget ul.semver-list > li.major {
 }
 
-.release-timeline-widget ul.semver-list > li.minor {
+.release-history-widget ul.semver-list > li.minor {
 }
 
-.release-timeline-widget ul.semver-list > li.patch {
+.release-history-widget ul.semver-list > li.patch {
    margin-right: -4px;
    border-right: 1px solid #55b9f0;
 }
 
-.release-timeline-widget ul.inline > li {
+.release-history-widget ul.inline > li {
    display: inline-block;
 }

@@ -35,7 +35,7 @@
                "headline": {
                   "level": 2,
                   "i18nHtmlText": {
-                     "en_US": "Release Timeline"
+                     "en_US": "Release History"
                   }
                }
             }
@@ -44,7 +44,7 @@
 
       "content1a": [
          {
-            "widget": "release-station/release-timeline-widget",
+            "widget": "release-station/release-history-widget",
             "features": {
             }
          }

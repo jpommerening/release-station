@@ -94,7 +94,7 @@ define( [
                   url: repo.url,
                   events: events
                };
-               project.timeline_url = axFlowService.constructAbsoluteUrl( 'timeline', {
+               project.repository_url = axFlowService.constructAbsoluteUrl( 'repository', {
                   owner: part[ 0 ],
                   name: part[ 1 ]
                } );
