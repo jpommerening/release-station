@@ -15,7 +15,7 @@
    float: right;
    padding: 0;
    top: 10px;
-   background-image: url(github-mark.png);
+   background-image: url(git-hub-mark.png);
    background-size: 55px 55px;
    cursor: pointer;
 }
@@ -28,6 +28,19 @@
 
 .git-hub-login-widget .circular {
    border-radius: 50%;
+}
+
+.git-hub-login-widget .caption {
+   position: absolute;
+   left: 0;
+   top: 45px;
+   width: 55px;
+   font-size: 10pt;
+   font-weight: medium;
+   text-shadow: -1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white, 1px -1px 0 white,
+                 0px -1px 0 white, -1px 0px 0 white, 0px 1px 0 white, 1px  0px 0 white;
+   color: #8c8c8c;
+   text-align: center;
 }
 
 .git-hub-login-widget .popover {

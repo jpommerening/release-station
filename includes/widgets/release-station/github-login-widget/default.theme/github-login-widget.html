@@ -1,8 +1,9 @@
 <div ng-class="{ authenticated: authenticated }"
      ng-click="authenticated || authenticate()"
-     class="icon circular">
+     class="circular icon">
    <a ng-if="authenticated" ng-click="togglePopover()" href="">
-      <img ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}" class="icon"/>
+      <img ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}" class="circular icon"/>
+      <span class="caption">{{resources.user.name}}</span>
    </a>
    <div ng-if="showPopover" class="popover bottom fade in">
       <div class="arrow"></div>

@@ -5,12 +5,16 @@
  */
 @charset "UTF-8";
 
-div.activity-grid-widget {
+.activity-grid-widget > div {
+   border-bottom: 1px dashed #ddd;
+   margin-top: 1em;
 }
 
 .activity-grid-widget h3 {
    font-weight: bold;
+   margin-top: 0.2em;
    margin-bottom: 0.2em;
+   white-space: nowrap;
 }
 
 .activity-grid-widget h3 span {
@@ -23,10 +27,19 @@ div.activity-grid-widget {
    opacity: 0.2;
    color: #717171;
    text-shadow: 1px 1px 1px #ccc, 0 0 0 #000, 1px 1px 1px #ccc;
+   margin-right: -1em;
 }
 
 .activity-grid-widget h3:hover > a.github {
    opacity: 1.0;
+}
+
+.activity-grid-widget h4 {
+   font-size: 1em;
+}
+
+.activity-grid-widget dl {
+   font-size: 0.9em;
 }
 
 /* palette

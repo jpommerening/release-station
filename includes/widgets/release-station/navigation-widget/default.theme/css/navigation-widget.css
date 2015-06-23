@@ -7,9 +7,9 @@
 
 .navigation-widget ul {
    font-family: "Exo 2",Arial,sans-serif;
-   font-size: 2.8em;
+   font-size: 2.1em;
    list-style-type: none;
-   margin: 0 1em 1.5ex 1em;
+   margin: -1ex 1em 1.5ex 1em;
    padding: 0;
 }
 
@@ -29,6 +29,5 @@
 
 .navigation-widget ul.inline > li {
    display: inline-block;
-   padding-right: 6%;
-   padding-left: 6%;
+   padding: 0 4%;
 }

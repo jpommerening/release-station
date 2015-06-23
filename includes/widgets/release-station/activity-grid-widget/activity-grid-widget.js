@@ -7,10 +7,11 @@ define( [
    'laxar',
    'angular',
    'semver',
+   'moment',
    './gauge-directive',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, semver, gauge, eventPipeline, githubEvents ) {
+], function( ax, ng, semver, moment, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
    var moduleName = 'activityGridWidget';
@@ -73,7 +74,7 @@ define( [
       eventPipeline( $scope, 'events' )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
-         .filter( githubEvents.by.date.after( '2015-01-01' ) )
+         .filter( githubEvents.by.date.after( moment().add( -1, 'month' ) ) )
          .classify( githubEvents.by.repository )
          .forEach( function( event ) {
             var repo = event.repo;
