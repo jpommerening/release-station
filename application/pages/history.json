@@ -23,6 +23,11 @@
                   "i18nHtmlText": {
                      "en_US": "Release<span>Station</span>"
                   }
+               },
+               "intro": {
+                  "i18nHtmlText": {
+                     "en_US": "for GitHub"
+                  }
                }
             }
          }

@@ -32,13 +32,13 @@
             "id": "authPopup",
             "features": {
                "content": {
-                  "layout": "auth-popup"
+                  "layout": "popup"
                },
                "open": {
-                  "onActions": [ "openPopup" ]
+                  "onActions": [ "openAuth" ]
                },
                "close": {
-                  "onActions": [ "closePopup" ]
+                  "onActions": [ "closeAuth" ]
                },
                "closeIcon": {
                   "enabled": true

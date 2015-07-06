@@ -109,7 +109,7 @@
 }
 
 .activity-calendar-widget td a {
-   color: white;
+   color: #fff;
 }
 
 /**
@@ -117,15 +117,15 @@
  */
 .activity-calendar-widget td h3 {
    position: absolute;
-   bottom: 0;
-   right: 0;
+   bottom: 2px;
+   right: 2px;
    margin: 0;
    padding: 0;
    font-size: 2em;
    font-weight: bold;
    line-height: 0.8;
    text-align: right;
-   color: white;
+   color: #fff;
    z-index: 20;
 }
 
@@ -283,10 +283,10 @@
 .activity-calendar-widget td.not-in-month:hover a,
 .activity-calendar-widget td.not-in-month:hover h3 {
    background: transparent;
-   color: white;
+   color: #fff;
 }
 
 .activity-calendar-widget td.not-in-month:hover {
    background: #eee;
-   color: white;
+   color: #fff;
 }

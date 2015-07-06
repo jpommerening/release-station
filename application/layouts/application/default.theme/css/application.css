@@ -40,7 +40,14 @@
    float: right;
    width: auto;
    font-size: 55px;
-   line-height: 1;
+   line-height: 0.83;
+}
+
+.app-header h1 + div.ax-local-intro-text {
+   float: right;
+   margin-top: 9px;
+   font-size: 10pt;
+   color: #8c8c8c;
 }
 
 .app-github {
