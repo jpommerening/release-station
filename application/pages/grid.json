@@ -91,6 +91,11 @@
                   "i18nHtmlText": {
                      "en_US": "Activity Overview"
                   }
+               },
+               "intro": {
+                  "i18nHtmlText": {
+                     "en_US": "last 30 days"
+                  }
                }
             }
          }

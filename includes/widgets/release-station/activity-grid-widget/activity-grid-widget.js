@@ -74,7 +74,7 @@ define( [
       eventPipeline( $scope, 'events' )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
-         .filter( githubEvents.by.date.after( moment().add( -1, 'month' ) ) )
+         .filter( githubEvents.by.date.after( moment().add( -30, 'days' ) ) )
          .classify( githubEvents.by.repository )
          .forEach( function( event ) {
             var repo = event.repo;
