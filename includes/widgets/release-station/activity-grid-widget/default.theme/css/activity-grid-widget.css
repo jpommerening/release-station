@@ -38,6 +38,10 @@
    font-size: 1em;
 }
 
+.activity-grid-widget .details {
+   color: #8c8c8c;
+}
+
 .activity-grid-widget dl {
    font-size: 0.9em;
 }
