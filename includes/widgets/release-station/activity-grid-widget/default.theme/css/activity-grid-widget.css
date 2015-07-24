@@ -35,7 +35,7 @@
 }
 
 .activity-grid-widget h4 {
-   font-size: 1em;
+   font-size: 0.8em;
 }
 
 .activity-grid-widget .details {
@@ -97,7 +97,7 @@
 
 @media (min-width: 1200px) {
    .activity-grid-widget .ax-gauge-inner {
-      font-size: 1.05em;
+      font-size: 0.8em;
    }
 }
 
