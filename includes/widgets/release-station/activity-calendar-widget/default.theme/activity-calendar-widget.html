@@ -24,7 +24,7 @@
                             weekend: day.weekend,
                             'not-in-month': !day.isInMonth,
                             'hidden-xs': day.weekend }">
-               <a ng-href="{{day.url}}" class="day" tabindex="0">
+               <a ng-href="{{day.url}}" class="day" tabindex="0" ng-click="details(day.date)">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>
                      <li ng-if="day.releases">{{day.releases.length}} releases</li>

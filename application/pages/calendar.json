@@ -59,6 +59,45 @@
          }
       ],
 
+      "popups": [
+         {
+            "widget": "laxarjs/ax-popup-widget",
+            "id": "details",
+            "features": {
+               "content": {
+                  "layout": "popup"
+               },
+               "open": {
+                  "onActions": [ "openDetails" ]
+               },
+               "close": {
+                  "onActions": [ "closeDetails" ]
+               },
+               "closeIcon": {
+                  "enabled": true
+               }
+            }
+         }
+      ],
+
+      "details.header": [
+         {
+            "widget": "laxarjs/ax-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 3,
+                  "i18nHtmlText": {
+                     "en_US": "Details"
+                  }
+               }
+            }
+         }
+      ],
+
+      "details.content": [
+      ],
+
+
       "header": [
          {
             "widget": "laxarjs/ax-headline-widget",

@@ -30,6 +30,19 @@ define( [
          $scope.showPopover = !$scope.showPopover;
       };
 
+      $scope.buttons = [
+         {
+            htmlLabel: 'Test',
+            id: 'test',
+            classes: [ 'btn-info' ]
+         },
+         {
+            htmlLabel: 'Test 2',
+            id: 'test 2',
+            classes: [ ]
+         }
+      ];
+
       var userPublisher = patterns.resources.replacePublisherForFeature( $scope, 'user', {
          deliverToSender: true
       } );

@@ -35,6 +35,17 @@ define( [
       $scope.visibleRows = 6;
       $scope.active = false;
 
+      $scope.details = function details( date ) {
+         if( date.isSame( selected ) ) {
+            $scope.eventBus.publish( 'takeActionRequest.openDetails', {
+               'action': 'openDetails',
+               'day': date.format( 'YYYY-MM-DD' )
+            } );
+            return false;
+         }
+         return true;
+      };
+
       eventPipeline( $scope, 'events' )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )

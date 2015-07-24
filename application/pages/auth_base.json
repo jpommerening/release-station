@@ -29,7 +29,7 @@
       "popups": [
          {
             "widget": "laxarjs/ax-popup-widget",
-            "id": "authPopup",
+            "id": "auth",
             "features": {
                "content": {
                   "layout": "popup"
@@ -44,10 +44,28 @@
                   "enabled": true
                }
             }
+         },
+         {
+            "widget": "laxarjs/ax-popup-widget",
+            "id": "settings",
+            "features": {
+               "content": {
+                  "layout": "popup"
+               },
+               "open": {
+                  "onActions": [ "openSettings" ]
+               },
+               "close": {
+                  "onActions": [ "closeSettings" ]
+               },
+               "closeIcon": {
+                  "enabled": true
+               }
+            }
          }
       ],
 
-      "authPopup.header": [
+      "auth.header": [
          {
             "widget": "laxarjs/ax-headline-widget",
             "features": {
@@ -61,7 +79,7 @@
          }
       ],
 
-      "authPopup.content": [
+      "auth.content": [
          {
             "widget": "laxarjs/ax-command-bar-widget",
             "features": {
@@ -71,6 +89,23 @@
                }
             }
          }
+      ],
+
+      "settings.header": [
+         {
+            "widget": "laxarjs/ax-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 3,
+                  "i18nHtmlText": {
+                     "en_US": "Settings"
+                  }
+               }
+            }
+         }
+      ],
+
+      "settings.content": [
       ],
 
       "login": [

@@ -13,7 +13,15 @@
                 title="{{resources.user.name}} on GitHub">@{{resources.user.login}}</a>)
          </span>
       </h3>
-      <div class="popover-content">
+      <div class="popover-content"
+         ax-widget-area
+         ax-widget-area-binding="features.content.areaName">
+      </div>
+      <div class="popover-footer">
+         <div class="btn-group"
+            ax-button-list="buttons"
+            ax-button-list-click="">
+         </div>
       </div>
    </div>
 </div>
