@@ -1,0 +1,37 @@
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+@charset "UTF-8";
+
+.settings-widget ul {
+   font-family: "Exo 2",Arial,sans-serif;
+   font-size: 2.1em;
+   list-style-type: none;
+   margin: -1ex 1em 1.5ex 1em;
+   padding: 0;
+}
+
+.settings-widget a {
+   color: rgba(120, 120, 120, 0.4);
+   text-shadow: 1px 2px 2px #ebeced, 0 0 0 #aaa, 1px 2px 2px #ebeced;
+}
+
+.settings-widget a > i.fa {
+   margin-right: 0.4em;
+}
+
+.settings-widget a.active {
+   color: #ff9900;
+   text-shadow: 0 0 2px #f8c283;
+}
+
+.settings-widget ul.inline > li {
+   display: inline-block;
+   padding: 0 4%;
+}
+
+.settings-widget .fa-toggle-on {
+   color: #1fdf5f;
+}

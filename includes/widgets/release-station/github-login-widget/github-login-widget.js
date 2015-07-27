@@ -15,33 +15,41 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$q' ];
+   Controller.$inject = [ '$scope', '$http', '$q', 'axFlowService' ];
 
-   function Controller( $scope, $http, $q ) {
+   function Controller( $scope, $http, $q, axFlowService ) {
       var userUrl = $scope.features.user.url;
 
       $scope.authenticated = false;
       $scope.authenticate = function() {
-         $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.auth.action, {} );
+         $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.auth.action, {
+            action: features.auth.action
+         } );
       };
 
-      $scope.showPopover = false;
-      $scope.togglePopover = function() {
-         $scope.showPopover = !$scope.showPopover;
-      };
-
-      $scope.buttons = [
-         {
-            htmlLabel: 'Test',
-            id: 'test',
-            classes: [ 'btn-info' ]
+      $scope.dropdown = {
+         open: false,
+         toggle: function() {
+            this.open = !this.open;
          },
-         {
-            htmlLabel: 'Test 2',
-            id: 'test 2',
-            classes: [ ]
-         }
-      ];
+         click: function( item ) {
+            if( item.action ) {
+               $scope.eventBus.publish( 'takeActionRequest.' + item.action, {
+                  action: item.action,
+                  data: item
+               } );
+               this.open = false;
+               return false;
+            }
+            return true;
+         },
+         menu: $scope.features.menu.map( function( item ) {
+            if( item.place ) {
+               item.url = axFlowService.constructAnchor( item.place, item.parameters );
+            }
+            return item;
+         } )
+      };
 
       var userPublisher = patterns.resources.replacePublisherForFeature( $scope, 'user', {
          deliverToSender: true
@@ -78,7 +86,7 @@ define( [
             url: userUrl,
             headers: headers
          } ).then( function( response ) {
-            ax.log.info( 'Got user data', response.data );
+            ax.log.info( 'Got user data' + JSON.stringify( response.data ) );
             userPublisher( response.data );
          }, function( response ) {
             userPublisher( {} );

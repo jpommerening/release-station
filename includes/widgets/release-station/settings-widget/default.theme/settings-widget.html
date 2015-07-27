@@ -1,0 +1,6 @@
+<ul>
+   <li ng-repeat="repo in repos">
+      {{repo.name}}
+      <i class="fa" ng-class="{ 'fa-toggle-on': repo.enabled, 'fa-toggle-off': !repo.enabled }"></i>
+   </li>
+</ul>

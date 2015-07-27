@@ -95,6 +95,11 @@
       ],
 
       "details.content": [
+         {
+            "widget": "release-station/details-widget",
+            "features": {
+            }
+         }
       ],
 
 

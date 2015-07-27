@@ -1,7 +1,8 @@
 <ul class="inline">
    <li ng-repeat="item in navigation">
       <a ng-href="{{item.url}}" ng-class="{ active: item.active }">
-         <i class="fa hidden-sm" ng-class="[ item.icon ]" ng-if="item.icon"></i><span class="hidden-xs">{{item.title}}</span>
+         <i class="fa hidden-sm" ng-class="[ item.icon ]" ng-if="item.icon"></i><!--
+      --><span class="hidden-xs" ng-bind-html="item.i18nHtmlLabel | axLocalize:i18n"></span>
       </a>
    </li>
 </ul>

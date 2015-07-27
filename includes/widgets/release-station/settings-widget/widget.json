@@ -1,5 +1,5 @@
 {
-   "name": "NavigationWidget",
+   "name": "SettingsWidget",
    "description": "Just a list of links",
 
    "integration": {
@@ -11,7 +11,7 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-         "navigation": {
+         "settings": {
             "type": "object",
             "description": "",
             "properties": {
@@ -21,16 +21,13 @@
                      "type": "object",
                      "properties": {
                         "place": {
-                           "type": "string",
-                           "description": "The name of the place to navigate to when this navigation item is clicked."
+                           "type": "string"
+                        },
+                        "title": {
+                           "type": "string"
                         },
                         "icon": {
-                           "type": "string",
-                           "description": "A FontAwesome (or compatible) icon class to use for this navigation item."
-                        },
-                        "i18nHtmlLabel": {
-                           "type": [ "string", "object" ],
-                           "description": "The (internationalized) label for this navigation item."
+                           "type": "string"
                         }
                      }
                   }

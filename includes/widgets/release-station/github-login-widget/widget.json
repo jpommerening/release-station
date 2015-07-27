@@ -8,6 +8,7 @@
    },
 
    "controls": [
+      "laxar-uikit/controls/i18n",
       "ax-layer-control",
       "ax-button-list-control"
    ],
@@ -52,6 +53,40 @@
                   "type": "string",
                   "description": "The name of the resource to publish user information.",
                   "format": "topic"
+               },
+               "i18nHtmlLabel": {
+                  "type": [ "string", "object" ],
+                  "default": {
+                     "en_US": "Signed in as"
+                  }
+               }
+            }
+         },
+         "menu": {
+            "type": "array",
+            "description": "Menu entries",
+            "items": {
+               "type": "object",
+               "required": [ "i18nHtmlLabel" ],
+               "properties": {
+                  "i18nHtmlLabel": {
+                     "type": [ "string", "object" ],
+                     "description": "The (internationalized) label for this menu item."
+                  },
+                  "action": {
+                     "type": "string",
+                     "description": "The name of the action to request when clicked.",
+                     "format": "topic"
+                  },
+                  "place": {
+                     "type": "string",
+                     "description": "The name of the place to navigate to when clicked.",
+                     "format": "topic"
+                  },
+                  "icon": {
+                     "type": "string",
+                     "description": "A FontAwesome (or compatible) icon class to use for this navigation item."
+                  }
                }
             }
          }

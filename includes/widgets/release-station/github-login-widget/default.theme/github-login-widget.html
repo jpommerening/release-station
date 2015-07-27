@@ -1,27 +1,20 @@
-<div ng-class="{ authenticated: authenticated }"
+<div ng-class="{ authenticated: authenticated, open: dropdown.open}"
      ng-click="authenticated || authenticate()"
-     class="circular icon">
-   <a ng-if="authenticated" ng-click="togglePopover()" href="">
+     class="circular icon dropdown">
+   <a ng-if="authenticated" ng-click="dropdown.toggle()" href="">
       <img ng-src="{{resources.user.avatar_url}}" title="{{resources.user.name}}" class="circular icon"/>
       <span class="caption">{{resources.user.name}}</span>
    </a>
-   <div ng-if="showPopover" class="popover bottom fade in">
-      <div class="arrow"></div>
-      <h3 class="popover-title">{{resources.user.name}}
-         <span class="small">
-            (<a href="{{resources.user.html_url}}"
-                title="{{resources.user.name}} on GitHub">@{{resources.user.login}}</a>)
-         </span>
-      </h3>
-      <div class="popover-content"
-         ax-widget-area
-         ax-widget-area-binding="features.content.areaName">
-      </div>
-      <div class="popover-footer">
-         <div class="btn-group"
-            ax-button-list="buttons"
-            ax-button-list-click="">
-         </div>
-      </div>
-   </div>
+   <ul class="dropdown-menu dropdown-menu-right">
+      <li class="dropdown-header" ng-bind-html="features.user.i18nHtmlLabel | axLocalize:i18n"></li>
+      <li><a href="{{resources.user.html_url}}" title="{{resources.user.name}}">{{resources.user.login}}</a></li>
+      <li class="divider" role="separator"></li>
+      <li ng-repeat="item in dropdown.menu">
+         <a ng-href="{{item.target}}"
+            ng-click="dropdown.click( item )">
+            <i class="fa" ng-class="[ item.icon ]" ng-if="item.icon"></i><!--
+         --><span ng-bind-html="item.i18nHtmlLabel | axLocalize:i18n"></span>
+         </a>
+      </li>
+   </ul>
 </div>
