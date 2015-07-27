@@ -74,7 +74,7 @@ define( [
 
       return q( function( resolve, reject ) {
          var data = {};
-         var state = !flag
+         var state = !flag;
 
          if( !resource && !flag ) {
             return resolve( data );

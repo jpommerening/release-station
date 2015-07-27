@@ -1,30 +1,19 @@
 /**
- * Copyright 2015 Jonas Pommerening
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org/license
  */
 define( [
-   '../navigation-widget',
-   'laxar/laxar_testing'
-], function( widgetModule, ax ) {
+   'json!../widget.json',
+   'laxar-testing'
+], function( descriptor, testing ) {
    'use strict';
 
    describe( 'A NavigationWidget', function() {
 
-      var testBed_;
-
-      beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/navigation-widget' );
-         testBed_.featuresMock = {};
-
-         testBed_.useWidgetJson();
-         testBed_.setup();
-      } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed_.tearDown();
-      } );
+      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( testing.widget.load );
+      afterEach( testing.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

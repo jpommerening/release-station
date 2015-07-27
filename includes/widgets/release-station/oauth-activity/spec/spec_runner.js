@@ -1,13 +1,16 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org/license
  */
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'AxOAuthWidget Specification',
+      title: 'OAuthActivity Specification',
       tests: [
-         'ax-oauth-widget.spec'
-      ]
+         'oauth-activity.spec'
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

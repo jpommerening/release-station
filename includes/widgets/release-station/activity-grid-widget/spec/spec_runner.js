@@ -6,9 +6,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ActivityGrid Specification',
+      title: 'ActivityGridWidget Specification',
       tests: [
-         'activity-grid.spec'
-      ]
+         'activity-grid-widget.spec'
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

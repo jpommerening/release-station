@@ -1,6 +1,7 @@
 /**
- * Copyright 2015 Jonas Pommerening
+ * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org/license
  */
 ( function( global ) {
    'use strict';
@@ -8,6 +9,8 @@
       title: 'NavigationWidget Specification',
       tests: [
          'navigation-widget.spec'
-      ]
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

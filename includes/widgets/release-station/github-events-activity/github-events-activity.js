@@ -108,10 +108,16 @@ define( [
 
    /**
     * Cross the given list of streams.
-    * (!!!NEVER EVER CALL THIS!!!)
+    * Note: Don't call. It would be bad.
     */
    function crossStreams( streams ) {
-      haha, jk;
+      var haha, jk;
+      return [
+         { P: 'I\'m fuzzy on the whole good/bad thing. What do you mean, "bad"?' },
+         { E: 'Try to imagine all life as you know it stopping instantaneously and every molecule in your ' +
+              'body exploding at the speed of light.' },
+         { P: 'Right. That\'s bad. Okay. All right. Important safety tip. Thanks, Egon.' }
+      ] && jk;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +129,7 @@ define( [
 
       return q( function( resolve, reject ) {
          var data = {};
-         var state = !flag
+         var state = !flag;
 
          if( !resource && !flag ) {
             return resolve( data );
@@ -186,11 +192,10 @@ define( [
    function deduplicate( callback ) {
       var ids = [];
       return function( event ) {
-         if( !event.id ) {
-            // TODO: deep compare
-         } else if( ids.indexOf( event.id ) >= 0 ) {
-            return;
-         } else {
+         if( event.id ) {
+            if( ids.indexOf( event.id ) >= 0 ) {
+               return;
+            }
             ids.push( event.id );
          }
          return callback( event );

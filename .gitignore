@@ -8,4 +8,5 @@ atlassian-ide-plugin.xml
 /bower_components
 *.backup.json
 release-station-*.zip
+test-results.xml
 .*~

@@ -6,9 +6,11 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'ActivityCalendar Specification',
+      title: 'ActivityCalendarWidget Specification',
       tests: [
-         'activity-calendar.spec'
-      ]
+         'activity-calendar-widget.spec'
+      ],
+      testRunner: 'laxar-testing',
+      jasmineMajorVersion: 2
    };
 } )( this );

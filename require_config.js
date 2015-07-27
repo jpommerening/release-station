@@ -92,7 +92,9 @@ var require = {
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
+      jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       q_mock: 'q_mock/q',
+      'promise-polyfill': 'promise-polyfill/Promise',
 
       // LaxarJS Core Legacy:
       text: 'requirejs-plugins/lib/text',
@@ -110,9 +112,11 @@ var require = {
       'release-station': '../includes/lib/release-station',
 
       'laxar': 'laxar/dist/laxar',
+      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',
+      'laxar-testing': 'laxar-testing/dist/laxar-testing',
 
       // App Parts:
       'laxar-path-root': '..',

@@ -39,7 +39,7 @@ define( [
          panes[ $scope.prev ].prev = true;
          panes[ $scope.active ].active = true;
          panes[ $scope.next ].next = true;
-      };
+      }
 
       this.setActivePane = setActivePane;
 

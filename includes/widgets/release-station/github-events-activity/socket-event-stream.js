@@ -15,8 +15,7 @@ define( [
       this.onEvent_ = this.options.onEvent;
       this.onError_ = this.options.onError;
       this.events_ = this.options.events || [ '*' ];
-
-      this.socket_;
+      this.socket_ = null;
    }
 
    SocketEventStream.prototype = {

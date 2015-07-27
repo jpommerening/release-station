@@ -8,7 +8,7 @@ define( [
 ], function( ng ) {
    'use strict';
 
-   var $injector = angular.injector( [ 'ng' ] );
+   var $injector = ng.injector( [ 'ng' ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,8 +34,8 @@ define( [
       var eventTypes = this.events_.map( eventNameToType );
 
       this.client_ = $injector.invoke( [ '$http', '$q', createPollingClient ] );
-      this.eventFilter_ = eventTypes.indexOf( '*' ) >= 0
-                        ? function( event ) { return true; }
+      this.eventFilter_ = eventTypes.indexOf( '*' ) >= 0 ?
+                          function( event ) { return true; }
                         : function( event ) { return (eventTypes.indexOf( event.type ) >= 0); };
    }
 
@@ -162,14 +162,14 @@ define( [
          clearTimeout( timeout );
          return $q( function( resolve, reject ) {
             cancel = reject;
-            var t = timeout = setTimeout( function() {
+            var t = ( timeout = setTimeout( function() {
                cancel = null;
                if( t === timeout ) {
                   $http( options ).then( resolve, reject );
                } else {
                   reject( new Error( 'Polling client received multiple, concurrent requests.' ) );
                }
-            }, delay || 0 );
+            }, delay || 0 ) );
          } );
       }
 

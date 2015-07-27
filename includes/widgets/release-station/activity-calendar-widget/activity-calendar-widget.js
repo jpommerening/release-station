@@ -117,7 +117,7 @@ define( [
 
          var weeks;
 
-         if( $scope.weeks.length == 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
+         if( $scope.weeks.length === 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
             weeks = initMonth( startOfMonth, endOfMonth );
             $scope.weeks = weeks;
          } else if( date.isBefore( startOfSelectedMonth ) ) {
@@ -203,7 +203,7 @@ define( [
 
    function eventBucket( buckets, timestamp ) {
       var key = timestamp.format( 'YYYY-MM-DD' );
-      return buckets[ key ] = (buckets[ key ] || {});
+      return (buckets[ key ] = (buckets[ key ] || {}));
    }
 
    function pushItem( bucket, key, item ) {

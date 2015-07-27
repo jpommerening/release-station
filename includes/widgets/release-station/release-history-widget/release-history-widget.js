@@ -14,7 +14,6 @@ define( [
    Controller.$inject = [ '$scope', 'axFlowService' ];
 
    function Controller( $scope, flowService ) {
-      $scope.log = function( a ) { console.log( a ); };
       $scope.versions = {};
 
       var selected;
@@ -84,11 +83,13 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function updateMetaData( versions, latest, selected ) {
+      function updateVersion( version ) {
+         version.isSelected = version.name === selected;
+      }
+
       for( var key in versions ) {
          if( versions.hasOwnProperty( key ) ) {
-            versions[ key ].forEach( function( version ) {
-               version.isSelected = version.name === selected;
-            } );
+            versions[ key ].forEach( updateVersion );
          }
       }
    }

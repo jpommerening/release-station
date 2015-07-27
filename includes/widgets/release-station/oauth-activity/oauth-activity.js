@@ -37,7 +37,7 @@ define( [
 
       var promise = $q( function( resolve, reject ) {
          if( helper.search.code && ( helper.search.state === auth.state ) ) {
-            resolve( getAccessToken( search.code ) );
+            resolve( getAccessToken( helper.search.code ) );
          } else if( helper.hash.access_token ) {
             resolve( helper.hash );
          } else if( auth.data ) {
@@ -204,7 +204,7 @@ define( [
             setCookie( key, value, options );
          },
          removeItem: function( key ) {
-            setCookie( key, value, '; max-age=0' );
+            setCookie( key, '', '; max-age=0' );
          }
       };
    }

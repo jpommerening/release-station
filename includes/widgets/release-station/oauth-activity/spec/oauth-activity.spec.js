@@ -1,30 +1,19 @@
 /**
  * Copyright 2015 aixigo AG
  * Released under the MIT license.
+ * http://laxarjs.org/license
  */
 define( [
-   '../oauth-widget',
-   'laxar/laxar_testing'
-], function( widgetModule, ax ) {
+   'json!../widget.json',
+   'laxar-testing'
+], function( descriptor, testing ) {
    'use strict';
 
-   describe( 'An OAuthActivity', function() {
+   describe( 'An OauthActivity', function() {
 
-      var testBed_;
-
-      beforeEach( function setup() {
-         testBed_ = ax.testing.portalMocksAngular.createControllerTestBed( 'release-station/oauth-activity' );
-         testBed_.featuresMock = {};
-
-         testBed_.useWidgetJson();
-         testBed_.setup();
-      } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      afterEach( function() {
-         testBed_.tearDown();
-      } );
+      beforeEach( testing.createSetupForWidget( descriptor ) );
+      beforeEach( testing.widget.load );
+      afterEach( testing.tearDown );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
