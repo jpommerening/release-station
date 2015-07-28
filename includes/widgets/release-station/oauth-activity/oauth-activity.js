@@ -4,19 +4,21 @@
  * http://laxarjs.org
  */
 define( [
-   'angular',
    './helper'
-], function( ng, helper ) {
+], function( helper ) {
    'use strict';
-
-   var moduleName = 'oAuthActivity';
-   var module     = ng.module( moduleName, [] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$q', '$location', 'axFlowService' ];
+   // TODO LaxarJS/laxar#221:
+   //      Inject axFlowService and use flowService.contructAbsoluteUrl( '_self' ) instead of
+   //      window.location.href for redirect_uri
 
-   function Controller( $scope, $http, $q, $location, flowService ) {
+   Controller.injections = [ 'axContext', 'axEventBus' ];
+
+   Controller.create = Controller;
+
+   function Controller( $scope, eventBus ) {
       var oauthProvider = $scope.features.provider;
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
@@ -35,7 +37,7 @@ define( [
          save: false
       };
 
-      var promise = $q( function( resolve, reject ) {
+      var promise = new Promise( function( resolve, reject ) {
          if( helper.search.code && ( helper.search.state === auth.state ) ) {
             resolve( getAccessToken( helper.search.code ) );
          } else if( helper.hash.access_token ) {
@@ -99,7 +101,7 @@ define( [
       function redirectToAuthProvider() {
          var parameters = {
             client_id: oauthProvider.clientId,
-            redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
+            redirect_uri: oauthProvider.redirectUrl || window.location.href,
             response_type: oauthProvider.clientSecret ? 'code' : 'token',
             scope: oauthProvider.scope,
             state: auth.state
@@ -116,23 +118,20 @@ define( [
          oauthStorage.removeItem( 'state' );
 
          // ask the provider for an access token
-         $http( {
-            method: 'POST',
-            ur: oauthProvider.accessTokenUrl,
-            params: {
+         fetch( {
+            method: 'post',
+            ur: oauthProvider.accessTokenUrl + '?' + encodeArguments( {
                client_id: oauthProvider.clientId,
                client_secret: oauthProvider.clientSecret,
                code: code
-            },
+            } ),
             headers: {
                'Accept': 'application/x-www-urlencoded, application/json'
-            },
-            transformResponse: $http.defaults.transformResponse.concat( [ function( data, headers ) {
-               var urlencoded = /^application\/x-www-urlencoded(; *)?$/.test( headers( 'Content-Type' ) );
-               return urlencoded ? decodeArguments( data ) : data;
-            } ] )
+            }
          } ).then( function( response ) {
-            return response.data;
+               var contentType = response.headers.get( 'Content-Type' );
+               var urlencoded = /^application\/x-www-urlencoded(; *)?$/.test( contentType );
+               return urlencoded ? response.text().then( decodeArguments ) : response.json();
          } );
       }
 
@@ -231,10 +230,10 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   module.controller( 'OAuthActivityController', Controller );
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return module;
+   return {
+      name: 'oauthActivity',
+      create: Controller.create,
+      injections: Controller.injections
+   };
 
 } );

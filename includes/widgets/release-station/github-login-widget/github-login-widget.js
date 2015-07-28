@@ -15,15 +15,15 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$q', 'axFlowService' ];
+   Controller.$inject = [ '$scope', 'axFlowService' ];
 
-   function Controller( $scope, $http, $q, axFlowService ) {
+   function Controller( $scope, axFlowService ) {
       var userUrl = $scope.features.user.url;
 
       $scope.authenticated = false;
       $scope.authenticate = function() {
          $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.auth.action, {
-            action: features.auth.action
+            action: $scope.features.auth.action
          } );
       };
 
@@ -63,7 +63,7 @@ define( [
 
       patterns.validation.handlerFor( $scope )
          .registerResourceFromFeature( 'auth', {
-            onValidate: authResourceValidator( $http, $q, userUrl )
+            onValidate: authResourceValidator( userUrl )
          } );
 
       patterns.flags.handlerFor( $scope )
@@ -81,13 +81,12 @@ define( [
             headers[ 'Authorization' ] = 'token ' + accessToken;
          }
 
-         return $http( {
-            method: 'GET',
-            url: userUrl,
+         return fetch( userUrl, {
+            method: 'get',
             headers: headers
          } ).then( function( response ) {
-            ax.log.info( 'Got user data' + JSON.stringify( response.data ) );
-            userPublisher( response.data );
+            ax.log.info( 'Got user data' );
+            response.json().then( userPublisher );
          }, function( response ) {
             userPublisher( {} );
          } );
@@ -98,24 +97,23 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function authResourceValidator( $http, $q, url ) {
+   function authResourceValidator( url ) {
       return function validateAccessToken( resource, data ) {
          var accessToken = (data || {}).access_token;
          var htmlApiLink = '<a href="' + url + '" title="GitHub API">GitHub API</a>';
 
          if( !accessToken ) {
-            return $q.when( [
+            return Promise.resolve( [
                { en_US: 'Can\'t connect to ' + htmlApiLink + ' without an access token.' }
             ] );
          }
 
-         return $http( {
-            method: 'HEAD',
-            url: url,
+         return fetch( url, {
+            method: 'head',
             headers: {
                'Authorization': 'token ' + accessToken
             }
-         } ).then( function( data ) {
+         } ).then( function( response ) {
             var i18nHtmlMessage = {
                en_US: 'Successfully validated access token <i>' + accessToken + '</i>. ' +
                       'Received authentication success from ' + htmlApiLink + '.'
@@ -129,7 +127,7 @@ define( [
                       'Received HTTP status <i>' + statusText + '</i> from ' + htmlApiLink + '.'
             };
             ax.log.trace( i18nHtmlMessage.en_US );
-            return $q.reject( [ i18nHtmlMessage ] );
+            return Promise.reject( [ i18nHtmlMessage ] );
          } );
 
       };

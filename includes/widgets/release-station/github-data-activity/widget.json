@@ -1,9 +1,9 @@
 {
-   "name": "GitHubDataActivity",
+   "name": "GithubDataActivity",
    "description": "Request repository data from GitHub",
 
    "integration": {
-      "technology": "angular",
+      "technology": "plain",
       "type": "activity"
    },
 

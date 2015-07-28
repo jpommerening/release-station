@@ -1,9 +1,9 @@
 {
-   "name": "GitHubEventsActivity",
+   "name": "GithubEventsActivity",
    "description": "Query events (commits, tags, issues) from GitHub",
 
    "integration": {
-      "technology": "angular",
+      "technology": "plain",
       "type": "activity"
    },
 

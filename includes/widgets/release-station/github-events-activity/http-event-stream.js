@@ -3,12 +3,8 @@
  * Released under the MIT license.
  * http://laxarjs.org
  */
-define( [
-   'angular'
-], function( ng ) {
+define( [], function() {
    'use strict';
-
-   var $injector = ng.injector( [ 'ng' ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +29,7 @@ define( [
 
       var eventTypes = this.events_.map( eventNameToType );
 
-      this.client_ = $injector.invoke( [ '$http', '$q', createPollingClient ] );
+      this.client_ = createPollingClient();
       this.eventFilter_ = eventTypes.indexOf( '*' ) >= 0 ?
                           function( event ) { return true; }
                         : function( event ) { return (eventTypes.indexOf( event.type ) >= 0); };
@@ -43,13 +39,17 @@ define( [
 
       handleEvents_: function( response ) {
          if( this.onEvent_ ) {
-            response.data.filter( this.eventFilter_ ).forEach( this.onEvent_ );
+            response.json().then( function( data ) {
+               data.filter( this.eventFilter_ ).forEach( this.onEvent_ );
+            }.bind( this ) );
          }
       },
 
       handleErrors_: function( response ) {
          if( this.onError_ ) {
-            this.onError_( response.data, response.status, response.headers );
+            response.text().then( function( data ) {
+               this.onError_( data, response.status, response.headers );
+            }.bind( this ) );
          }
       },
 
@@ -64,24 +64,20 @@ define( [
          var poll = this.client_.poll;
 
          var options = Object.create( this.options );
-         var headers = options.headers || {};
 
-         function fetch( url, delay ) {
-            options.method = 'GET';
-            options.url = url;
-            options.headers = Object.keys( headers ).reduce( function( object, key ) {
-               object[ key ] = object[ key ] || headers[ key ];
-               return object;
-            }, {
-               'If-None-Match': etags[ url ]
-            } );
+         function fetchAll( url, delay ) {
+            options.method = 'get';
+            options.headers = options.headers || {};
 
-            return poll( options, pollInterval, delay )
+            if( etags[ url ] ) {
+               options.headers[ 'If-None-Match' ] = etags[ url ];
+            }
+
+            return poll( url, options, pollInterval, delay )
                .then( function( response ) {
-                  var url = response.config.url;
-                  var etag = response.headers( 'ETag' );
-                  var links = parseLinks( response.headers( 'Link' ) );
-                  var interval = response.headers( 'X-Poll-Interval' );
+                  var etag = response.headers.get( 'ETag' );
+                  var links = parseLinks( response.headers.get( 'Link' ) );
+                  var interval = response.headers.get( 'X-Poll-Interval' );
 
                   if( interval && (interval * 1000) > pollInterval ) {
                      pollInterval = interval * 1000;
@@ -94,7 +90,7 @@ define( [
                   handleEvents( response );
 
                   if( links.next ) {
-                     return fetch( links.next );
+                     return fetchAll( links.next );
                   }
                }, function( response ) {
                   if( response instanceof InterruptedException ) {
@@ -107,12 +103,12 @@ define( [
 
          function repeat() {
             if( !interrupted ) {
-               return fetch( url, pollInterval )
+               return fetchAll( url, pollInterval )
                   .then( repeat );
             }
          }
 
-         fetch( url ).then( repeat );
+         fetchAll( url ).then( repeat );
 
          return this;
       },
@@ -154,18 +150,18 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createPollingClient( $http, $q ) {
+   function createPollingClient() {
       var timeout;
       var cancel;
 
-      function fetch( options, delay ) {
+      function wait( delay ) {
          clearTimeout( timeout );
-         return $q( function( resolve, reject ) {
+         return new Promise( function( resolve, reject ) {
             cancel = reject;
             var t = ( timeout = setTimeout( function() {
                cancel = null;
                if( t === timeout ) {
-                  $http( options ).then( resolve, reject );
+                  resolve();
                } else {
                   reject( new Error( 'Polling client received multiple, concurrent requests.' ) );
                }
@@ -173,9 +169,12 @@ define( [
          } );
       }
 
-      function poll( options, pollInterval, initialDelay ) {
+      function poll( url, options, pollInterval, initialDelay ) {
          function fetchAndPoll( delay ) {
-            return fetch( options, delay )
+            return wait( delay )
+               .then( function() {
+                  return fetch( url, options );
+               } )
                .then( pollUntilChanged );
          }
 

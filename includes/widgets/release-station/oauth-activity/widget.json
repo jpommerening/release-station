@@ -1,9 +1,9 @@
 {
-   "name": "OAuthActivity",
+   "name": "OauthActivity",
    "description": "Authenticate with external OAuth2 providers",
 
    "integration": {
-      "technology": "angular",
+      "technology": "plain",
       "type": "activity"
    },
 

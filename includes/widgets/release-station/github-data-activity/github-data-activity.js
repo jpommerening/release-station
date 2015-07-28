@@ -4,38 +4,39 @@
  * http://laxarjs.org
  */
 define( [
-   'angular',
    'laxar-patterns'
-], function( ng, patterns ) {
+], function( patterns ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$http', '$q' ];
+   Controller.injections = [ 'axContext', 'axEventBus' ];
 
-   function Controller( $scope, $http, $q ) {
+   Controller.create = Controller;
+
+   function Controller( context, eventBus ) {
       var baseOptions = {
          method: 'GET',
          headers: {}
       };
 
-      var authorized = authHandler( $scope, $q, 'auth' ).then( setAuthHeader );
+      var authorized = authHandler( context, 'auth' ).then( setAuthHeader );
 
       var resources = {};
 
       var provideActions = [ 'provide-resource' ];
-      var provideHandler = createRequestHandler( $scope.eventBus, function( data ) {
+      var provideHandler = createRequestHandler( eventBus, function( data ) {
          return authorized.then( provideResource.bind( null, data ) );
       } );
 
       provideActions.forEach( function( action ) {
-         $scope.eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
+         eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
       } );
 
-      $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
+      eventBus.subscribe( 'beginLifecycleRequest', function() {
       } );
 
-      $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
+      eventBus.subscribe( 'endLifecycleRequest', function() {
       } );
 
       function setAuthHeader( data ) {
@@ -49,9 +50,13 @@ define( [
       function provideResource( data ) {
          var options = Object.create( baseOptions );
 
-         options.url = data.url;
+         var promise = resources[ data.resource ];
 
-         var promise = resources[ data.resource ] || ( resources[ data.resource ] = $http( options ) );
+         if( !promise ) {
+            promise = fetch( data.url, options ).then( function( response ) {
+               return response.json();
+            } );
+         }
 
          return promise.then( null, function( error ) {
             // Cache failures too, but prune them after 10 seconds
@@ -67,12 +72,12 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function authHandler( context, q, name ) {
+   function authHandler( context, name ) {
       var feature = context.features[ name ];
       var resource = feature.resource;
       var flag = feature.flag;
 
-      return q( function( resolve, reject ) {
+      return new Promise( function( resolve, reject ) {
          var data = {};
          var state = !flag;
 
@@ -119,10 +124,10 @@ define( [
             data: data
          } ).then( function() {
             return provider( data );
-         } ).then( function( response ) {
+         } ).then( function( data ) {
             return eventBus.publish( 'didReplace.' + resource, {
                resource: resource,
-               data: response.data
+               data: data
             } );
          } ).then( function() {
             return OUTCOME_SUCCESS;
@@ -140,6 +145,10 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'gitHubDataActivity', [] ).controller( 'GitHubDataActivityController', Controller );
+   return {
+      name: 'githubDataActivity',
+      create: Controller.create,
+      injections: Controller.injections
+   };
 
 } );

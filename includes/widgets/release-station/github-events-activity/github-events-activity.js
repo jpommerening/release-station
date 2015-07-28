@@ -4,11 +4,10 @@
  * http://laxarjs.org
  */
 define( [
-   'angular',
    'laxar-patterns',
    './http-event-stream',
    './socket-event-stream'
-], function( ng, patterns, HttpEventStream, SocketEventStream ) {
+], function( patterns, HttpEventStream, SocketEventStream ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,12 +20,14 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$q' ];
+   Controller.injections = [ 'axContext', 'axEventBus' ];
 
-   function Controller( $scope, $q ) {
+   Controller.create = Controller;
+
+   function Controller( context, eventBus ) {
       var eventsPublisher = {
-         replace: throttleReplacements( patterns.resources.replacePublisherForFeature( $scope, 'events' ) ),
-         update: throttleUpdates( patterns.resources.updatePublisherForFeature( $scope, 'events' ) ),
+         replace: throttleReplacements( patterns.resources.replacePublisherForFeature( context, 'events' ) ),
+         update: throttleUpdates( patterns.resources.updatePublisherForFeature( context, 'events' ) ),
          push: function( item ) {
             return eventsPublisher.update( [ { op: 'add', path: '/-', value: item } ] );
          }
@@ -35,30 +36,30 @@ define( [
       var baseOptions = {
          headers: {},
          onEvent: deduplicate( eventsPublisher.push ),
-         onError: $scope.eventBus.publish.bind( $scope.eventBus, 'didEncounterError.GITHUB_EVENTS' )
+         onError: eventBus.publish.bind( eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
-      var authorized = authHandler( $scope, $q, 'auth' ).then( setAuthHeader );
+      var authorized = authHandler( context, 'auth' ).then( setAuthHeader );
 
-      var streams = $scope.features.events.sources.map( provideStream );
+      var streams = context.features.events.sources.map( provideStream );
 
       var provideActions = [ 'provide-events' ];
-      var provideHandler = createRequestHandler( $scope.eventBus, function( data ) {
+      var provideHandler = createRequestHandler( eventBus, function( data ) {
          return authorized.then( provideStream.bind( null, data ) );
       } );
 
       provideActions.forEach( function( action ) {
-         $scope.eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
+         eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
       } );
 
-      $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
+      eventBus.subscribe( 'beginLifecycleRequest', function() {
          eventsPublisher.replace( [] );
          authorized.then( function() {
             connectStreams( streams );
          } );
       } );
 
-      $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
+      eventBus.subscribe( 'endLifecycleRequest', function() {
          disconnectStreams( streams );
       } );
 
@@ -122,12 +123,12 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function authHandler( context, q, name ) {
+   function authHandler( context, name ) {
       var feature = context.features[ name ];
       var resource = feature.resource;
       var flag = feature.flag;
 
-      return q( function( resolve, reject ) {
+      return new Promise( function( resolve, reject ) {
          var data = {};
          var state = !flag;
 
@@ -260,6 +261,10 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'gitHubEventsActivity', [] ).controller( 'GitHubEventsActivityController', Controller );
+   return {
+      name: 'githubEventsActivity',
+      create: Controller.create,
+      injections: Controller.injections
+   };
 
 } );
