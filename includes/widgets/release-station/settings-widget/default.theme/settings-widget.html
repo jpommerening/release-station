@@ -1,6 +1,58 @@
-<ul>
-   <li ng-repeat="repo in repos">
-      {{repo.name}}
-      <i class="fa" ng-class="{ 'fa-toggle-on': repo.enabled, 'fa-toggle-off': !repo.enabled }"></i>
+<ul class="nav nav-tabs" role="tablist">
+   <li ng-repeat="account in accounts"
+       ng-class="{ active: ( account.login == login ) }"
+       role="presentation">
+      <a ng-click="selectAccount( account )" role="tab">
+         <img ng-src="{{account.avatar_url}}" alt="{{account.login}}"/>
+         {{account.login}}
+      </a>
    </li>
 </ul>
+
+<div class="tab-content">
+   <div role="tabpanel" class="tab-pane active">
+
+      <nav ng-if="pager" class="text-center">
+         <ul class="pagination">
+            <li ng-if="{ disabled: (pager.first == pager.current) }">
+               <a href="#" ng-click="selectPage(pager.current - 1)">&laquo;</a>
+            </li>
+            <li ng-repeat="page in pager.pages"
+                ng-class="{ active: (pager.current == page) }">
+               <a href="#" ng-click="selectPage(page)">{{page}}</a>
+            </li>
+            <li ng-class="{ disabled: (pager.last == pager.current) }">
+               <a href="#" ng-click="selectPage(pager.current + 1)">&raquo;</a>
+            </li>
+         </ul>
+      </nav>
+
+      <ul ng-if="repositories" class="list-group">
+         <li class="list-group-item"
+             ng-repeat="repo in repositories"
+             ng-if="$index >= pager.start && $index < pager.end">
+            <div class="toggle" ng-class="{ on: repo.enabled, off: !repo.enabled }">
+               <label ng-class="{ active: !repo.enabled }">
+                  <input type="radio" name="toggle-{{repo.full_name}}"
+                         ng-model="repo.enabled"
+                         ng-value="false"
+                         ng-change="toggleRepository( repo )"></input>
+                  <span>off</span>
+               </label>
+               <label ng-class="{ active: repo.enabled }">
+                  <input type="radio" name="toggle-{{repo.full_name}}"
+                         ng-model="repo.enabled"
+                         ng-value="true"
+                         ng-change="toggleRepository( repo )"></input>
+                  <span>on</span>
+               </label>
+            </div>
+            <i class="fa" ng-class="{ 'fa-code-fork': repo.fork, 'fa-folder-open-o': !repo.fork }"></i>
+            <a ng-href="{{repo.html_url}}">
+               {{repo.name}}
+            </a>
+         </li>
+      </ul>
+
+   </div>
+</div>

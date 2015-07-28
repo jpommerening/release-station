@@ -5,33 +5,54 @@
  */
 @charset "UTF-8";
 
-.settings-widget ul {
-   font-family: "Exo 2",Arial,sans-serif;
-   font-size: 2.1em;
-   list-style-type: none;
-   margin: -1ex 1em 1.5ex 1em;
-   padding: 0;
+.settings-widget {
 }
 
-.settings-widget a {
-   color: rgba(120, 120, 120, 0.4);
-   text-shadow: 1px 2px 2px #ebeced, 0 0 0 #aaa, 1px 2px 2px #ebeced;
+.settings-widget .nav img {
+   height: 2em;
+   width: 2em;
 }
 
-.settings-widget a > i.fa {
-   margin-right: 0.4em;
-}
-
-.settings-widget a.active {
-   color: #ff9900;
-   text-shadow: 0 0 2px #f8c283;
-}
-
-.settings-widget ul.inline > li {
+.settings-widget .toggle {
    display: inline-block;
-   padding: 0 4%;
+   background-color: #dfdfdf;
+   border-radius: 4px;
+   margin: 1px;
+   padding: 3px;
+   width: 55px;
+   height: 28px;
+   margin-right: 1ex;
 }
 
-.settings-widget .fa-toggle-on {
-   color: #1fdf5f;
+.settings-widget .toggle.on {
+   background-color: #2fdf5f;
 }
+
+.settings-widget .toggle {
+}
+
+.settings-widget .toggle label {
+   position: relative;
+   width: 22px;
+   height: 22px;
+
+   border-radius: 2px;
+   font-weight: lighter;
+   text-align: center;
+}
+
+.settings-widget .toggle label,
+.settings-widget .toggle label span {
+   cursor: pointer;
+}
+
+.settings-widget .toggle label.active {
+   background-color: #fff;
+}
+
+.settings-widget .toggle input[type="radio"] {
+   position: absolute;
+   opacity: 0;
+   cursor: pointer;
+}
+

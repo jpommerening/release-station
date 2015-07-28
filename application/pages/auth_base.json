@@ -112,6 +112,12 @@
          {
             "widget": "release-station/settings-widget",
             "features": {
+               "user": {
+                  "resource": "user"
+               },
+               "repositories": {
+                  "resource": "repositories"
+               }
             }
          }
       ],

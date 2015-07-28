@@ -10,27 +10,35 @@
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
+      "required": [ "user" ],
       "properties": {
          "settings": {
             "type": "object",
             "description": "",
             "properties": {
-               "items": {
-                  "type": "array",
-                  "items": {
-                     "type": "object",
-                     "properties": {
-                        "place": {
-                           "type": "string"
-                        },
-                        "title": {
-                           "type": "string"
-                        },
-                        "icon": {
-                           "type": "string"
-                        }
-                     }
-                  }
+            }
+         },
+         "user": {
+            "type": "object",
+            "description": "User information",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource to subscribe to for user information.",
+                  "format": "topic"
+               }
+            }
+         },
+         "repositories": {
+            "type": "object",
+            "description": "User repositories",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource to publish user information.",
+                  "format": "topic"
                }
             }
          }

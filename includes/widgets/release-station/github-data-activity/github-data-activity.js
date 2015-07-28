@@ -60,9 +60,25 @@ define( [
          var promise = resources[ data.resource ];
 
          if( !promise ) {
-            promise = fetch( data.url, options ).then( function( response ) {
-               return response.json();
-            } );
+            promise = fetch( data.url, options ).then( handleResponse );
+         }
+
+         function handleResponse( response ) {
+            var promise = response.json();
+            var links = response.headers.get( 'Link' );
+            var next = links && parseLinks( links ).next;
+
+            if( next ) {
+               return fetch( next, options )
+                  .then( handleResponse )
+                  .then( function( tail ) {
+                     return promise.then( function( head ) {
+                        return head.concat( tail );
+                     } );
+                  } );
+            } else {
+               return promise;
+            }
          }
 
          return promise.then( null, function( error ) {
@@ -75,6 +91,26 @@ define( [
             throw error;
          } );
       }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function parseLinks( string ) {
+      var pattern = /^\s*<([^>]+)>;\s*rel="(\w+)"\s*$/;
+
+      if( !string ) {
+         return {};
+      }
+
+      return string
+         .split( ',' )
+         .map( pattern.exec.bind( pattern ) )
+         .reduce( function( object, match ) {
+            if( match ) {
+               object[ match[ 2 ] ] = match[ 1 ];
+            }
+            return object;
+         }, {} );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
