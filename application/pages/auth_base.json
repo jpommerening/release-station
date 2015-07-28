@@ -99,7 +99,7 @@
             "widget": "laxarjs/ax-headline-widget",
             "features": {
                "headline": {
-                  "level": 3,
+                  "level": 4,
                   "i18nHtmlText": {
                      "en_US": "Settings"
                   }
@@ -115,8 +115,10 @@
                "user": {
                   "resource": "user"
                },
-               "repositories": {
-                  "resource": "repositories"
+               "settings": {
+                  "events": {
+                     "resource": "event-sources"
+                  }
                }
             }
          }

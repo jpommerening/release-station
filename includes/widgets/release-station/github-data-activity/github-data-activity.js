@@ -27,14 +27,25 @@ define( [
          headers: {}
       };
 
+      var ready = false;
       var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
-
       var resources = {};
 
+      if( features.data.sources.resource ) {
+         patterns.resources.handlerFor( this )
+            .registerResourceFromFeature( 'data.sources', {
+               onReplace: function( event ) {
+                  return provideResources( event.data );
+               },
+               unUpdate: function( event ) {
+               }
+            } );
+      } else if( features.data.sources.length ) {
+         provideResources( features.data.sources );
+      }
+
       var provideActions = [ 'provide-resource' ];
-      var provideHandler = createRequestHandler( eventBus, function( data ) {
-         return authorized.then( provideResource.bind( null, data ) );
-      } );
+      var provideHandler = createRequestHandler( eventBus, provideResource );
 
       provideActions.forEach( function( action ) {
          eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
@@ -54,13 +65,17 @@ define( [
          }
       }
 
-      function provideResource( data ) {
+      function provideResources( sources ) {
+         return sources.map( provideResource );
+      }
+
+      function provideResource( source ) {
          var options = Object.create( baseOptions );
 
-         var promise = resources[ data.resource ];
+         var promise = resources[ source.resource ];
 
          if( !promise ) {
-            promise = fetch( data.url, options ).then( handleResponse );
+            promise = fetch( source.url, options ).then( handleResponse );
          }
 
          function handleResponse( response ) {
@@ -85,7 +100,7 @@ define( [
             // Cache failures too, but prune them after 10 seconds
             if( !promise.timeout ) {
                promise.timeout = setTimeout( function() {
-                  delete resources[ data.resource ];
+                  delete resources[ source.resource ];
                }, 10000 );
             }
             throw error;

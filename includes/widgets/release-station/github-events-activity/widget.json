@@ -23,9 +23,16 @@
                   "default": "events"
                },
                "sources": {
-                  "type": "array",
+                  "type": [ "array", "object" ],
                   "description": "Event sources.",
                   "default": [],
+                  "properties": {
+                     "resource": {
+                        "type": "string",
+                        "description": "The name of the resource supplying the the sources.",
+                        "format": "topic"
+                     }
+                  },
                   "items": {
                      "type": "object",
                      "description": "The event source",

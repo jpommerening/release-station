@@ -13,43 +13,9 @@
                },
                "events": {
                   "resource": "events",
-                  "sources": [
-                     {
-                        "type": "http",
-                        "url": "https://api.github.com/orgs/LaxarJS/events",
-                        "events": [ "push", "issues", "release", "create", "repository" ]
-                     },
-                     {
-                        "type": "http",
-                        "url": "https://api.github.com/repos/LaxarJS/laxar/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     },
-                     {
-                        "type": "socket.io",
-                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     },
-                     {
-                        "type": "http",
-                        "url": "https://api.github.com/repos/LaxarJS/laxar-uikit/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     },
-                     {
-                        "type": "socket.io",
-                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar-uikit/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     },
-                     {
-                        "type": "http",
-                        "url": "https://api.github.com/repos/LaxarJS/laxar-patterns/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     },
-                     {
-                        "type": "socket.io",
-                        "url": "https://github-live-events.herokuapp.com/repos/LaxarJS/laxar-patterns/events",
-                        "events": [ "push", "issues", "release", "create" ]
-                     }
-                  ]
+                  "sources": {
+                     "resource": "event-sources"
+                  }
                }
             }
          },

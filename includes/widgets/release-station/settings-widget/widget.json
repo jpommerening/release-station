@@ -1,6 +1,6 @@
 {
    "name": "SettingsWidget",
-   "description": "Just a list of links",
+   "description": "",
 
    "integration": {
       "technology": "angular",
@@ -16,6 +16,16 @@
             "type": "object",
             "description": "",
             "properties": {
+               "events": {
+                  "type": "object",
+                  "properties": {
+                     "resource": {
+                        "type": "string",
+                        "description": "The name of the resource under which to publish selected event sources.",
+                        "format": "topic"
+                     }
+                  }
+               }
             }
          },
          "user": {
@@ -26,18 +36,6 @@
                "resource": {
                   "type": "string",
                   "description": "The name of the resource to subscribe to for user information.",
-                  "format": "topic"
-               }
-            }
-         },
-         "repositories": {
-            "type": "object",
-            "description": "User repositories",
-            "required": [ "resource" ],
-            "properties": {
-               "resource": {
-                  "type": "string",
-                  "description": "The name of the resource to publish user information.",
                   "format": "topic"
                }
             }

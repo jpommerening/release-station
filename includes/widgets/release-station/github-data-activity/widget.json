@@ -11,6 +11,40 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
+         "data": {
+            "type": "object",
+            "description": "Configuration for publishing GitHub data.",
+            "properties": {
+               "sources": {
+                  "type": [ "array", "object" ],
+                  "description": "Event sources.",
+                  "default": [],
+                  "properties": {
+                     "resource": {
+                        "type": "string",
+                        "description": "The name of the resource supplying the the sources.",
+                        "format": "topic"
+                     }
+                  },
+                  "items": {
+                     "type": "object",
+                     "description": "The event source",
+                     "required": [ "type", "url" ],
+                     "properties": {
+                        "url": {
+                           "type": "string",
+                           "description": "The URL associated with the resource."
+                        },
+                        "resource": {
+                           "type": "string",
+                           "description": "The name under which to publish the resource.",
+                           "format": "topic"
+                        }
+                     }
+                  }
+               }
+            }
+         },
          "auth": {
             "type": "object",
             "description": "Authorization with the GitHub API",

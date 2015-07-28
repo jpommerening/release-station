@@ -44,14 +44,45 @@ define( [
          onError: eventBus.publish.bind( eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
+      var ready = false;
       var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
+      var streams = [];
 
-      var streams = features.events.sources.map( provideStream );
+      if( features.events.sources.resource ) {
+         patterns.resources.handlerFor( this )
+            .registerResourceFromFeature( 'events.sources', {
+               onReplace: function( event ) {
+                  disconnectStreams( streams );
+                  streams = [];
+                  provideStreams( event.data );
+               },
+               onUpdate: function( event ) {
+                  var patches = event.patches;
+
+                  for( var i = 0; i < patches.length; i++ ) {
+                     switch( patches[ i ].op ) {
+                        case 'add':
+                           patches[ i ].value = provideStream( patches[ i ].value );
+                           break;
+                        case 'remove':
+                           patterns.json.getPointer( streams, patches[ i ].path ).disconnect();
+                           break;
+                        case 'replace':
+                           patches[ i ].value = provideStream( patches[ i ].value );
+                           patterns.json.getPointer( streams, patches[ i ].path ).disconnect();
+                           break;
+                     }
+                  }
+
+                  patterns.json.applyPatch( streams, patches );
+               }
+            } );
+      } else if( features.events.sources.length ) {
+         provideStreams( features.events.sources );
+      }
 
       var provideActions = [ 'provide-events' ];
-      var provideHandler = createRequestHandler( eventBus, function( data ) {
-         return authorized.then( provideStream.bind( null, data ) );
-      } );
+      var provideHandler = createRequestHandler( eventBus, provideStream );
 
       provideActions.forEach( function( action ) {
          eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
@@ -60,6 +91,7 @@ define( [
       eventBus.subscribe( 'beginLifecycleRequest', function() {
          eventsPublisher.replace( [] );
          authorized.then( function() {
+            ready = true;
             connectStreams( streams );
          } );
       } );
@@ -76,13 +108,25 @@ define( [
          }
       }
 
-      function provideStream( data ) {
+      function provideStreams( sources ) {
+         return sources.map( provideStream );
+      }
+
+      function provideStream( source ) {
          var options = Object.create( baseOptions );
 
-         options.url = data.url;
-         options.events = data.events;
+         options.url = source.url;
+         options.events = source.events;
 
-         return new EventStream[ data.type ]( options );
+         var stream = new EventStream[ source.type ]( options );
+
+         if( ready ) {
+            stream.connect( source.url );
+         }
+
+         streams.push( stream );
+
+         return stream;
       }
    }
 
