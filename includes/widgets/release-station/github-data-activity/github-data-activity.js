@@ -75,7 +75,9 @@ define( [
          var promise = resources[ source.resource ];
 
          if( !promise ) {
-            promise = fetch( source.url, options ).then( handleResponse );
+            promise = authorized.then( function() {
+               return fetch( source.url, options ).then( handleResponse );
+            } );
          }
 
          function handleResponse( response ) {
