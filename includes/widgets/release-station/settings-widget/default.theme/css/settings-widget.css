@@ -31,6 +31,10 @@
 .settings-widget .toggle {
 }
 
+.settings-widget .toggle + i {
+   width: 2ex;
+}
+
 .settings-widget .toggle label {
    position: relative;
    width: 22px;
