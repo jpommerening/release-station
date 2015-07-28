@@ -20,14 +20,19 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.injections = [ 'axContext', 'axEventBus' ];
+   Controller.injections = [ 'axEventBus', 'axFeatures' ];
 
-   Controller.create = Controller;
+   Controller.create = function create( eventBus, features ) {
+      return new Controller( eventBus, features );
+   };
 
-   function Controller( context, eventBus ) {
+   function Controller( eventBus, features ) {
+      this.eventBus = eventBus;
+      this.features = features;
+
       var eventsPublisher = {
-         replace: throttleReplacements( patterns.resources.replacePublisherForFeature( context, 'events' ) ),
-         update: throttleUpdates( patterns.resources.updatePublisherForFeature( context, 'events' ) ),
+         replace: throttleReplacements( patterns.resources.replacePublisherForFeature( this, 'events' ) ),
+         update: throttleUpdates( patterns.resources.updatePublisherForFeature( this, 'events' ) ),
          push: function( item ) {
             return eventsPublisher.update( [ { op: 'add', path: '/-', value: item } ] );
          }
@@ -39,9 +44,9 @@ define( [
          onError: eventBus.publish.bind( eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
-      var authorized = authHandler( context, 'auth' ).then( setAuthHeader );
+      var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
 
-      var streams = context.features.events.sources.map( provideStream );
+      var streams = features.events.sources.map( provideStream );
 
       var provideActions = [ 'provide-events' ];
       var provideHandler = createRequestHandler( eventBus, function( data ) {

@@ -20,7 +20,10 @@
                "auth": {
                   "onActions": [ "authenticate" ],
                   "resource": "accessToken",
-                  "flag": "authenticated"
+                  "flag": "authenticated",
+                  "drop": {
+                     "onActions": [ "deauthenticate" ]
+                  }
                }
             }
          }
@@ -134,6 +137,7 @@
                   },
                   {
                      "icon": "fa-sign-out",
+                     "action": "deauthenticate",
                      "i18nHtmlLabel": {
                         "en_US": "Signout"
                      }

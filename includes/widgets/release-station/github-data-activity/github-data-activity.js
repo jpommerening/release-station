@@ -10,17 +10,24 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.injections = [ 'axContext', 'axEventBus' ];
+   Controller.injections = [ 'axEventBus', 'axFeatures' ];
 
-   Controller.create = Controller;
+   Controller.create = function create( eventBus, features ) {
+      return new Controller( eventBus, features );
+   };
 
-   function Controller( context, eventBus ) {
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function Controller( eventBus, features ) {
+      this.eventBus = eventBus;
+      this.features = features;
+
       var baseOptions = {
          method: 'GET',
          headers: {}
       };
 
-      var authorized = authHandler( context, 'auth' ).then( setAuthHeader );
+      var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
 
       var resources = {};
 

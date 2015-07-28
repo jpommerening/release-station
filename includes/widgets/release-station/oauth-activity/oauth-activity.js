@@ -14,18 +14,22 @@ define( [
    //      Inject axFlowService and use flowService.contructAbsoluteUrl( '_self' ) instead of
    //      window.location.href for redirect_uri
 
-   Controller.injections = [ 'axContext', 'axEventBus' ];
+   Controller.injections = [ 'axEventBus', 'axFeatures' ];
 
-   Controller.create = Controller;
+   Controller.create = function create( eventBus, features ) {
+      return new Controller( eventBus, features );
+   };
 
-   function Controller( $scope, eventBus ) {
-      var oauthProvider = $scope.features.provider;
+   function Controller( eventBus, features ) {
+      var oauthProvider = features.provider;
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
-      var authOnActions = $scope.features.auth.onActions;
-      var authToken = $scope.features.auth.token;
-      var authResourceName = $scope.features.auth.resource;
-      var authFlagName = $scope.features.auth.flag;
+      var authOnActions = features.auth.onActions;
+      var dropAuthOnActions = features.auth.drop.onActions;
+
+      var authToken = features.auth.token;
+      var authResourceName = features.auth.resource;
+      var authFlagName = features.auth.flag;
 
       var auth = {
          data: oauthStorage.getItem( 'data' ) || authToken && {
@@ -50,12 +54,16 @@ define( [
       } );
 
       authOnActions.forEach( function( action ) {
-         $scope.eventBus.subscribe( 'takeActionRequest.' + action, redirectToAuthProvider );
+         eventBus.subscribe( 'takeActionRequest.' + action, redirectToAuthProvider );
       } );
 
-      $scope.eventBus.subscribe( 'saveRequest.' + authResourceName, saveAuthResource );
+      dropAuthOnActions.forEach( function( action ) {
+         eventBus.subscribe( 'takeActionRequest.' + action, dropAuth );
+      } );
 
-      $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
+      eventBus.subscribe( 'saveRequest.' + authResourceName, saveAuthResource );
+
+      eventBus.subscribe( 'beginLifecycleRequest', function() {
          promise
             .then( function( data ) {
                if( auth.data !== data ) {
@@ -76,23 +84,28 @@ define( [
       } );
 
       function publishAuthResource( data ) {
-         return $scope.eventBus.publish( 'didReplace.' + authResourceName, {
+         return eventBus.publish( 'didReplace.' + authResourceName, {
             resource: authResourceName,
             data: data
          } );
       }
 
       function publishAuthFlag( state ) {
-         return $scope.eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + state, {
+         return eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + state, {
             flag: authFlagName,
             state: state
          } );
       }
 
       function saveAuthResource() {
-         oauthStorage.setItem( 'data', auth.data );
+         if( auth.data ) {
+            oauthStorage.setItem( 'data', auth.data );
+         } else {
+            oauthStorage.removeItem( 'data' );
+            console.log( 'remove' );
+         }
 
-         return $scope.eventBus.publish( 'didSave.' + authResourceName, {
+         return eventBus.publish( 'didSave.' + authResourceName, {
             resource: authResourceName,
             outcome: 'SUCCESS'
          } );
@@ -110,6 +123,13 @@ define( [
          oauthStorage.setItem( 'state', auth.state );
 
          window.location.href = oauthProvider.url + '?' + encodeArguments( parameters ).join( '&' );
+      }
+
+      function dropAuth() {
+         auth.data = undefined;
+
+         return publishAuthFlag( false )
+            .then( saveAuthResource );
       }
 
       function getAccessToken( code ) {
@@ -136,7 +156,7 @@ define( [
       }
 
       function validateAuthResource() {
-         return $scope.eventBus.publishAndGatherReplies( 'validateRequest.' + authResourceName, {
+         return eventBus.publishAndGatherReplies( 'validateRequest.' + authResourceName, {
             resource: authResourceName
          } ).then( function( replies ) {
             var failures = [];

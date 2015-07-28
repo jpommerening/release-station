@@ -75,6 +75,24 @@
                   "type": "string",
                   "description": "The name of the flag indicating the current authentication state.",
                   "format": "topic"
+               },
+               "drop": {
+                  "type": "object",
+                  "description": "When to drop authorization.",
+                  "properties": {
+                     "onActions": {
+                        "type": "array",
+                        "description": "Names of the actions that trigger de-authentication.",
+                        "items": {
+                           "type": "string",
+                           "format": "topic"
+                        },
+                        "default": []
+                     }
+                  },
+                  "default": {
+                     "onActions": []
+                  }
                }
             }
          }
