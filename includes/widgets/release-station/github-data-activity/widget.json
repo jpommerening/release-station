@@ -14,7 +14,22 @@
          "data": {
             "type": "object",
             "description": "Configuration for publishing GitHub data.",
+            "default": {},
             "properties": {
+               "onActions": {
+                  "type": "array",
+                  "description": "Provide resources on given takeActionRequests.",
+                  "items": {
+                     "type": "string",
+                     "format": "topic"
+                  }
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish resources.",
+                  "format": "topic",
+                  "default": "data"
+               },
                "sources": {
                   "type": [ "array", "object" ],
                   "description": "Event sources.",
@@ -29,7 +44,7 @@
                   "items": {
                      "type": "object",
                      "description": "The event source",
-                     "required": [ "type", "url" ],
+                     "required": [ "url" ],
                      "properties": {
                         "url": {
                            "type": "string",

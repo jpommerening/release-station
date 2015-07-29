@@ -13,6 +13,7 @@
                },
                "events": {
                   "resource": "events",
+                  "onActions": [ "provide-stream" ],
                   "sources": {
                      "resource": "event-sources"
                   }
@@ -25,6 +26,13 @@
                "auth": {
                   "resource": "accessToken",
                   "flag": "authenticated"
+               },
+               "data": {
+                  "resource": "data",
+                  "onActions": [ "provide-resource" ],
+                  "sources": {
+                     "resource": "data-sources"
+                  }
                }
             }
          }

@@ -20,10 +20,8 @@ define( [
             onReplace: replaceUser
          } );
 
-      var events = {
-         replace: patterns.resources.replacePublisherForFeature( $scope, 'settings.events' ),
-         update: patterns.resources.updatePublisherForFeature( $scope, 'settings.events' )
-      };
+      var eventSources = publisherForFeature( $scope, 'settings.events' );
+      var dataSources = publisherForFeature( $scope, 'settings.data' );
 
       var ITEMS_PER_PAGE = 10;
 
@@ -49,26 +47,17 @@ define( [
          }
       };
 
-      function eventSourceForRepository( repository ) {
-         return {
-            type: /^(https?):/.exec( repository.events_url )[ 1 ],
-            url: repository.events_url,
-            events: [ "push", "issues", "release", "create" ]
-         };
-      }
-
       $scope.toggleRepository = function( repository ) {
          var index = settings.repositories.indexOf( repository.url );
          if( repository.enabled && index == -1 ) {
             settings.repositories.push( repository.url );
-            events.update( [
-               { op: 'add', path: '/-', value: eventSourceForRepository( repository ) }
-            ] );
+            eventSources.push( eventSourceForRepository( repository ) );
+            dataSources.push( dataSourceForRepository( repository ) );
          } else if( index >= 0 ) {
+            var patches = [ { op: 'remove', path: '/' + index } ];
             settings.repositories.splice( index, 1 );
-            events.update( [
-               { op: 'remove', path: '/' + index }
-            ] );
+            eventSources.update( patches );
+            dataSources.update( patches );
          }
 
          saveSettings( settings );
@@ -76,7 +65,8 @@ define( [
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
          return Promise.all( settings.repositories.map( getResource ) ).then( function( repositories ) {
-            return events.replace( repositories.map( eventSourceForRepository ) );
+            eventSources.replace( repositories.map( eventSourceForRepository ) );
+            dataSources.replace( repositories.map( dataSourceForRepository ) );
          } );
       } );
 
@@ -173,25 +163,65 @@ define( [
             resource = event.data;
          } );
 
-         return new Promise( function( resolve, reject ) {
-            $scope.eventBus.subscribe( 'didTakeAction.provide-resource-' + id, function didTakeAction( event ) {
-               $scope.eventBus.unsubscribe( didTakeAction );
-               if( event.outcome === patterns.actions.OUTCOME_SUCCESS ) {
-                  resolve( resource );
-               } else {
-                  reject( event.data );
-               }
-            } );
+         return $scope.eventBus.publishAndGatherReplies( 'takeActionRequest.provide-resource-' + id, {
+            action: 'provide-resource',
+            data: {
+               resource: id,
+               url: url
+            }
+         } )
+         .then( function( replies ) {
+            if( !(replies.length) || resource === undefined ) {
+               return Promise.reject();
+            }
 
-            $scope.eventBus.publish( 'takeActionRequest.provide-resource-' + id, {
-               action: 'provide-resource',
-               data: {
-                  resource: id,
-                  url: url
-               }
-            } );
+            return resource;
          } );
       }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function eventSourceForRepository( repository ) {
+      return {
+         type: /^(https?):/.exec( repository.events_url )[ 1 ],
+         url: repository.events_url,
+         events: [ "push", "issues", "release", "create" ]
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function dataSourceForRepository( repository ) {
+      return {
+         url: repository.url
+      };
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var nullPublisher = {};
+   nullPublisher.replace = nullPublisher.update = nullPublisher.push = function() {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function publisherForFeature( $scope, feature ) {
+      var pointer = patterns.json.pathToPointer( feature );
+      var resource = patterns.json.getPointer( $scope.features, pointer );
+
+      if( resource === undefined ) {
+         return nullPublisher;
+      }
+
+      var publisher = {
+         replace: patterns.resources.replacePublisherForFeature( $scope, feature ),
+         update: patterns.resources.updatePublisherForFeature( $scope, feature ),
+         push: function( item ) {
+            return publisher.update( [ { op: 'add', path: '/-', value: item } ] );
+         }
+      };
+
+      return publisher;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

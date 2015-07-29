@@ -20,6 +20,11 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   var nullPublisher = {};
+   nullPublisher.replace = nullPublisher.update = nullPublisher.update = function() {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    Controller.injections = [ 'axEventBus', 'axFeatures' ];
 
    Controller.create = function create( eventBus, features ) {
@@ -30,13 +35,13 @@ define( [
       this.eventBus = eventBus;
       this.features = features;
 
-      var eventsPublisher = {
+      var eventsPublisher = ( features.events && features.events.resource ) ? {
          replace: throttleReplacements( patterns.resources.replacePublisherForFeature( this, 'events' ) ),
          update: throttleUpdates( patterns.resources.updatePublisherForFeature( this, 'events' ) ),
          push: function( item ) {
-            return eventsPublisher.update( [ { op: 'add', path: '/' + ( item.id || '-' ), value: item } ] );
+            return eventsPublisher.update( [ { op: 'add', path: '/-', value: item } ] );
          }
-      };
+      } : nullPublisher;
 
       var baseOptions = {
          headers: {},
@@ -44,56 +49,39 @@ define( [
          onError: eventBus.publish.bind( eventBus, 'didEncounterError.GITHUB_EVENTS' )
       };
 
-      var ready = false;
-      var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
       var streams = [];
+      var ready = authHandler( this, 'auth' )
+                     .then( setAuthHeader )
+                     .then( waitForEvent( 'beginLifecycleRequest' ) )
+                     .then( function() { eventsPublisher.replace( [] ) } );
 
       if( features.events.sources.resource ) {
          patterns.resources.handlerFor( this )
             .registerResourceFromFeature( 'events.sources', {
                onReplace: function( event ) {
                   disconnectStreams( streams );
-                  streams = [];
-                  provideStreams( event.data );
+                  streams = provideStreams( event.data );
                },
                onUpdate: function( event ) {
-                  var patches = event.patches;
-
-                  for( var i = 0; i < patches.length; i++ ) {
-                     switch( patches[ i ].op ) {
-                        case 'add':
-                           patches[ i ].value = provideStream( patches[ i ].value );
-                           break;
-                        case 'remove':
-                           patterns.json.getPointer( streams, patches[ i ].path ).disconnect();
-                           break;
-                        case 'replace':
-                           patches[ i ].value = provideStream( patches[ i ].value );
-                           patterns.json.getPointer( streams, patches[ i ].path ).disconnect();
-                           break;
-                     }
-                  }
-
-                  patterns.json.applyPatch( streams, patches );
+                  applyPatches( streams, event.patches );
                }
             } );
       } else if( features.events.sources.length ) {
-         provideStreams( features.events.sources );
+         streams = provideStreams( features.events.sources );
       }
 
-      var provideActions = [ 'provide-events' ];
-      var provideHandler = createRequestHandler( eventBus, provideStream );
+      var provideActions = features.events.onActions || [];
+      var provideHandler = createRequestHandler( eventBus, function( source ) {
+         var stream = provideStream( source );
+         streams.push( stream );
+         return stream;
+      } );
 
       provideActions.forEach( function( action ) {
          eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
       } );
 
       eventBus.subscribe( 'beginLifecycleRequest', function() {
-         eventsPublisher.replace( [] );
-         authorized.then( function() {
-            ready = true;
-            connectStreams( streams );
-         } );
       } );
 
       eventBus.subscribe( 'endLifecycleRequest', function() {
@@ -108,6 +96,19 @@ define( [
          }
       }
 
+      function waitForEvent( event ) {
+         var promise = new Promise( function( resolve, reject ) {
+            eventBus.subscribe( event, function wait() {
+               eventBus.unsubscribe( wait );
+               resolve();
+            } );
+         } );
+
+         return function() {
+            return promise;
+         };
+      }
+
       function provideStreams( sources ) {
          return sources.map( provideStream );
       }
@@ -120,54 +121,34 @@ define( [
 
          var stream = new EventStream[ source.type ]( options );
 
-         if( ready ) {
+         return ready.then( function() {
             stream.connect( source.url );
-         }
-
-         streams.push( stream );
-
-         return stream;
+            return stream;
+         } );
       }
-   }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   /**
-    * Connect the given list of streams.
-    */
-   function connectStreams( streams ) {
-      streams.forEach( function( stream ) {
-         if( !stream.connected ) {
-            stream.connect( stream.options.url );
-            stream.connected = true;
+      function applyPatches( streams, patches ) {
+         function disconnectStream( pointer ) {
+            disconnectStreams( [ patterns.json.getPointer( streams, pointer ) ] );
          }
-      } );
-   }
 
-   /**
-    * Disconnect the given list of streams.
-    */
-   function disconnectStreams( streams ) {
-      streams.forEach( function( stream ) {
-         if( stream.connected ) {
-            stream.disconnect();
-            stream.connected = false;
+         for( var i = 0; i < patches.length; i++ ) {
+            switch( patches[ i ].op ) {
+               case 'add':
+                  patches[ i ].value = provideStream( patches[ i ].value );
+                  break;
+               case 'remove':
+                  disconnectStream( patches[ i ].path );
+                  break;
+               case 'replace':
+                  disconnectStream( patches[ i ].path );
+                  patches[ i ].value = provideStream( patches[ i ].value );
+                  break;
+            }
          }
-      } );
-   }
+         patterns.json.applyPatch( streams, patches );
+      }
 
-   /**
-    * Cross the given list of streams.
-    * Note: Don't call. It would be bad.
-    */
-   function crossStreams( streams ) {
-      var haha, jk;
-      return [
-         { P: 'I\'m fuzzy on the whole good/bad thing. What do you mean, "bad"?' },
-         { E: 'Try to imagine all life as you know it stopping instantaneously and every molecule in your ' +
-              'body exploding at the speed of light.' },
-         { P: 'Right. That\'s bad. Okay. All right. Important safety tip. Thanks, Egon.' }
-      ] && jk;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,6 +185,16 @@ define( [
                }
             } );
          }
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function disconnectStreams( streams ) {
+      return Promise.all( streams ).then( function( streams ) {
+         streams.forEach( function( stream ) {
+            stream.disconnect();
+         } );
       } );
    }
 

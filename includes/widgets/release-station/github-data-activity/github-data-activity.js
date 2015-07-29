@@ -10,6 +10,11 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   var nullPublisher = {};
+   nullPublisher.replace = nullPublisher.update = nullPublisher.update = function() {};
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    Controller.injections = [ 'axEventBus', 'axFeatures' ];
 
    Controller.create = function create( eventBus, features ) {
@@ -22,30 +27,47 @@ define( [
       this.eventBus = eventBus;
       this.features = features;
 
+     var dataPublisher = features.data.resource ? {
+         replace: patterns.resources.replacePublisherForFeature( this, 'data' ),
+         update: patterns.resources.updatePublisherForFeature( this, 'data' ),
+         push: function( item ) {
+            return dataPublisher.update( [ { op: 'add', path: '/-', value: item } ] );
+         }
+      } : nullPublisher;
+
       var baseOptions = {
          method: 'GET',
          headers: {}
       };
 
-      var ready = false;
-      var authorized = authHandler( this, 'auth' ).then( setAuthHeader );
-      var resources = {};
+      var resources = [];
+      var ready = authHandler( this, 'auth' )
+                     .then( setAuthHeader )
+                     .then( waitForEvent( 'beginLifecycleRequest' ) );
 
       if( features.data.sources.resource ) {
          patterns.resources.handlerFor( this )
             .registerResourceFromFeature( 'data.sources', {
                onReplace: function( event ) {
-                  return provideResources( event.data );
+                  resources = provideResources( event.data );
+                  Promise.all( resources ).then( dataPublisher.replace );
                },
                unUpdate: function( event ) {
+                  applyPatches( resources, event.patches );
                }
             } );
       } else if( features.data.sources.length ) {
-         provideResources( features.data.sources );
+         resources = provideResources( features.data.sources );
+         Promise.all( resources ).then( dataPublisher.replace );
       }
 
-      var provideActions = [ 'provide-resource' ];
-      var provideHandler = createRequestHandler( eventBus, provideResource );
+      var provideActions = features.data.onActions || [];
+      var provideHandler = createRequestHandler( eventBus, function( source ) {
+         var resource = provideResource( source );
+         resources.push( resource );
+         resource.then( dataPublisher.push );
+         return resource;
+      } );
 
       provideActions.forEach( function( action ) {
          eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
@@ -65,6 +87,19 @@ define( [
          }
       }
 
+      function waitForEvent( event ) {
+         var promise = new Promise( function( resolve, reject ) {
+            eventBus.subscribe( event, function wait() {
+               eventBus.unsubscribe( wait );
+               resolve();
+            } );
+         } );
+
+         return function() {
+            return promise;
+         };
+      }
+
       function provideResources( sources ) {
          return sources.map( provideResource );
       }
@@ -72,42 +107,43 @@ define( [
       function provideResource( source ) {
          var options = Object.create( baseOptions );
 
-         var promise = resources[ source.resource ];
+         return ready
+            .then( function() {
+               return fetch( source.url, options )
+            } )
+            .then( function handleResponse( response ) {
+               var promise = response.json();
+               var links = response.headers.get( 'Link' );
+               var next = links && parseLinks( links ).next;
 
-         if( !promise ) {
-            promise = authorized.then( function() {
-               return fetch( source.url, options ).then( handleResponse );
-            } );
-         }
-
-         function handleResponse( response ) {
-            var promise = response.json();
-            var links = response.headers.get( 'Link' );
-            var next = links && parseLinks( links ).next;
-
-            if( next ) {
-               return fetch( next, options )
-                  .then( handleResponse )
-                  .then( function( tail ) {
-                     return promise.then( function( head ) {
-                        return head.concat( tail );
+               if( next ) {
+                  return fetch( next, options )
+                     .then( handleResponse )
+                     .then( function( tail ) {
+                        return promise.then( function( head ) {
+                           return head.concat( tail );
+                        } );
                      } );
-                  } );
-            } else {
-               return promise;
+               } else {
+                  return promise;
+               }
+            } );
+      }
+
+      function applyPatches( resources, patches ) {
+         for( var i = 0; i < patches.length; i++ ) {
+            switch( patches[ i ].op ) {
+               case 'add':
+                  patches[ i ].value = provideResource( patches[ i ].value );
+                  break;
+               case 'replace':
+                  patches[ i ].value = provideResource( patches[ i ].value );
+                  break;
             }
          }
-
-         return promise.then( null, function( error ) {
-            // Cache failures too, but prune them after 10 seconds
-            if( !promise.timeout ) {
-               promise.timeout = setTimeout( function() {
-                  delete resources[ source.resource ];
-               }, 10000 );
-            }
-            throw error;
-         } );
+         patterns.json.applyPatch( resources, patches );
       }
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

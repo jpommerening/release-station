@@ -25,6 +25,16 @@
                         "format": "topic"
                      }
                   }
+               },
+               "data": {
+                  "type": "object",
+                  "properties": {
+                     "resource": {
+                        "type": "string",
+                        "description": "The name of the resource under which to publish selected repository data.",
+                        "format": "topic"
+                     }
+                  }
                }
             }
          },
