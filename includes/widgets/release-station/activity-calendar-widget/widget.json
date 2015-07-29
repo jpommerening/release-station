@@ -11,6 +11,18 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
+         "calendar": {
+            "type": "object",
+            "description": "",
+            "properties": {
+               "parameter": {
+                  "type": "string",
+                  "description": "The place parameter to use for selecting dates.",
+                  "format": "topic",
+                  "default": "date"
+               }
+            }
+         },
          "events": {
             "type": "object",
             "description": "Which events to display in the calendar.",
@@ -18,7 +30,7 @@
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "The name of the events resource to pull events from",
+                  "description": "The name of the events resource to pull events from.",
                   "format": "topic",
                   "default": "events"
                },
@@ -32,15 +44,19 @@
                }
             }
          },
-         "calendar": {
+         "details": {
             "type": "object",
-            "description": "",
+            "description": "How to handle details display.",
             "properties": {
-               "parameter": {
+               "resource": {
                   "type": "string",
-                  "description": "The place parameter to use for selecting dates",
-                  "format": "topic",
-                  "default": "date"
+                  "description": "The name of the resource to publish details with.",
+                  "format": "topic"
+               },
+               "action": {
+                  "type": "string",
+                  "description": "Which action to trigger when details shall be displayed.",
+                  "format": "topic"
                }
             }
          }

@@ -69,6 +69,9 @@
          {
             "widget": "release-station/details-widget",
             "features": {
+               "details": {
+                  "resource": "details"
+               }
             }
          }
       ],
@@ -118,6 +121,10 @@
             "features": {
                "events": {
                   "resource": "events"
+               },
+               "details": {
+                  "resource": "details",
+                  "action": "openDetails"
                }
             }
          }

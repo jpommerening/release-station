@@ -11,6 +11,18 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
+         "details": {
+            "type": "object",
+            "required": [ "resource" ],
+            "description": "",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource providing details.",
+                  "format": "topic"
+               }
+            }
+         }
       }
    }
 }

@@ -12,6 +12,8 @@ define( [
 ], function( ax, ng, moment, eventPipeline, githubEvents ) {
    'use strict';
 
+   var DATE_FORMAT = 'YYYY-MM-DD';
+
    var moduleName = 'activityCalendarWidget';
    var module     = ng.module( moduleName, [] );
 
@@ -36,10 +38,16 @@ define( [
       $scope.active = false;
 
       $scope.details = function details( date ) {
+         var events = eventBucket( $scope.resources.events, date );
+
+         $scope.eventBus.publish( 'didReplace.' + $scope.features.details.resource, {
+            resource: $scope.features.details.resource,
+            data: events
+         } );
+
          if( date.isSame( selected ) ) {
-            $scope.eventBus.publish( 'takeActionRequest.openDetails', {
-               'action': 'openDetails',
-               'day': date.format( 'YYYY-MM-DD' )
+            $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
+               action: $scope.features.details.action
             } );
             return false;
          }
@@ -144,7 +152,7 @@ define( [
          var object = Object.create( base );
          var parameters = {};
 
-         parameters[ parameter ] = date.format( 'YYYY-MM-DD' );
+         parameters[ parameter ] = date.format( DATE_FORMAT );
 
          object.date = date;
          object.weekend = date.day() % 6 === 0;
@@ -202,7 +210,7 @@ define( [
    module.controller( 'ActivityCalendarWidgetController', Controller );
 
    function eventBucket( buckets, timestamp ) {
-      var key = timestamp.format( 'YYYY-MM-DD' );
+      var key = timestamp.format( DATE_FORMAT );
       return (buckets[ key ] = (buckets[ key ] || {}));
    }
 

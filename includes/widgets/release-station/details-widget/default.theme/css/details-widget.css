@@ -5,29 +5,6 @@
  */
 @charset "UTF-8";
 
-.details-widget ul {
-   font-family: "Exo 2",Arial,sans-serif;
-   font-size: 2.1em;
-   list-style-type: none;
-   margin: -1ex 1em 1.5ex 1em;
-   padding: 0;
-}
-
-.details-widget a {
-   color: rgba(120, 120, 120, 0.4);
-   text-shadow: 1px 2px 2px #ebeced, 0 0 0 #aaa, 1px 2px 2px #ebeced;
-}
-
-.details-widget a > i.fa {
-   margin-right: 0.4em;
-}
-
-.details-widget a.active {
-   color: #ff9900;
-   text-shadow: 0 0 2px #f8c283;
-}
-
-.details-widget ul.inline > li {
-   display: inline-block;
-   padding: 0 4%;
+.details-widget table tr:first-child td {
+   border-top: none;
 }

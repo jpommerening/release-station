@@ -34,7 +34,7 @@ define( [
          replace: throttleReplacements( patterns.resources.replacePublisherForFeature( this, 'events' ) ),
          update: throttleUpdates( patterns.resources.updatePublisherForFeature( this, 'events' ) ),
          push: function( item ) {
-            return eventsPublisher.update( [ { op: 'add', path: '/-', value: item } ] );
+            return eventsPublisher.update( [ { op: 'add', path: '/' + ( item.id || '-' ), value: item } ] );
          }
       };
 

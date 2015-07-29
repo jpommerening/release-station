@@ -4,8 +4,9 @@
  * http://laxarjs.org
  */
 define( [
-   'angular'
-], function( ng ) {
+   'angular',
+   'laxar-patterns'
+], function( ng, patterns ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,6 +14,24 @@ define( [
    Controller.$inject = [ '$scope' ];
 
    function Controller( $scope ) {
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'details', {
+            onReplace: function( event ) {
+               var data = event.data;
+               $scope.tabs[0].disabled = !(data.commits && data.commits.length);
+               $scope.tabs[1].disabled = !(data.tags && data.tags.length);
+            }
+         } );
+
+      $scope.selectTab = function( tab ) {
+         $scope.selected = tab;
+      };
+      $scope.tabs = [
+         { name: 'commits', title: 'Commits' },
+         { name: 'tags', title: 'Tags' },
+         { name: 'issues', title: 'Issues' }
+      ];
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

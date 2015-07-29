@@ -1,2 +1,34 @@
 
-Details
+<ul class="nav nav-tabs" role="tablist">
+   <li ng-repeat="tab in tabs"
+       ng-class="{ active: selected == tab.name, disabled: tab.disabled }"
+       role="presentation">
+      <a ng-click="selectTab(tab.name)" role="tab">
+         {{tab.title}}
+      </a>
+   </li>
+</ul>
+
+<div class="tab-content">
+
+   <div role="tabpanel" class="tab-pane" ng-class="{ active: selected == 'commits' }">
+      <table class="table">
+         <tr ng-repeat="commit in resources.details.commits">
+            <td><a ng-href="{{commit.repo.url}}">{{commit.repo.name}}</td>
+            <td><a ng-href="{{commit.payload.url}}">{{commit.payload.sha.substring(0, 6)}}</a></td>
+            <td>{{commit.payload.message}}</td>
+         </tr>
+      </table>
+   </div>
+
+   <div role="tabpanel" class="tab-pane" ng-class="{ active: selected == 'tags' }">
+      <table class="table">
+         <tr ng-repeat="tag in resources.details.tags">
+            <td><a ng-href="{{tag.repo.url}}">{{tag.repo.name}}</td>
+            <td>{{tag.payload.ref}}</td>
+         </tr>
+      </table>
+   </div>
+
+</div>
+
