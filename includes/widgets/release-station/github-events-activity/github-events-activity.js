@@ -231,13 +231,14 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function deduplicate( callback ) {
-      var ids = [];
+      var idx = 0;
+      var ids = {};
       return function( event ) {
          if( event.id ) {
-            if( ids.indexOf( event.id ) >= 0 ) {
+            if( event.id in ids ) {
                return;
             }
-            ids.push( event.id );
+            ids[ event.id ] = idx++;
          }
          return callback( event );
       };
@@ -277,7 +278,7 @@ define( [
    function throttleUpdates( publisher, options ) {
       var timeout;
       var batch = [];
-      var maxBatchSize = (options || {}).maxBatchSize || 10;
+      var maxBatchSize = (options || {}).maxBatchSize || 20;
       var maxLatency = (options || {}).maxLatency || 150;
 
       function update() {
@@ -285,7 +286,10 @@ define( [
             publisher( batch );
             batch = [];
          }
-         timeout = null;
+         if( timeout ) {
+            clearTimeout( timeout );
+            timeout = null;
+         }
       }
 
       return function( patches ) {

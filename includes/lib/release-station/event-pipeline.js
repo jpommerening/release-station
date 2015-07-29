@@ -31,7 +31,7 @@ define( [
       var pipeline = this.pipeline = [];
       var model = this.model = context.resources[ feature ] = {};
       var processor = createProcessor( pipeline, model );
-      var incoming = [];
+      var events = [];
 
       context.eventBus.subscribe( 'didReplace.' + resource, onReplace );
       context.eventBus.subscribe( 'didUpdate.' + resource, onUpdate );
@@ -41,13 +41,25 @@ define( [
       } );
 
       function onReplace( event ) {
-         incoming.concat( event.data );
-         processEvents( incoming, processor );
+         events = event.data;
+         processor.clear();
+         processor( events );
       }
 
       function onUpdate( event ) {
+         var incoming = [];
+         var length = events.length;
+
          jsonPatch.apply( incoming, event.patches );
-         processEvents( incoming, processor );
+         jsonPatch.apply( events, event.patches );
+
+         if( events.length === incoming.length + length ) {
+            // only additions
+            processor( incoming );
+         } else {
+            // more complex changes, replay all events
+            processor.clear( events );
+         }
       }
    }
 
@@ -124,7 +136,7 @@ define( [
    }
 
    function createProcessor( pipeline, model ) {
-      function processor( chunk, start, model ) {
+      function process( chunk, start, model, clear ) {
          var i, key;
 
          for( i = start; i < pipeline.length && chunk instanceof Array; i++ ) {
@@ -132,26 +144,44 @@ define( [
          }
 
          if( !(chunk instanceof Array) ) {
-            for( key in chunk ) {
-               if( chunk.hasOwnProperty( key ) ) {
-                  if( i < pipeline.length ) {
-                     chunk[ key ] = processor( chunk[ key ], i, model && model[ key ] );
+            if( clear ) {
+               for( key in model ) {
+                  if( model.hasOwnProperty( key ) ) {
+                     process( chunk[ key ] || [], i, model[ key ], true );
                   }
+               }
+            } else {
+               for( key in chunk ) {
+                  if( chunk.hasOwnProperty( key ) ) {
+                     if( i < pipeline.length ) {
+                        chunk[ key ] = process( chunk[ key ], i, model && model[ key ] );
+                     }
 
-                  if( model && !model[ key ] ) {
-                     model[ key ] = chunk[ key ];
+                     if( model && !model[ key ] ) {
+                        model[ key ] = chunk[ key ];
+                     }
                   }
                }
             }
          } else if( model && (model instanceof Array) ) {
-            model.splice.apply( model, [ model.length, 0 ].concat( chunk ) );
+            if( clear ) {
+               model.splice.apply( model, [ 0, model.length ].concat( chunk ) );
+            } else {
+               model.splice.apply( model, [ model.length, 0 ].concat( chunk ) );
+            }
          }
          return model || chunk;
       }
 
-      return function( chunk ) {
-         return processor( chunk, 0, model );
+      function processor( chunk ) {
+         return process( chunk, 0, model );
+      }
+
+      processor.clear = function clear( chunk ) {
+         return process( chunk || [], 0, model, true );
       };
+
+      return processor;
    }
 
    EventPipeline.create = function create( context, feature ) {
