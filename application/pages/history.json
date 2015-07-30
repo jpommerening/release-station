@@ -13,6 +13,7 @@
                },
                "data": {
                   "resource": "data",
+                  "onActions": [ "provide-resource" ],
                   "sources": {
                      "resource": "data-sources"
                   }
