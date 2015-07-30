@@ -14,13 +14,12 @@ define( [
     * This handler listens to replacements and updates to a list resource
     * and processes with user defined functions.
     *
+    * @constructor
     * @param {Object}   context
     * @param {EventBus} context.eventBus
     * @param {Object}   context.features
     * @param {Object}   context.resources
     * @param {String}   feature
-    *
-    * @return {Object}
     */
    function EventPipeline( context, feature ) {
       if( !(this instanceof EventPipeline) ) {
@@ -30,7 +29,7 @@ define( [
       var resource = this.resource = context.features[ feature ].resource;
       var pipeline = this.pipeline = [];
       var model = this.model = context.resources[ feature ] = {};
-      var processor = createProcessor( pipeline, model );
+      var processor = this.processor = new Processor( pipeline, model );
       var events = [];
 
       context.eventBus.subscribe( 'didReplace.' + resource, onReplace );
@@ -40,10 +39,18 @@ define( [
          context.eventBus.unsubscribe( onUpdate );
       } );
 
+      this.rewind = function() {
+         processor.clear();
+      };
+
+      this.replay = function() {
+         processor.process( events );
+      };
+
       function onReplace( event ) {
          events = event.data;
          processor.clear();
-         processor( events );
+         processor.process( events );
       }
 
       function onUpdate( event ) {
@@ -55,10 +62,11 @@ define( [
 
          if( events.length === incoming.length + length ) {
             // only additions
-            processor( incoming );
+            processor.process( incoming );
          } else {
             // more complex changes, replay all events
-            processor.clear( events );
+            processor.clear();
+            processor.process( events );
          }
       }
    }
@@ -106,14 +114,39 @@ define( [
    };
 
    /**
+    * A helper to process chunks of event data using a pipeline and
+    * insert the date into the given model.
+    *
+    * @constructor
+    * @param {Function[]} pipeline a list of functions used for processing.
+    * @param {Array|Object} model the model to update when processing.
+    */
+   function Processor( pipeline, model ) {
+      if( !(this instanceof Processor) ) {
+         return new Processor( pipeline, model );
+      }
+
+      this.pipeline = pipeline;
+      this.model = model;
+   }
+
+   Processor.prototype.process = function process( chunk ) {
+      return merge( this.model, processWithPipeline( this.pipeline, chunk ) );
+   };
+
+   Processor.prototype.clear = function clear() {
+      return clearWithPipeline( this.pipeline, this.model );
+   };
+
+   /**
     * Process events in chunks.
     * If processing takes "too long", execution will be interrupted and will
     * continue asynchronously.
     *
     * @param {Array} events
     *    The events to process (processed items will be removed from the array).
-    * @param {Function} processor
-    *    A function that processes one chunk.
+    * @param {Processor} processor
+    *    A processor.
     * @param {Number} timeout
     *    The maximum time in milliseconds for synchronous processing.
     */
@@ -125,7 +158,7 @@ define( [
       }
 
       while( events.length > 0 && !shouldStop() ) {
-         processor( events.splice( 0, 10 ) );
+         processor.process( events.splice( 0, 10 ) );
       }
 
       if( events.length > 0 ) {
@@ -135,53 +168,73 @@ define( [
       }
    }
 
-   function createProcessor( pipeline, model ) {
-      function process( chunk, start, model, clear ) {
-         var i, key;
+   function processWithPipeline( pipeline, chunk ) {
+      var i, key;
 
-         for( i = start; i < pipeline.length && chunk instanceof Array; i++ ) {
-            chunk = pipeline[ i ]( chunk );
-         }
-
-         if( !(chunk instanceof Array) ) {
-            if( clear ) {
-               for( key in model ) {
-                  if( model.hasOwnProperty( key ) ) {
-                     process( chunk[ key ] || [], i, model[ key ], true );
-                  }
-               }
-            } else {
-               for( key in chunk ) {
-                  if( chunk.hasOwnProperty( key ) ) {
-                     if( i < pipeline.length ) {
-                        chunk[ key ] = process( chunk[ key ], i, model && model[ key ] );
-                     }
-
-                     if( model && !model[ key ] ) {
-                        model[ key ] = chunk[ key ];
-                     }
-                  }
-               }
-            }
-         } else if( model && (model instanceof Array) ) {
-            if( clear ) {
-               model.splice.apply( model, [ 0, model.length ].concat( chunk ) );
-            } else {
-               model.splice.apply( model, [ model.length, 0 ].concat( chunk ) );
-            }
-         }
-         return model || chunk;
+      for( i = 0; i < pipeline.length && chunk instanceof Array; i++ ) {
+         chunk = pipeline[ i ]( chunk );
       }
 
-      function processor( chunk ) {
-         return process( chunk, 0, model );
+      pipeline = pipeline.slice( i );
+
+      if( pipeline.length ) {
+         for( key in chunk ) {
+            if( chunk.hasOwnProperty( key ) ) {
+               chunk[ key ] = processWithPipeline( pipeline, chunk[ key ] );
+            }
+         }
       }
 
-      processor.clear = function clear( chunk ) {
-         return process( chunk || [], 0, model, true );
-      };
+      return chunk;
+   }
 
-      return processor;
+   function clearWithPipeline( pipeline, model ) {
+      var i, key, chunk = [];
+
+      for( i = 0; i < pipeline.length && chunk instanceof Array; i++ ) {
+         chunk = pipeline[ i ]( chunk );
+      }
+
+      pipeline = pipeline.slice( i );
+
+      if( pipeline.length ) {
+         for( key in model ) {
+            if( model.hasOwnProperty( key ) ) {
+               clearWithPipeline( pipeline, model[ key ] );
+            }
+         }
+      } else {
+         clear( model );
+      }
+
+      return model;
+   }
+
+   function merge( target, source ) {
+      if( ( target instanceof Array ) && ( source instanceof Array ) ) {
+         target.push.apply( target, source );
+      } else if( ( typeof target === 'object' ) && ( typeof source === 'object' ) ) {
+         for( var key in source ) {
+            if( source.hasOwnProperty( key ) ) {
+               target[ key ] = merge( target[ key ], source[ key ] );
+            }
+         }
+      } else {
+         target = source;
+      }
+      return target;
+   }
+
+   function clear( target ) {
+      if( target instanceof Array ) {
+         target.splice( 0, target.length );
+      } else {
+         for( key in target ) {
+            if( target.hasOwnProperty( key ) ) {
+               delete target[ key ];
+            }
+         }
+      }
    }
 
    EventPipeline.create = function create( context, feature ) {
