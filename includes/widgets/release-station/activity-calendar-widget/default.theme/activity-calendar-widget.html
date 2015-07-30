@@ -24,6 +24,7 @@
                             weekend: day.weekend,
                             'not-in-month': !day.isInMonth,
                             'hidden-xs': day.weekend }">
+ <!-- ng-style="{ 'background-color': scale( getActivityEstimation( day ) ).brighten().hex() }"-->
                <a ng-href="{{day.url}}" class="day" tabindex="0" ng-click="details(day.date)">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>

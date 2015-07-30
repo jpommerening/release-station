@@ -69,17 +69,19 @@ define( [
          transclude: true,
          scope: {
             value: '=' + directiveName,
+            fill: '=' + directiveName + 'Fill',
+            glow: '=' + directiveName + 'Glow',
             interval: '=' + directiveName + 'Interval'
          },
          link: function( scope, element, attrs ) {
-            var defs = $document.find( '#ax-gauge-defs' );
-            var fill = element.find( '.ax-gauge-fill' )[0];
-            var glow = element.find( '.ax-gauge-glow' )[0];
-            var progress = element.find( '.ax-gauge-progress' )[0];
+            var $defs = $document.find( '#ax-gauge-defs' );
+            var $fill = element.find( '.ax-gauge-fill' );
+            var $glow = element.find( '.ax-gauge-glow' );
+            var $progress = element.find( '.ax-gauge-progress' );
 
-            if( defs.length === 0 ) {
-               defs = ng.element( svgGlobalDefs );
-               $document.find( 'body' ).append( defs );
+            if( $defs.length === 0 ) {
+               $defs = ng.element( svgGlobalDefs );
+               $document.find( 'body' ).append( $defs );
             }
 
             numInstances++;
@@ -88,21 +90,31 @@ define( [
 
             scope.$watch( 'value', function( newValue, oldValue ) {
                if( newValue > 0 ) {
-                  setGauge( fill, newValue );
-                  setGauge( glow, newValue );
+                  setGauge( $fill[0], newValue );
+                  setGauge( $glow[0], newValue );
                }
             } );
             scope.$watch( 'active', function( newValue, oldValue ) {
                /*
                if( scope.length > 0 ) {
-                  setProgress( progress, newValue, scope.length );
+                  setProgress( $progress[0], newValue, scope.length );
                }
                */
+            } );
+            scope.$watch( 'fill', function( newValue, oldValue ) {
+               $fill.css( 'fill', newValue );
+            } );
+            scope.$watch( 'glow', function( newValue, oldValue ) {
+               if( newValue ) {
+                  $glow.css( 'fill', newValue );
+               } else {
+                  $glow.css( 'display', 'none' );
+               }
             } );
 
             element.on( '$destroy', function() {
                if( --numInstances === 0 ) {
-                  defs.remove();
+                  $defs.remove();
                }
             } );
          },
@@ -210,7 +222,7 @@ define( [
                '<feBlend mode="screen" />' +
             '</filter>' +
             '<radialGradient id="ax-gauge-inner-fill">' +
-               '<stop offset="85%" stop-color="white" />' +
+               '<stop offset="90%" stop-color="white" />' +
                '<stop offset="100%" stop-color="black" />' +
             '</radialGradient>' +
             '<mask id="ax-gauge-inner-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">' +

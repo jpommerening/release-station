@@ -37,6 +37,7 @@ var require = {
       jjve: 'jjve/jjve',
       'socket.io': 'socket.io-client/socket.io',
       semver: 'semver/semver.browser',
+      'chroma-js': 'chroma-js/chroma',
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',

@@ -7,9 +7,10 @@ define( [
    'laxar',
    'angular',
    'moment',
+   'chroma-js',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, moment, eventPipeline, githubEvents ) {
+], function( ax, ng, moment, chroma, eventPipeline, githubEvents ) {
    'use strict';
 
    var DATE_FORMAT = 'YYYY-MM-DD';
@@ -31,6 +32,8 @@ define( [
       $scope.resources = {
          events: {}
       };
+      $scope.scale = chroma.scale( $scope.features.calendar.colors ).correctLightness( true );
+      $scope.getActivityEstimation = getActivityEstimation;
 
       $scope.pushedRows = 0;
       $scope.unshiftedRows = 0;
@@ -248,6 +251,25 @@ define( [
             day.isFuture = date.isAfter( today );
          } );
       } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function getActivityEstimation( day ) {
+      var sum = 0;
+      if( day.commits ) {
+         sum += day.commits.length;
+      }
+      if( day.tags ) {
+         sum += day.tags.length * 1.4;
+      }
+      if( day.issues_opened ) {
+         sum += day.issues_opened.length;
+      }
+      if( day.issues_closed ) {
+         sum += day.issues_closed.length;
+      }
+      return 1 - (1 / Math.log(1 + sum));
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

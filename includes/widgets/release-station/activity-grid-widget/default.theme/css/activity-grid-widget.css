@@ -58,6 +58,7 @@
    fill: #ccc;
 }
 
+/*
 .activity-grid-widget .ax-gauge-fill {
    fill: #ff9900;
 }
@@ -65,6 +66,7 @@
 .activity-grid-widget .ax-gauge-glow {
    fill: #f8c283;
 }
+*/
 
 .activity-grid-widget .ax-gauge-progress {
    stroke: #ccc;
