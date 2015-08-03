@@ -116,7 +116,6 @@ define( [
       function provideStream( source ) {
          var options = Object.create( baseOptions );
 
-         options.url = source.url;
          options.events = source.events;
 
          var stream = new EventStream[ source.type ]( options );

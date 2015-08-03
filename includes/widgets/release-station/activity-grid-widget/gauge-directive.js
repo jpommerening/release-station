@@ -219,14 +219,14 @@ define( [
                '<feComponentTransfer>' +
                   '<feFuncA type="linear" slope="0.4" />' +
                '</feComponentTransfer>' +
-               '<feBlend mode="screen" />' +
+               '<feBlend mode="lighten" />' +
             '</filter>' +
             '<radialGradient id="ax-gauge-inner-fill">' +
-               '<stop offset="90%" stop-color="white" />' +
+               '<stop offset="95%" stop-color="white" />' +
                '<stop offset="100%" stop-color="black" />' +
             '</radialGradient>' +
             '<mask id="ax-gauge-inner-mask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">' +
-               '<circle cx=".5" cy=".5" r=".3" fill="url(#ax-gauge-inner-fill)" />' +
+               '<circle cx=".5" cy=".5" r=".35" fill="url(#ax-gauge-inner-fill)" />' +
             '</mask>' +
          '</defs>' +
       '</svg>';
