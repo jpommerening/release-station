@@ -19,13 +19,14 @@
       <tbody>
          <tr ng-repeat="week in weeks">
             <td ng-repeat="day in week"
+                ng-style="{ 'background-color': day.isWorkingDay && (day.isSelected ? scale(getActivityEstimation(day)).brighten(10) : scale(getActivityEstimation(day))) }"
                 ng-class="{ today: day.isToday,
                             selected: day.isSelected,
                             past: day.isPast,
                             future: day.isFuture,
-                            weekend: day.weekend,
+                            weekend: day.isWeekend,
                             'not-in-month': !day.isInMonth,
-                            'hidden-xs': day.weekend }">
+                            'hidden-xs': day.isWeekend }">
                <a ng-href="{{day.url}}" class="day" tabindex="0" ng-click="details(day.date)">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>

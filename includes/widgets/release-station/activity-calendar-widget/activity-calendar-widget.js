@@ -156,7 +156,6 @@ define( [
          parameters[ parameter ] = date.format( DATE_FORMAT );
 
          object.date = date;
-         object.weekend = date.day() % 6 === 0;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
          object.commits_url = object.url + '/commits';
          object.tags_url = object.url + '/tags';
@@ -242,11 +241,13 @@ define( [
       weeks.forEach( function( week ) {
          week.forEach( function( day ) {
             var date = day.date;
-            day.isInMonth = date.isSame( startOfMonth ) || date.isBetween( startOfMonth, endOfMonth );
             day.isToday = date.isSame( today );
             day.isSelected = date.isSame( selected );
             day.isPast = date.isBefore( today );
             day.isFuture = date.isAfter( today );
+            day.isWeekend = date.day() % 6 === 0;
+            day.isInMonth = date.isSame( startOfMonth ) || date.isBetween( startOfMonth, endOfMonth );
+            day.isWorkingDay = day.isInMonth && !(day.isWeekend || day.isFuture);
          } );
       } );
    }
