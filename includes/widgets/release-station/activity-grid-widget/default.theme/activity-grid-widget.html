@@ -1,3 +1,14 @@
+<div ax-color-scale="scale"></div>
+
+<!--
+<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+   <div class="col-md-3"
+        style="background-color: gray; height: 39px"
+        ng-style="{ 'background-color': scale(num/15).hex() }"
+        ng-repeat="num in [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]">{{(num / 15).toFixed(3)}}:<br>{{scale(num/15).hex()}}</div>
+</div>
+-->
+
 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12"
      ng-repeat="project in projects | orderBy: 'gauge': true">
    <div class="col-md-12">
@@ -11,8 +22,8 @@
    </div>
    <div class="col-md-4 col-sm-4 col-xs-12">
       <ol ax-gauge="project.gauge"
-          ax-gauge-fill="scale(project.gauge).hex()"
-          ax-gauge-glow="scale(project.gauge).brighten().hex()"
+          ax-gauge-fill="scale(project.gauge).darken(0.1).hex()"
+          ax-gauge-glow="scale(project.gauge).brighten(0.1).hex()"
           ax-gauge-interval="features.gauge.interval">
          <li ax-gauge-pane
              ng-repeat="stat in stats">

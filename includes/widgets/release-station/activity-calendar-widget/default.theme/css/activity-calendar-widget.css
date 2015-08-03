@@ -244,6 +244,11 @@
    background: linear-gradient(0deg, rgba(248, 194, 131, 0.6), rgba(255, 153, 0, 0) 35%);
 }
 
+.activity-calendar-widget .ax-color-scale .ax-color-stop-0 { background-color: #6090c0; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #108070; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #b0e090; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #c8e050; }
+
 /**
  * Clean up some stuff we don't want to be colored.
  */

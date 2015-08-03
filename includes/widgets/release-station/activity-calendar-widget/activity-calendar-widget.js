@@ -7,10 +7,9 @@ define( [
    'laxar',
    'angular',
    'moment',
-   'chroma-js',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, moment, chroma, eventPipeline, githubEvents ) {
+], function( ax, ng, moment, eventPipeline, githubEvents ) {
    'use strict';
 
    var DATE_FORMAT = 'YYYY-MM-DD';
@@ -32,7 +31,6 @@ define( [
       $scope.resources = {
          events: {}
       };
-      $scope.scale = chroma.scale( $scope.features.calendar.colors ).correctLightness( true );
       $scope.getActivityEstimation = getActivityEstimation;
 
       $scope.pushedRows = 0;

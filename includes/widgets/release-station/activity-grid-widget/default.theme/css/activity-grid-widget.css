@@ -68,6 +68,11 @@
 }
 */
 
+.activity-grid-widget .ax-color-scale .ax-color-stop-0 { background-color: #6090c0; }
+.activity-grid-widget .ax-color-scale .ax-color-stop-1 { background-color: #108070; }
+.activity-grid-widget .ax-color-scale .ax-color-stop-2 { background-color: #b0e090; }
+.activity-grid-widget .ax-color-scale .ax-color-stop-3 { background-color: #c8e050; }
+
 .activity-grid-widget .ax-gauge-progress {
    stroke: #ccc;
    stroke-width: 2;

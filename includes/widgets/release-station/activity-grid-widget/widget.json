@@ -7,6 +7,10 @@
       "type": "widget"
    },
 
+   "controls": [
+      "laxar-color-scale-control"
+   ],
+
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
@@ -19,12 +23,6 @@
                   "type": "number",
                   "description": "Slide interval in milliseconds",
                   "default": 4500
-               },
-               "colors": {
-                  "type": [ "string", "array" ],
-                  "description": "One or more color stops to smoothly transition between, when changing value.",
-                  "default": [ "blue", "green", "orange" ],
-                  "items": { "type": "string" }
                }
             }
          },

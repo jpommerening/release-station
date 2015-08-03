@@ -127,6 +127,8 @@
          {
             "widget": "release-station/activity-calendar-widget",
             "features": {
+               "calendar": {
+               },
                "events": {
                   "resource": "events"
                },

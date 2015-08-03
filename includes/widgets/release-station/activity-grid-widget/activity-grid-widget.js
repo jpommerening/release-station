@@ -4,15 +4,15 @@
  * http://laxarjs.org/license
  */
 define( [
-   'laxar',
    'angular',
+   'laxar',
+   'laxar-patterns',
    'semver',
    'moment',
-   'chroma-js',
    './gauge-directive',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, semver, moment, chroma, gauge, eventPipeline, githubEvents ) {
+], function( ng, ax, patterns, semver, moment, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
    var moduleName = 'activityGridWidget';
@@ -27,9 +27,9 @@ define( [
    function Controller( $scope, $interval, axFlowService ) {
       $scope.projects = [];
       $scope.resources = {
-         events: {}
+         events: {},
+         projects: {}
       };
-      $scope.scale = chroma.scale( $scope.features.gauge.colors ).correctLightness( true );
       $scope.stats = [
          {
             text: [ 'Commits' ],
