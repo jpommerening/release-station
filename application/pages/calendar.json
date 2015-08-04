@@ -66,7 +66,7 @@
                "headline": {
                   "level": 3,
                   "i18nHtmlText": {
-                     "en_US": "Details"
+                     "en-US": "Details"
                   }
                }
             }
@@ -91,12 +91,12 @@
             "features": {
                "headline": {
                   "i18nHtmlText": {
-                     "en_US": "Release<span>Station</span>"
+                     "en-US": "Release<span>Station</span>"
                   }
                },
                "intro": {
                   "i18nHtmlText": {
-                     "en_US": "for GitHub"
+                     "en-US": "for GitHub"
                   }
                }
             }
@@ -113,7 +113,7 @@
                "headline": {
                   "level": 2,
                   "i18nHtmlText": {
-                     "en_US": "Activity Calendar"
+                     "en-US": "Activity Calendar"
                   }
                }
             }

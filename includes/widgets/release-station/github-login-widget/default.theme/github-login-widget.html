@@ -6,7 +6,7 @@
          <span class="caret"></span>
       </a>
       <a class="menu-item" ng-if="!authenticated" ng-click="authenticate()" href="#">
-         <span class="icon"></span><span>Login</span>
+         <span class="icon"></span><span>{{features.auth.i18nHtmlLabel | axLocalize:i18n}}</span>
       </a>
       <ul ng-if="authenticated" class="dropdown-menu dropdown-menu-right" role="menu">
          <li class="dropdown-header" ng-bind-html="features.user.i18nHtmlLabel | axLocalize:i18n"></li>

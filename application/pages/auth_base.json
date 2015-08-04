@@ -75,7 +75,7 @@
                "headline": {
                   "level": 3,
                   "i18nHtmlText": {
-                     "en_US": "Authenticate with GitHub"
+                     "en-US": "Authenticate with GitHub"
                   }
                }
             }
@@ -101,7 +101,7 @@
                "headline": {
                   "level": 4,
                   "i18nHtmlText": {
-                     "en_US": "Settings"
+                     "en-US": "Settings"
                   }
                }
             }
@@ -134,21 +134,21 @@
                         "place": "grid",
                         "icon": "fa-tachometer",
                         "i18nHtmlLabel": {
-                           "en_US": "Grid"
+                           "en-US": "Grid"
                         }
                      },
                      {
                         "place": "calendar",
                         "icon": "fa-calendar",
                         "i18nHtmlLabel": {
-                           "en_US": "Calendar"
+                           "en-US": "Calendar"
                         }
                      },
                      {
                         "place": "history",
                         "icon": "fa-tags",
                         "i18nHtmlLabel": {
-                           "en_US": "History"
+                           "en-US": "History"
                         }
                      }
                   ]
@@ -170,14 +170,14 @@
                   {
                      "action": "openSettings",
                      "i18nHtmlLabel": {
-                        "en_US": "Settings"
+                        "en-US": "Settings"
                      }
                   },
                   {
                      "icon": "fa-sign-out",
                      "action": "deauthenticate",
                      "i18nHtmlLabel": {
-                        "en_US": "Sign out"
+                        "en-US": "Sign out"
                      }
                   }
                ]

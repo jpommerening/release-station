@@ -104,7 +104,7 @@ define( [
 
          if( !accessToken ) {
             return Promise.resolve( [
-               { en_US: 'Can\'t connect to ' + htmlApiLink + ' without an access token.' }
+               { 'en-US': 'Can\'t connect to ' + htmlApiLink + ' without an access token.' }
             ] );
          }
 
@@ -115,18 +115,18 @@ define( [
             }
          } ).then( function( response ) {
             var i18nHtmlMessage = {
-               en_US: 'Successfully validated access token <i>' + accessToken + '</i>. ' +
-                      'Received authentication success from ' + htmlApiLink + '.'
+               'en-US': 'Successfully validated access token <i>' + accessToken + '</i>. ' +
+                        'Received authentication success from ' + htmlApiLink + '.'
             };
-            ax.log.trace( i18nHtmlMessage.en_US );
+            ax.log.trace( i18nHtmlMessage[ 'en-US' ] );
             return [ i18nHtmlMessage ];
          }, function( response ) {
             var statusText = response.status + ' ' + response.statusText;
             var i18nHtmlMessage = {
-               en_US: 'Validation of GitHub access token <i>' + accessToken + '</i> failed. ' +
-                      'Received HTTP status <i>' + statusText + '</i> from ' + htmlApiLink + '.'
+               'en-US': 'Validation of GitHub access token <i>' + accessToken + '</i> failed. ' +
+                        'Received HTTP status <i>' + statusText + '</i> from ' + htmlApiLink + '.'
             };
-            ax.log.trace( i18nHtmlMessage.en_US );
+            ax.log.trace( i18nHtmlMessage[ 'en-US' ] );
             return Promise.reject( [ i18nHtmlMessage ] );
          } );
 

@@ -44,12 +44,12 @@
             "features": {
                "headline": {
                   "i18nHtmlText": {
-                     "en_US": "Release<span>Station</span>"
+                     "en-US": "Release<span>Station</span>"
                   }
                },
                "intro": {
                   "i18nHtmlText": {
-                     "en_US": "for GitHub"
+                     "en-US": "for GitHub"
                   }
                }
             }
@@ -63,12 +63,12 @@
                "headline": {
                   "level": 2,
                   "i18nHtmlText": {
-                     "en_US": "Activity Overview"
+                     "en-US": "Activity Overview"
                   }
                },
                "intro": {
                   "i18nHtmlText": {
-                     "en_US": "last 30 days"
+                     "en-US": "last 30 days"
                   }
                }
             }
