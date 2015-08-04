@@ -232,10 +232,8 @@ define( [
       '</svg>';
 
    return {
-      createForModule: function( module ) {
-         module.directive( directiveName, gaugeDirective );
-         module.directive( directiveName + 'Pane', gaugePaneDirective );
-      }
+      axGauge: gaugeDirective,
+      axGaugePane: gaugePaneDirective
    };
 
 } );

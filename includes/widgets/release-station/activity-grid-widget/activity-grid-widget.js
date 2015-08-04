@@ -15,18 +15,12 @@ define( [
 ], function( ng, ax, patterns, semver, moment, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
-   var moduleName = 'activityGridWidget';
-   var module     = ng.module( moduleName, [] );
-
-   gauge.createForModule( module );
-
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
 
    function Controller( $scope, $interval, axFlowService ) {
 
-      $scope.getActivityEstimation = function(x) { return x.activity; };
       $scope.projects = [];
       $scope.resources = {
          events: {},
@@ -163,8 +157,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   module.controller( 'ActivityGridWidgetController', Controller );
-
-   return module;
+   return ng.module( 'activityGridWidget', [] )
+            .directive( 'axGauge', gauge.axGauge )
+            .directive( 'axGaugePane', gauge.axGaugePane )
+            .controller( 'ActivityGridWidgetController', Controller );
 
 } );

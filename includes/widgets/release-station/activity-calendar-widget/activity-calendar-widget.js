@@ -14,9 +14,6 @@ define( [
 
    var DATE_FORMAT = 'YYYY-MM-DD';
 
-   var moduleName = 'activityCalendarWidget';
-   var module     = ng.module( moduleName, [] );
-
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    Controller.$inject = [ '$scope', '$timeout', 'axFlowService' ];
@@ -27,7 +24,6 @@ define( [
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
 
-      $scope.getActivityEstimation = function(x) { return x.activity; };
       $scope.weeks = [];
       $scope.resources = {
          events: {}
@@ -269,21 +265,20 @@ define( [
          sum += day.commits.length;
       }
       if( day.tags ) {
-         sum += day.tags.length * 1.4;
+         sum += day.tags.length * 1.5;
       }
       if( day.issues_opened ) {
-         sum += day.issues_opened.length;
+         sum += day.issues_opened.length * 0.75;
       }
       if( day.issues_closed ) {
-         sum += day.issues_closed.length;
+         sum += day.issues_closed.length * 0.75;
       }
       return 1 - (1 / Math.log(1 + sum));
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   module.controller( 'ActivityCalendarWidgetController', Controller );
-
-   return module;
+   return ng.module( 'activityCalendarWidget', [] )
+            .controller( 'ActivityCalendarWidgetController', Controller );
 
 } );
