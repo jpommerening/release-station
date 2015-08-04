@@ -40,34 +40,27 @@ define( [
          headers: {}
       };
 
-      var resources = [];
       var ready = authHandler( this, 'auth' )
                      .then( setAuthHeader )
-                     .then( waitForEvent( 'beginLifecycleRequest' ) );
+                     .then( waitForEvent( eventBus, 'beginLifecycleRequest' ) );
 
       if( features.data.sources.resource ) {
          patterns.resources.handlerFor( this )
             .registerResourceFromFeature( 'data.sources', {
                onReplace: function( event ) {
-                  resources = provideResources( event.data );
-                  Promise.all( resources ).then( dataPublisher.replace );
+                  Promise.all( provideResources( event.data ) ).then( dataPublisher.replace );
                },
-               unUpdate: function( event ) {
-                  applyPatches( resources, event.patches );
+               onUpdate: function( event ) {
+                  var patches = event.patches.map( mapPatchValue.bind( null, provideResource ) );
+                  Promise.all( patches.map( wrapPatchInPromise ) ).then( dataPublisher.update );
                }
             } );
       } else if( features.data.sources.length ) {
-         resources = provideResources( features.data.sources );
-         Promise.all( resources ).then( dataPublisher.replace );
+         Promise.all( provideResources( features.data.sources ) ).then( dataPublisher.replace );
       }
 
       var provideActions = features.data.onActions || [];
-      var provideHandler = createRequestHandler( eventBus, function( source ) {
-         var resource = provideResource( source );
-         resources.push( resource );
-         resource.then( dataPublisher.push );
-         return resource;
-      } );
+      var provideHandler = createRequestHandler( eventBus, provideResource );
 
       provideActions.forEach( function( action ) {
          eventBus.subscribe( 'takeActionRequest.' + action, provideHandler );
@@ -85,19 +78,6 @@ define( [
          } else {
             delete baseOptions.headers[ 'Authorization' ];
          }
-      }
-
-      function waitForEvent( event ) {
-         var promise = new Promise( function( resolve, reject ) {
-            eventBus.subscribe( event, function wait() {
-               eventBus.unsubscribe( wait );
-               resolve();
-            } );
-         } );
-
-         return function() {
-            return promise;
-         };
       }
 
       function provideResources( sources ) {
@@ -130,20 +110,35 @@ define( [
             } );
       }
 
-      function applyPatches( resources, patches ) {
-         for( var i = 0; i < patches.length; i++ ) {
-            switch( patches[ i ].op ) {
-               case 'add':
-                  patches[ i ].value = provideResource( patches[ i ].value );
-                  break;
-               case 'replace':
-                  patches[ i ].value = provideResource( patches[ i ].value );
-                  break;
-            }
-         }
-         patterns.json.applyPatch( resources, patches );
-      }
+   }
 
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function mapPatchValue( callback, patch ) {
+      var result = {
+         op: patch.op,
+         path: patch.path
+      };
+      if( patch.from ) {
+         result.from = patch.from;
+      }
+      if( patch.value ) {
+         result.value = callback( patch.value );
+      }
+      return result;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function wrapPatchInPromise( patch ) {
+      if( patch.value ) {
+         return callback( patch.value ).then( function( value ) {
+            result.value = value;
+            return result;
+         } );
+      } else {
+         return Promise.resolve( result );
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,6 +196,21 @@ define( [
             } );
          }
       } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function waitForEvent( eventBus, event ) {
+      var promise = new Promise( function( resolve, reject ) {
+         eventBus.subscribe( event, function wait() {
+            eventBus.unsubscribe( wait );
+            resolve();
+         } );
+      } );
+
+      return function() {
+         return promise;
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

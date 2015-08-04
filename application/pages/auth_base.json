@@ -118,6 +118,9 @@
                "settings": {
                   "events": {
                      "resource": "event-sources"
+                  },
+                  "data": {
+                     "resource": "data-sources"
                   }
                }
             }

@@ -52,7 +52,7 @@ define( [
       var streams = [];
       var ready = authHandler( this, 'auth' )
                      .then( setAuthHeader )
-                     .then( waitForEvent( 'beginLifecycleRequest' ) )
+                     .then( waitForEvent( eventBus, 'beginLifecycleRequest' ) )
                      .then( function() { eventsPublisher.replace( [] ) } );
 
       if( features.events.sources.resource ) {
@@ -63,7 +63,9 @@ define( [
                   streams = provideStreams( event.data );
                },
                onUpdate: function( event ) {
-                  applyPatches( streams, event.patches );
+                  var patches = event.patches.map( mapPatchValue.bind( null, provideStream ) );
+                  disconnectStreams( removedItems( streams, patches ) );
+                  patterns.json.applyPatch( streams, patches );
                }
             } );
       } else if( features.events.sources.length ) {
@@ -96,19 +98,6 @@ define( [
          }
       }
 
-      function waitForEvent( event ) {
-         var promise = new Promise( function( resolve, reject ) {
-            eventBus.subscribe( event, function wait() {
-               eventBus.unsubscribe( wait );
-               resolve();
-            } );
-         } );
-
-         return function() {
-            return promise;
-         };
-      }
-
       function provideStreams( sources ) {
          return sources.map( provideStream );
       }
@@ -126,28 +115,43 @@ define( [
          } );
       }
 
-      function applyPatches( streams, patches ) {
-         function disconnectStream( pointer ) {
-            disconnectStreams( [ patterns.json.getPointer( streams, pointer ) ] );
-         }
+   }
 
-         for( var i = 0; i < patches.length; i++ ) {
-            switch( patches[ i ].op ) {
-               case 'add':
-                  patches[ i ].value = provideStream( patches[ i ].value );
-                  break;
-               case 'remove':
-                  disconnectStream( patches[ i ].path );
-                  break;
-               case 'replace':
-                  disconnectStream( patches[ i ].path );
-                  patches[ i ].value = provideStream( patches[ i ].value );
-                  break;
-            }
-         }
-         patterns.json.applyPatch( streams, patches );
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function removedItems( items, patches ) {
+      return patches.filter( function( patch ) {
+         return ( patch.op === 'remove' || patch.op === 'replace' );
+      } ).map( function( patch ) {
+         return patterns.json.getPointer( items, patch.path );
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function disconnectStreams( streams ) {
+      return Promise.all( streams ).then( function( streams ) {
+         streams.forEach( function( stream ) {
+            stream.disconnect();
+         } );
+      } );
+   }
+
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function mapPatchValue( callback, patch ) {
+      var result = {
+         op: patch.op,
+         path: patch.path
+      };
+      if( patch.from ) {
+         result.from = patch.from;
       }
-
+      if( patch.value ) {
+         result.value = callback( patch.value );
+      }
+      return result;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,12 +193,17 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function disconnectStreams( streams ) {
-      return Promise.all( streams ).then( function( streams ) {
-         streams.forEach( function( stream ) {
-            stream.disconnect();
+   function waitForEvent( eventBus, event ) {
+      var promise = new Promise( function( resolve, reject ) {
+         eventBus.subscribe( event, function wait() {
+            eventBus.unsubscribe( wait );
+            resolve();
          } );
       } );
+
+      return function() {
+         return promise;
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
