@@ -26,6 +26,18 @@
                }
             }
          },
+         "repos": {
+            "type": "object",
+            "description": "Which projects to display in the grid.",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the projects resource, a list of repository resources",
+                  "format": "topic"
+               }
+            }
+         },
          "events": {
             "type": "object",
             "description": "Which events to display in the grid.",
@@ -34,8 +46,7 @@
                "resource": {
                   "type": "string",
                   "description": "The name of the events resource to pull events from",
-                  "format": "topic",
-                  "default": "events"
+                  "format": "topic"
                },
                "types": {
                   "type": "array",

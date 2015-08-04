@@ -79,6 +79,9 @@
          {
             "widget": "release-station/activity-grid-widget",
             "features": {
+               "repos": {
+                  "resource": "data"
+               },
                "events": {
                   "resource": "events"
                }

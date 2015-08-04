@@ -8,3 +8,8 @@
 .details-widget table tr:first-child td {
    border-top: none;
 }
+
+.details-widget .tab-content {
+   max-height: 600px;
+   overflow-y: auto;
+}

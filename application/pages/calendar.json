@@ -129,6 +129,9 @@
             "features": {
                "calendar": {
                },
+               "repos": {
+                  "resource": "repos"
+               },
                "events": {
                   "resource": "events"
                },

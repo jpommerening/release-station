@@ -25,11 +25,14 @@ define( [
    Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
 
    function Controller( $scope, $interval, axFlowService ) {
+
+      $scope.getActivityEstimation = function(x) { return x.activity; };
       $scope.projects = [];
       $scope.resources = {
          events: {},
-         projects: {}
+         repos: []
       };
+
       $scope.stats = [
          {
             text: [ 'Commits' ],
@@ -49,85 +52,47 @@ define( [
          }
       ];
 
-      var projectById = {};
-
-      function updateProjectInfo( id, url ) {
-         var resource = 'repo' + id;
-
-         function onReplace( event ) {
-            $scope.eventBus.unsubscribe( onReplace );
-            var project = $scope.projects[ projectById[ id ] ];
-            Object.keys( event.data ).forEach( function( key ) {
-               project[ key ] = event.data[ key ];
-            } );
-         }
-
-         $scope.eventBus.subscribe( 'didReplace.' + resource, onReplace );
-         $scope.eventBus.publish( 'takeActionRequest.provide-resource-' + resource, {
-            action: 'provide-resource',
-            data: {
-               resource: resource,
-               url: url
+      eventPipeline( $scope, 'events', {
+            onUpdateReplace: function() {
+               updateActivityData( $scope.resources.events );
             }
-         } );
-      }
-
-      eventPipeline( $scope, 'events' )
+         } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
          .filter( githubEvents.by.date.after( moment().add( -30, 'days' ) ) )
          .classify( githubEvents.by.repository )
-         .forEach( function( event ) {
-            var repo = event.repo;
-
-            if( typeof projectById[ repo.id ] === 'undefined' ) {
-               var name = repo.name;
-               var part = name.split( '/' );
-               var events = $scope.resources.events[ name ] = {};
-
-               projectById[ repo.id ] = $scope.projects.length;
-               var project = {
-                  id: repo.id,
-                  name: part[ 1 ],
-                  full_name: name,
-                  owner: {
-                     login: part[ 0 ]
-                  },
-                  url: repo.url,
-                  events: events
-               };
-               project.repository_url = axFlowService.constructAbsoluteUrl( 'repository', {
-                  owner: part[ 0 ],
-                  name: part[ 1 ]
-               } );
-
-               updateProjectInfo( repo.id, repo.url );
-
-               $scope.projects.push( project );
-
-               $scope.$watch( 'resources.events[ "' + name + '" ]', function( value ) {
-                  project.gauge = getActivityEstimation( value );
-               }, true );
-            }
-         } )
          .classify( classifyEventByType );
 
-      $scope.eventBus.subscribe('beginLifecycleRequest', beginLifecycle);
-      $scope.eventBus.subscribe('endLifecycleRequest', endLifecycle);
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'repos', {
+            onUpdateReplace: function() {
+               $scope.projects = $scope.resources.repos.map( constructProjectObject );
+            }
+         } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function beginLifecycle() {
-      }
+      function constructProjectObject( repo ) {
+         var base = eventBucket( $scope.resources.events, repo );
+         var object = Object.create( base );
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         object.repo = repo;
 
-      function endLifecycle() {
+         return object;
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function eventBucket( buckets, repo ) {
+      var key = repo.id;
+      return (buckets[ key ] = (buckets[ key ] || {}));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function classifyEventByType( event ) {
       var type = event.type;
@@ -162,28 +127,36 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function getActivityEstimation( events ) {
+   function updateActivityData( buckets ) {
+      Object.keys( buckets ).forEach( function( key ) {
+         buckets[ key ].activity = getActivityEstimation( buckets[ key ] );
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function getActivityEstimation( project ) {
       var sum = 0;
-      if( events.commits ) {
-         sum += events.commits.length;
+      if( project.commits ) {
+         sum += project.commits.length;
       }
-      if( events.issues_opened ) {
-         sum += events.issues_opened.length;
+      if( project.issues_opened ) {
+         sum += project.issues_opened.length;
       }
-      if( events.issues_closed ) {
-         sum += events.issues_closed.length;
+      if( project.issues_closed ) {
+         sum += project.issues_closed.length;
       }
-      if( events.major ) {
-         sum += events.major.length * 2;
+      if( project.major ) {
+         sum += project.major.length * 2;
       }
-      if( events.minor ) {
-         sum += events.minor.length * 1.3;
+      if( project.minor ) {
+         sum += project.minor.length * 1.3;
       }
-      if( events.patch ) {
-         sum += events.patch.length * 1.1;
+      if( project.patch ) {
+         sum += project.patch.length * 1.1;
       }
-      if( events.major ) {
-         sum += events.major.length * 2;
+      if( project.major ) {
+         sum += project.major.length * 2;
       }
       return 1 - (1 / Math.log(1 + sum));
    }

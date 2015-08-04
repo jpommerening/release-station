@@ -19,7 +19,7 @@
       <tbody>
          <tr ng-repeat="week in weeks">
             <td ng-repeat="day in week"
-                ng-style="{ 'background-color': day.isWorkingDay && (day.isSelected ? scale(getActivityEstimation(day)).brighten(10) : scale(getActivityEstimation(day))) }"
+                ng-style="{ 'background-color': day.isWorkingDay && (day.isSelected ? scale(day.activity).brighten(10) : scale(day.activity)) }"
                 ng-class="{ today: day.isToday,
                             selected: day.isSelected,
                             past: day.isPast,

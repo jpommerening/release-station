@@ -82,7 +82,7 @@ define( [
       date: date( 'YYYY-MM-DD' ),
       type: pick( 'type' ),
       types: filterTypes,
-      repository: pick( 'repo', 'name' ),
+      repository: pick( 'repo', 'id' ),
       actor: pick( 'actor', 'login' ),
       organization: pick( 'org', 'login' )
    };

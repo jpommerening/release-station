@@ -1,5 +1,6 @@
 <div ax-color-scale="scale"></div>
 
+<!-- uncomment to have a look at the color scale -->
 <!--
 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
    <div class="col-md-3"
@@ -10,27 +11,26 @@
 -->
 
 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12"
-     ng-repeat="project in projects | orderBy: 'gauge': true">
+     ng-repeat="project in projects | orderBy: 'activity': true | limitTo: 18">
    <div class="col-md-12">
       <h3>
-         <a ng-href="{{project.repository_url}}"><span>{{project.owner.login}}/</span>{{project.name}}</a>
-         <a ng-if="project.html_url"
-            ng-href="{{project.html_url}}"
+         <a ng-href="{{project.repo.repository_url}}"><span>{{project.repo.owner.login}}/</span>{{project.repo.name}}</a>
+         <a ng-href="{{project.repo.html_url}}"
             class="github"
-            title="{{project.full_name}} on GitHub"><i class="fa fa-github"></i></a>
+            title="{{project.repo.full_name}} on GitHub"><i class="fa fa-github"></i></a>
       </h3>
    </div>
    <div class="col-md-4 col-sm-4 col-xs-12">
-      <ol ax-gauge="project.gauge"
+      <ol ax-gauge="project.activity"
           ax-gauge-interval="features.gauge.interval"
-          ax-gauge-fill="scale(project.gauge)">
+          ax-gauge-fill="scale(project.activity)">
          <!--
           ax-gauge-fill="scale(project.gauge).darken(0.1)"
           ax-gauge-glow="scale(project.gauge).brighten(0.1)"
           -->
          <li ax-gauge-pane
              ng-repeat="stat in stats">
-            <span style="font-size: 2em">{{project.events[ stat.value ].length || 0}}</span><br/>
+            <span style="font-size: 2em">{{project[ stat.value ].length || 0}}</span><br/>
             <span>{{stat.text.join(' ')}}</span>
          </li>
       </ol>
@@ -39,24 +39,24 @@
       <h4>Issues</h4>
       <dl class="dl-horizontal">
          <dt>Opened</dt>
-         <dd>{{project.events.issues_opened.length || 0}}</dd>
+         <dd>{{project.issues_opened.length || 0}}</dd>
          <dt>Closed</dt>
-         <dd>{{project.events.issues_closed.length || 0}}</dd>
+         <dd>{{project.issues_closed.length || 0}}</dd>
       </dl>
       <dl class="dl-horizontal">
          <dt>Commits</dt>
-         <dd>{{project.events.commits.length || 0 }}</dd>
+         <dd>{{project.commits.length || 0 }}</dd>
       </dl>
    </div>
    <div class="col-md-3 col-sm-3 col-xs-6 details">
       <h4>Releases</h4>
       <dl class="dl-horizontal">
          <dt>Major</dt>
-         <dd>{{project.events.major.length || 0}}</dd>
+         <dd>{{project.major.length || 0}}</dd>
          <dt>Minor</dt>
-         <dd>{{project.events.minor.length || 0}}</dd>
+         <dd>{{project.minor.length || 0}}</dd>
          <dt>Patch</dt>
-         <dd>{{project.events.patch.length || 0}}</dd>
+         <dd>{{project.patch.length || 0}}</dd>
       </dl>
    </div>
 </div>

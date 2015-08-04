@@ -27,11 +27,11 @@ define( [
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
 
+      $scope.getActivityEstimation = function(x) { return x.activity; };
       $scope.weeks = [];
       $scope.resources = {
          events: {}
       };
-      $scope.getActivityEstimation = getActivityEstimation;
 
       $scope.pushedRows = 0;
       $scope.unshiftedRows = 0;
@@ -55,30 +55,15 @@ define( [
          return true;
       };
 
-      eventPipeline( $scope, 'events' )
+      eventPipeline( $scope, 'events', {
+            onUpdateReplace: function() {
+               updateActivityData( $scope.resources.events );
+            }
+         } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
          .classify( githubEvents.by.date )
-         .classify( function( event ) {
-            var type = event.type;
-            var payload = event.payload;
-            switch( type ) {
-               case 'CommitEvent':
-                  return 'commits';
-               case 'CreateEvent':
-                  if( payload.ref_type === 'tag' ) {
-                     return 'tags';
-                  }
-                  return;
-               case 'IssuesEvent':
-                  if( payload.action === 'opened' || payload.action === 'reopened' ) {
-                     return 'issues_opened';
-                  } else if( payload.action === 'closed' ) {
-                     return 'issues_closed';
-                  }
-                  return;
-            }
-         } );
+         .classify( classifyEventByType );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
          var endOfDay = callTomorrow( function toNextDay() {
@@ -100,9 +85,6 @@ define( [
             ax.log.trace( 'Will update calendar at midnight, in ' + Math.ceil( timeout / 1000 ) + ' seconds.' );
             return $timeout( callback, timeout );
          }
-      } );
-
-      $scope.eventBus.subscribe( 'endLifecycleRequest', function( event ) {
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
@@ -207,15 +189,11 @@ define( [
 
    }
 
-   module.controller( 'ActivityCalendarWidgetController', Controller );
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function eventBucket( buckets, timestamp ) {
       var key = timestamp.format( DATE_FORMAT );
       return (buckets[ key ] = (buckets[ key ] || {}));
-   }
-
-   function pushItem( bucket, key, item ) {
-      return (bucket[ key ] = (bucket[ key ] || [])).push( item );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,6 +232,37 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   function classifyEventByType( event ) {
+      var type = event.type;
+      var payload = event.payload;
+      switch( type ) {
+         case 'CommitEvent':
+            return 'commits';
+         case 'CreateEvent':
+            if( payload.ref_type === 'tag' ) {
+               return 'tags';
+            }
+            return;
+         case 'IssuesEvent':
+            if( payload.action === 'opened' || payload.action === 'reopened' ) {
+               return 'issues_opened';
+            } else if( payload.action === 'closed' ) {
+               return 'issues_closed';
+            }
+            return;
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function updateActivityData( buckets ) {
+      Object.keys( buckets ).forEach( function( key ) {
+         buckets[ key ].activity = getActivityEstimation( buckets[ key ] );
+      } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function getActivityEstimation( day ) {
       var sum = 0;
       if( day.commits ) {
@@ -272,6 +281,8 @@ define( [
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   module.controller( 'ActivityCalendarWidgetController', Controller );
 
    return module;
 

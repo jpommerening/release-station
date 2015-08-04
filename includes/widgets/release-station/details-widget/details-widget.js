@@ -20,6 +20,9 @@ define( [
                var data = event.data;
                $scope.tabs[0].disabled = !(data.commits && data.commits.length);
                $scope.tabs[1].disabled = !(data.tags && data.tags.length);
+               $scope.tabs[2].disabled = !(data.issues && data.issues.length);
+
+               console.log( data );
             }
          } );
 
@@ -27,7 +30,12 @@ define( [
          $scope.selected = tab;
       };
       $scope.tabs = [
-         { name: 'commits', title: 'Commits' },
+         { name: 'commits', title: 'Commits', columns: [
+            {
+               title: 'Repository',
+               value: 'repo.name'
+            }
+         ] },
          { name: 'tags', title: 'Tags' },
          { name: 'issues', title: 'Issues' }
       ];

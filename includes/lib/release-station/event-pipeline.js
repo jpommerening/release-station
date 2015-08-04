@@ -20,37 +20,57 @@ define( [
     * @param {Object}   context.features
     * @param {Object}   context.resources
     * @param {String}   feature
+    * @param {Object}   options
+    * @param {Function|Function[]} options.onUpdate
+    * @param {Function|Function[]} options.onReplace
+    * @param {Function|Function[]} options.onUpdateReplace
+    * @param {Boolean}             options.omitFirstReplace
     */
-   function EventPipeline( context, feature ) {
+   function EventPipeline( context, feature, options ) {
       if( !(this instanceof EventPipeline) ) {
-         return new EventPipeline( context, feature );
+         return new EventPipeline( context, feature, options );
       }
 
       var resource = this.resource = context.features[ feature ].resource;
       var pipeline = this.pipeline = [];
-      var model = this.model = context.resources[ feature ] = {};
-      var processor = this.processor = new Processor( pipeline, model );
+      var model = this.model = context.resources[ feature ] = ( context.resources[ feature ] || {} );
+      var processor = this.processor = new Processor( pipeline );
       var events = [];
+
+      var replaceHandlers = arrayOfFunctions( options.onReplace )
+                               .concat( arrayOfFunctions( options.onUpdateReplace ) );;
+      var updateHandlers = arrayOfFunctions( options.onUpdate )
+                              .concat( arrayOfFunctions( options.onUpdateReplace ) );;
+      var omitNextReplace = options.omitFirstReplace || false;
 
       context.eventBus.subscribe( 'didReplace.' + resource, onReplace );
       context.eventBus.subscribe( 'didUpdate.' + resource, onUpdate );
-      context.eventBus.subscribe( 'endLifecycleRequest', function() {
-         context.eventBus.unsubscribe( onReplace );
-         context.eventBus.unsubscribe( onUpdate );
-      } );
+
+      /*
+      window.eventPipeline = this;
 
       this.rewind = function() {
-         processor.clear();
+         processor.clear( model );
       };
 
       this.replay = function() {
          processor.process( events );
+         processor.merge( model );
       };
+      */
 
       function onReplace( event ) {
          events = event.data;
-         processor.clear();
+         processor.clear( model );
          processor.process( events );
+         processor.merge( model );
+
+         if( !omitNextReplace ) {
+            replaceHandlers.forEach( function( handler ) {
+               return handler( event );
+            } );
+         }
+         omitNextReplace = false;
       }
 
       function onUpdate( event ) {
@@ -65,10 +85,26 @@ define( [
             processor.process( incoming );
          } else {
             // more complex changes, replay all events
-            processor.clear();
+            processor.clear( model );
             processor.process( events );
          }
+         processor.merge( model );
+         updateHandlers.forEach( function( handler ) {
+            return handler( event );
+         } );
       }
+   }
+
+   function arrayOfFunctions( arrayOrFunction ) {
+      if( typeof arrayOrFunction === 'function' ) {
+         return [ arrayOrFunction ];
+      }
+
+      if( arrayOrFunction instanceof Array ) {
+         return arrayOrFunction;
+      }
+
+      return [];
    }
 
    function pushApply( fn ) {
@@ -115,11 +151,10 @@ define( [
 
    /**
     * A helper to process chunks of event data using a pipeline and
-    * insert the date into the given model.
+    * insert the date into a model.
     *
     * @constructor
     * @param {Function[]} pipeline a list of functions used for processing.
-    * @param {Array|Object} model the model to update when processing.
     */
    function Processor( pipeline, model ) {
       if( !(this instanceof Processor) ) {
@@ -127,15 +162,21 @@ define( [
       }
 
       this.pipeline = pipeline;
-      this.model = model;
+      this.pending = null;
    }
 
-   Processor.prototype.process = function process( chunk ) {
-      return merge( this.model, processWithPipeline( this.pipeline, chunk ) );
+   Processor.prototype.process = function( chunk ) {
+      return ( this.pending = merge( this.pending, processWithPipeline( this.pipeline, chunk ) ) );
    };
 
-   Processor.prototype.clear = function clear() {
-      return clearWithPipeline( this.pipeline, this.model );
+   Processor.prototype.merge = function( model ) {
+      merge( model, this.pending );
+      clear( this.pending );
+      return model;
+   };
+
+   Processor.prototype.clear = function( model ) {
+      return clearWithPipeline( this.pipeline, model );
    };
 
    /**
@@ -211,7 +252,9 @@ define( [
    }
 
    function merge( target, source ) {
-      if( ( target instanceof Array ) && ( source instanceof Array ) ) {
+      if( !target ) {
+         target = source;
+      } else if( ( target instanceof Array ) && ( source instanceof Array ) ) {
          target.push.apply( target, source );
       } else if( ( typeof target === 'object' ) && ( typeof source === 'object' ) ) {
          for( var key in source ) {
