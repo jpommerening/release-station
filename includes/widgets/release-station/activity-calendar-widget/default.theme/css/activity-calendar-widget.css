@@ -145,9 +145,10 @@
 }
 
 .activity-calendar-widget .ax-color-scale .ax-color-stop-0 { background-color: #c0c3c4; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #509080; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #b0e090; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #a8f8a0; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #40b0a0; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #50a090; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #b0e090; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-4 { background-color: #c8f8a0; }
 
 /**
  * Clean up some stuff we don't want to be colored.
