@@ -151,34 +151,6 @@
 }
 
 /**
- * "Candy cane"-style side banner for "today"
- */
-/*
-.activity-calendar-widget td.today:before {
-   content: "";
-   width: 1.5em;
-   height: 100%;
-   position: absolute;
-   left: 0;
-   top: 0;
-   background: repeating-linear-gradient(-45deg, #f90, #f90 15%, transparent 15%, transparent 30%);
-}
-
-.activity-calendar-widget td.today ul {
-   margin-left: 1.2em;
-}
-
-.activity-calendar-widget td.today:hover:before {
-   background: repeating-linear-gradient(-45deg, #fe9800, #fe9800 15%, transparent 15%, transparent 30%);
-}
-
-.activity-calendar-widget td.today.selected:before {
-   background: repeating-linear-gradient(-45deg, #44a9e0, #44a9e0 15%, transparent 15%, transparent 30%);
-}
-*/
-
-
-/**
  * Overlay, to make overflowing content fade out at the bottom
  */
 .activity-calendar-widget ul:after {
@@ -189,85 +161,10 @@
    top: 0;
 }
 
-/**
- * Days in the past
- */
-.activity-calendar-widget td.past {
-   background: #44a9e0;
-}
-
-/*
-.activity-calendar-widget td.past ul:after {
-   background: linear-gradient(0deg, rgba(68, 169, 224, 0.6), rgba(68, 169, 224, 0) 35%);
-}
-*/
-
-.activity-calendar-widget td.past:hover {
-   background: #55b9f0;
-}
-
-/*
-.activity-calendar-widget td.past:hover ul:after {
-   background: linear-gradient(0deg, rgba(85, 185, 240, 0.6), rgba(85, 185, 240, 0) 35%);
-}
-*/
-
-/**
- * Today
- */
-.activity-calendar-widget td.today {
-   background: #44a9e0;
-}
-
-/*
-.activity-calendar-widget td.today ul:after {
-   background: linear-gradient(0deg, rgba(68, 169, 224, 0.6), rgba(68, 169, 224, 0) 35%);
-}
-*/
-
-.activity-calendar-widget td.today:hover {
-   background: #55b9f0;
-}
-
-/*
-.activity-calendar-widget td.today:hover ul:after {
-   background: linear-gradient(0deg, rgba(85, 185, 240, 0.6), rgba(85, 185, 240, 0) 35%);
-}
-*/
-
-/**
- * The selected day
- */
-/*
-.activity-calendar-widget td.selected {
-   background: #fe9800;
-   box-shadow: 0 0 6px #f8c283, inset 2px 2px 7px #fdb124, inset -2px -2px 7px #fdb124;
-}
-*/
-
-/*
-.activity-calendar-widget td.selected ul:after {
-   background: linear-gradient(0deg, rgba(253, 177, 36, 0.6), rgba(255, 153, 0, 0) 35%);
-}
-*/
-
-/*
-.activity-calendar-widget td.selected:hover {
-   background: #fe9800;
-   box-shadow: 0 0 8px #fdb124, inset 2px 2px 7px #f8c283, inset -2px -2px 7px #f8c283;
-}
-*/
-
-/*
-.activity-calendar-widget td.selected:hover ul:after {
-   background: linear-gradient(0deg, rgba(248, 194, 131, 0.6), rgba(255, 153, 0, 0) 35%);
-}
-*/
-
 .activity-calendar-widget .ax-color-scale .ax-color-stop-0 { background-color: #c0c3c4; }
 .activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #509080; }
 .activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #b0e090; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #c8e050; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #a8f8a0; }
 
 /**
  * Clean up some stuff we don't want to be colored.

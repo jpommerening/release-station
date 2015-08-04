@@ -5,6 +5,7 @@
  */
 @charset "UTF-8";
 
+/*
 .navigation-widget ul {
    font-family: "Exo 2",Arial,sans-serif;
    font-size: 2.1em;
@@ -18,9 +19,6 @@
    text-shadow: 1px 2px 2px #ebeced, 0 0 0 #aaa, 1px 2px 2px #ebeced;
 }
 
-.navigation-widget a > i.fa {
-   margin-right: 0.4em;
-}
 
 .navigation-widget a.active {
    color: #ff9900;
@@ -30,4 +28,9 @@
 .navigation-widget ul.inline > li {
    display: inline-block;
    padding: 0 4%;
+}
+*/
+
+.navigation-widget a > i.fa {
+   margin-right: 0.4em;
 }

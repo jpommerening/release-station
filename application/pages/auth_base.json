@@ -124,37 +124,6 @@
          }
       ],
 
-      "login": [
-         {
-            "widget": "release-station/github-login-widget",
-            "features": {
-               "auth": {
-                  "action": "authenticate",
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "user": {
-                  "resource": "user"
-               },
-               "menu": [
-                  {
-                     "action": "openSettings",
-                     "i18nHtmlLabel": {
-                        "en_US": "Settings"
-                     }
-                  },
-                  {
-                     "icon": "fa-sign-out",
-                     "action": "deauthenticate",
-                     "i18nHtmlLabel": {
-                        "en_US": "Signout"
-                     }
-                  }
-               ]
-            }
-         }
-      ],
-
       "navigation": [
          {
             "widget": "release-station/navigation-widget",
@@ -184,6 +153,34 @@
                      }
                   ]
                }
+            }
+         },
+         {
+            "widget": "release-station/github-login-widget",
+            "features": {
+               "auth": {
+                  "action": "authenticate",
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "user": {
+                  "resource": "user"
+               },
+               "menu": [
+                  {
+                     "action": "openSettings",
+                     "i18nHtmlLabel": {
+                        "en_US": "Settings"
+                     }
+                  },
+                  {
+                     "icon": "fa-sign-out",
+                     "action": "deauthenticate",
+                     "i18nHtmlLabel": {
+                        "en_US": "Sign out"
+                     }
+                  }
+               ]
             }
          }
       ]

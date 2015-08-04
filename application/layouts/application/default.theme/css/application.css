@@ -1,62 +1,58 @@
-.app-footer {
-   margin-top: 20px;
+/**
+ * Override demo stuff
+ */
+body {
+   background-image: none;
+}
+body::before {
+   border: none;
+   display: none;
+}
+.app-content-wrapper {
+   top: 90px;
 }
 
-.app-logo {
-   display: block;
-   height: 60px;
-   width: 257px;
-   background: url("../../default.theme/images/laxarjs_logo.png") no-repeat right/100%;
+/**
+ * http://laxarjs.org style navigation
+ */
+.navbar-fixed-top {
+   background-color: #626262;
+   border: 1px solid #444;
+   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.app-flower {
-   float: right;
-   margin-top: 40px;
-   margin-right: 20px;
-   margin-bottom: 40px;
-   height: 300px;
-   width: 127px;
-   background: url("../../default.theme/images/pot_flower.png") no-repeat right/100%;
+.navbar-inverse {
+   background-color: #626262;
+}
+.navbar-inverse .navbar-nav > li > a {
+   color: #fff;
+   line-height: 22px;
+   font-size: 16px;
+}
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:focus,
+.navbar-inverse .navbar-nav > .open > a:hover {
+   color: #fff;
+   background-color: #ff9900;
 }
 
-.app-header {
-   top: 0;
-   height: 60px;
-   padding-top: 27px;
-   padding-bottom: 80px;
-}
-
-
-.app-header .form-group {
-   margin-top: 15px;
-   margin-bottom: 0;
-   line-height: 1;
-}
-
-.app-header h1 {
+.navbar-brand h1 {
+   font-size: 2rem;
+   font-weight: 300;
+   color: #fff;
    margin: 0;
-   position: relative;
-   bottom: 2px;
-   float: right;
-   width: auto;
-   font-size: 55px;
-   line-height: 0.83;
+   line-height: 22px;
 }
-
-.app-header h1 + div.ax-local-intro-text {
-   float: right;
-   margin-top: 9px;
-   font-size: 10pt;
-   color: #8c8c8c;
+.navbar-brand h1 span {
+   color: #ff9900;
+   font-weight: 200;
 }
-
-.app-github {
-   padding-left: 26px;
-   padding-right: 26px;
-}
-
-.app-navigation {
-   text-align: center;
+.navbar-brand h1 + div.ax-local-intro-text {
+   color: #999;
+   font-size: 0.9rem;
+   margin-top: -0.2rem;
 }
 
 .app-content h2 {
