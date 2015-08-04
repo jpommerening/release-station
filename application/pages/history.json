@@ -15,7 +15,7 @@
                   "resource": "data",
                   "onActions": [ "provide-resource" ],
                   "sources": {
-                     "resource": "data-sources"
+                     "resource": "dataSources"
                   }
                }
             }

@@ -15,7 +15,7 @@
                   "resource": "events",
                   "onActions": [ "provide-stream" ],
                   "sources": {
-                     "resource": "event-sources"
+                     "resource": "eventSources"
                   }
                }
             }
@@ -31,7 +31,7 @@
                   "resource": "data",
                   "onActions": [ "provide-resource" ],
                   "sources": {
-                     "resource": "data-sources"
+                     "resource": "dataSources"
                   }
                }
             }

@@ -117,10 +117,10 @@
                },
                "settings": {
                   "events": {
-                     "resource": "event-sources"
+                     "resource": "eventSources"
                   },
                   "data": {
-                     "resource": "data-sources"
+                     "resource": "dataSources"
                   }
                }
             }
