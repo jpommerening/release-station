@@ -132,12 +132,13 @@ define( [
 
    function wrapPatchInPromise( patch ) {
       if( patch.value ) {
-         return callback( patch.value ).then( function( value ) {
-            result.value = value;
-            return result;
+         return patch.value.then( function( value ) {
+            return mapPatchValue( function() {
+               return value;
+            }, patch );
          } );
       } else {
-         return Promise.resolve( result );
+         return Promise.resolve( patch );
       }
    }
 
