@@ -8,9 +8,7 @@
    },
 
    "controls": [
-      "laxar-uikit/controls/i18n",
-      "ax-layer-control",
-      "ax-button-list-control"
+      "laxar-uikit/controls/i18n"
    ],
 
    "features": {
