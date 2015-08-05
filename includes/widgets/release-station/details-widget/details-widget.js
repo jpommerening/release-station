@@ -14,17 +14,6 @@ define( [
    Controller.$inject = [ '$scope' ];
 
    function Controller( $scope ) {
-      patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'details', {
-            onReplace: function( event ) {
-               var data = event.data;
-               $scope.tabs[0].disabled = !(data.commits && data.commits.length);
-               $scope.tabs[1].disabled = !(data.tags && data.tags.length);
-               $scope.tabs[2].disabled = !(data.issues && data.issues.length);
-
-               console.log( data );
-            }
-         } );
 
       $scope.selectTab = function( tab ) {
          $scope.selected = tab;
@@ -40,6 +29,22 @@ define( [
          { name: 'issues', title: 'Issues' }
       ];
 
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'details', {
+            onReplace: function( event ) {
+               var data = event.data;
+
+               $scope.tabs.forEach( function( tab ) {
+                  tab.enabled = !!(data[ tab.name ] && data[ tab.name ].length);
+
+                  if( tab.enabled && !$scope.selected ) {
+                     $scope.selected = tab.name;
+                  }
+               } );
+
+               console.log( data );
+            }
+         } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

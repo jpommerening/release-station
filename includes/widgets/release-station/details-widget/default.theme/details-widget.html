@@ -1,7 +1,8 @@
 
 <ul class="nav nav-tabs" role="tablist">
    <li ng-repeat="tab in tabs"
-       ng-class="{ active: selected == tab.name, disabled: tab.disabled }"
+       ng-if="tab.enabled"
+       ng-class="{ active: selected == tab.name }"
        role="presentation">
       <a ng-click="selectTab(tab.name)" href="" role="tab">
          {{tab.title}}
@@ -11,7 +12,8 @@
 
 <div class="tab-content">
 
-   <div role="tabpanel" class="tab-pane" ng-class="{ active: selected == 'commits' }">
+   <div class="tab-pane" role="tabpanel"
+        ng-class="{ active: selected == 'commits' }">
       <table class="table">
          <tr ng-repeat="commit in resources.details.commits">
             <td><a ng-href="{{commit.repo.url}}">{{commit.repo.name}}</td>
@@ -21,7 +23,8 @@
       </table>
    </div>
 
-   <div role="tabpanel" class="tab-pane" ng-class="{ active: selected == 'tags' }">
+   <div class="tab-pane" role="tabpanel"
+        ng-class="{ active: selected == 'tags' }">
       <table class="table">
          <tr ng-repeat="tag in resources.details.tags">
             <td><a ng-href="{{tag.repo.url}}">{{tag.repo.name}}</td>

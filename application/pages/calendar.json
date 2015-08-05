@@ -146,7 +146,9 @@
                   "fields": [
                      "repo.name",
                      "actor.login",
-                     "org.login"
+                     "org.login",
+                     "payload.message",
+                     "payload.ref"
                   ]
                },
                "details": {
