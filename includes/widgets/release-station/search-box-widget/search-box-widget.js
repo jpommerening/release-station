@@ -41,9 +41,7 @@ define( [
       $scope.functions = {
 
          startSearch: function() {
-            searchPublisher( {
-               queryString: $scope.model.queryString
-            } );
+            searchPublisher( $scope.model.queryString );
          }
 
       };

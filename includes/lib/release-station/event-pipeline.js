@@ -46,19 +46,6 @@ define( [
       context.eventBus.subscribe( 'didReplace.' + resource, onReplace );
       context.eventBus.subscribe( 'didUpdate.' + resource, onUpdate );
 
-      /*
-      window.eventPipeline = this;
-
-      this.rewind = function() {
-         processor.clear( model );
-      };
-
-      this.replay = function() {
-         processor.process( events );
-         processor.merge( model );
-      };
-      */
-
       function onReplace( event ) {
          events = event.data;
          processor.clear( model );
@@ -93,6 +80,13 @@ define( [
             return handler( event );
          } );
       }
+
+      this.replay = function() {
+         processor.clear( model );
+         processor.process( events );
+         processor.merge( model );
+      };
+
    }
 
    function arrayOfFunctions( arrayOrFunction ) {
@@ -280,9 +274,9 @@ define( [
       }
    }
 
-   EventPipeline.create = function create( context, feature ) {
-      return new EventPipeline( context, feature );
+   EventPipeline.create = function create( context, feature, options ) {
+      return new EventPipeline( context, feature, options );
    };
 
-   return EventPipeline;
+   return EventPipeline.create;
 } );

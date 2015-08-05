@@ -60,6 +60,21 @@
                }
             }
          },
+         "search": {
+            "type": "object",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               },
+               "fields": {
+                  "type": "array",
+                  "items": {
+                     "type": [ "string", "array" ]
+                  }
+               }
+            }
+         },
          "details": {
             "type": "object",
             "description": "How to handle details display.",

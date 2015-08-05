@@ -4,15 +4,15 @@
  * http://laxarjs.org/license
  */
 define( [
-   'angular',
    'laxar',
    'laxar-patterns',
+   'angular',
    'semver',
    'moment',
    './gauge-directive',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ng, ax, patterns, semver, moment, gauge, eventPipeline, githubEvents ) {
+], function( ax, patterns, ng, semver, moment, gauge, eventPipeline, githubEvents ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +20,7 @@ define( [
    Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
 
    function Controller( $scope, $interval, axFlowService ) {
+      var searchFields = ( $scope.features.search.fields || [] ).map( toJsonPointer );
 
       $scope.projects = [];
       $scope.resources = {
@@ -46,7 +47,7 @@ define( [
          }
       ];
 
-      eventPipeline( $scope, 'events', {
+      var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.resources.events );
             }
@@ -54,6 +55,10 @@ define( [
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
          .filter( githubEvents.by.date.after( moment().add( -30, 'days' ) ) )
+         .filter( function( event ) {
+            var searchString = $scope.resources.search;
+            return fuzzyMatchPointers( searchString, searchFields, event );
+         } )
          .classify( githubEvents.by.repository )
          .classify( classifyEventByType );
 
@@ -63,6 +68,14 @@ define( [
                $scope.projects = $scope.resources.repos.map( constructProjectObject );
             }
          } );
+
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'search', {
+            onUpdateReplace: function() {
+               pipeline.replay();
+               updateActivityData( $scope.resources.events );
+            }
+         } )
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -78,6 +91,31 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function toJsonPointer( item ) {
+      if( typeof item === 'string' ) {
+         return item[ 0 ] === '/' ? item : patterns.json.pathToPointer( item );
+      } else if( item.join ) {
+         return '/' + item.join( '/' );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function fuzzyMatchPointers( search, pointers, object ) {
+      return search ? pointers.some( function( pointer ) {
+         var value = patterns.json.getPointer( object, pointer );
+         if( typeof value === 'string' ) {
+            return ( value.toUpperCase().indexOf( search.toUpperCase() ) >= 0 );
+         } else {
+            return value === search;
+         }
+         return false;
+      } ) : true;
+   }
+
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -141,6 +141,14 @@
                "events": {
                   "resource": "events"
                },
+               "search": {
+                  "resource": "searchString",
+                  "fields": [
+                     "repo.name",
+                     "actor.login",
+                     "org.login"
+                  ]
+               },
                "details": {
                   "resource": "details",
                   "action": "openDetails"

@@ -56,6 +56,18 @@
          }
       ],
 
+      "navigation": [
+         {
+            "widget": "release-station/search-box-widget",
+            "insertBeforeId": "login",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            }
+         }
+      ],
+
       "headline": [
          {
             "widget": "laxarjs/ax-headline-widget",
@@ -79,11 +91,19 @@
          {
             "widget": "release-station/activity-grid-widget",
             "features": {
+               "events": {
+                  "resource": "events"
+               },
                "repos": {
                   "resource": "data"
                },
-               "events": {
-                  "resource": "events"
+               "search": {
+                  "resource": "searchString",
+                  "fields": [
+                     "repo.name",
+                     "actor.login",
+                     "org.login"
+                  ]
                }
             }
          }

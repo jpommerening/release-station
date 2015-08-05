@@ -5,11 +5,12 @@
  */
 define( [
    'laxar',
+   'laxar-patterns',
    'angular',
    'moment',
    'release-station/event-pipeline',
    'release-station/github-events'
-], function( ax, ng, moment, eventPipeline, githubEvents ) {
+], function( ax, patterns, ng, moment, eventPipeline, githubEvents ) {
    'use strict';
 
    var DATE_FORMAT = 'YYYY-MM-DD';
@@ -19,14 +20,17 @@ define( [
    Controller.$inject = [ '$scope', '$timeout', 'axFlowService' ];
 
    function Controller( $scope, $timeout, flowService ) {
-      var parameter = $scope.features.calendar.parameter;
+      var dateParameter = $scope.features.calendar.parameter;
+      var searchFields = ( $scope.features.search.fields || [] ).map( toJsonPointer );
+
       var today = moment().startOf( 'day' );
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
 
       $scope.weeks = [];
       $scope.resources = {
-         events: {}
+         events: {},
+         search: ''
       };
 
       $scope.pushedRows = 0;
@@ -47,15 +51,27 @@ define( [
          } );
       };
 
-      eventPipeline( $scope, 'events', {
+      var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.resources.events );
             }
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
+         .filter( function( event ) {
+            var searchString = $scope.resources.search;
+            return fuzzyMatchPointers( searchString, searchFields, event );
+         } )
          .classify( githubEvents.by.date )
          .classify( classifyEventByType );
+
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'search', {
+            onUpdateReplace: function() {
+               pipeline.replay();
+               updateActivityData( $scope.resources.events );
+            }
+         } )
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
          var endOfDay = callTomorrow( function toNextDay() {
@@ -80,7 +96,7 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var date = event.data[ parameter ] ? moment( event.data[ parameter ] ) : today;
+         var date = event.data[ dateParameter ] ? moment( event.data[ dateParameter ] ) : today;
          selectDate( date );
       } );
 
@@ -127,7 +143,7 @@ define( [
          var object = Object.create( base );
          var parameters = {};
 
-         parameters[ parameter ] = date.format( DATE_FORMAT );
+         parameters[ dateParameter ] = date.format( DATE_FORMAT );
 
          object.date = date;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
@@ -179,6 +195,30 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function toJsonPointer( item ) {
+      if( typeof item === 'string' ) {
+         return item[ 0 ] === '/' ? item : patterns.json.pathToPointer( item );
+      } else if( item.join ) {
+         return '/' + item.join( '/' );
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function fuzzyMatchPointers( search, pointers, object ) {
+      return search ? pointers.some( function( pointer ) {
+         var value = patterns.json.getPointer( object, pointer );
+         if( typeof value === 'string' ) {
+            return ( value.toUpperCase().indexOf( search.toUpperCase() ) >= 0 );
+         } else {
+            return value === search;
+         }
+         return false;
+      } ) : true;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,10 +304,10 @@ define( [
          sum += day.tags.length * 1.5;
       }
       if( day.issues_opened ) {
-         sum += day.issues_opened.length * 0.75;
+         sum += day.issues_opened.length * 0.25;
       }
       if( day.issues_closed ) {
-         sum += day.issues_closed.length * 0.75;
+         sum += day.issues_closed.length * 0.25;
       }
       return 1 - (1 / Math.log(1 + sum));
    }
