@@ -1,0 +1,15 @@
+{
+  "name": "q_mock",
+  "version": "0.1.0",
+  "main": "q.js",
+  "homepage": "https://github.com/LaxarJS/q_mock",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "736fa7e4c5b957fb0a72d4aea468356820d994da"
+  },
+  "_source": "git://github.com/LaxarJS/q_mock.git",
+  "_target": "0.1.x",
+  "_originalSource": "LaxarJS/q_mock"
+}

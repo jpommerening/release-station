@@ -1,0 +1,882 @@
+{
+   "flows": [
+      {
+         "path": "application/flow/flow.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "application/flow/flow.json"
+         }
+      }
+   ],
+   "themes": [
+      {
+         "path": "bower_components/laxar-uikit/dist/themes/default.theme",
+         "name": "default.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         }
+      },
+      {
+         "path": "includes/themes/cube.theme",
+         "name": "cube.theme",
+         "resources": {
+            "watch": [
+               "css/theme.css"
+            ],
+            "list": [
+               "css/theme.css"
+            ],
+            "embed": []
+         }
+      }
+   ],
+   "pages": [
+      {
+         "path": "application/pages/auth_base.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "auth_base"
+         },
+         "pages": [],
+         "widgets": [
+            "laxarjs/ax-developer-tools-widget",
+            "release-station/oauth-activity",
+            "laxarjs/ax-popup-widget",
+            "laxarjs/ax-headline-widget",
+            "laxarjs/ax-command-bar-widget",
+            "release-station/settings-widget",
+            "release-station/navigation-widget",
+            "release-station/github-login-widget"
+         ]
+      },
+      {
+         "path": "application/pages/calendar.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "calendar"
+         },
+         "pages": [
+            "auth_base"
+         ],
+         "widgets": [
+            "release-station/github-events-activity",
+            "release-station/github-data-activity",
+            "laxarjs/ax-popup-widget",
+            "laxarjs/ax-headline-widget",
+            "release-station/details-widget",
+            "release-station/search-box-widget",
+            "release-station/activity-calendar-widget"
+         ]
+      },
+      {
+         "path": "application/pages/grid.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "grid"
+         },
+         "pages": [
+            "auth_base"
+         ],
+         "widgets": [
+            "release-station/github-events-activity",
+            "release-station/github-data-activity",
+            "laxarjs/ax-headline-widget",
+            "release-station/search-box-widget",
+            "release-station/activity-grid-widget"
+         ]
+      },
+      {
+         "path": "application/pages/history.json",
+         "resources": {
+            "watch": [
+               "."
+            ],
+            "embed": [
+               "."
+            ],
+            "list": []
+         },
+         "references": {
+            "file": "history"
+         },
+         "pages": [
+            "auth_base"
+         ],
+         "widgets": [
+            "release-station/github-data-activity",
+            "laxarjs/ax-headline-widget",
+            "release-station/release-history-widget"
+         ]
+      }
+   ],
+   "layouts": [
+      {
+         "resources": {
+            "list": [
+               "/application/layouts/application/default.theme/css/application.css",
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ],
+            "watch": [
+               "/application/layouts/application/default.theme/css/application.css",
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/css/application.css",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ],
+            "embed": [
+               "/application/layouts/application/default.theme/application.html",
+               "/application/layouts/application/cube.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "application"
+            }
+         }
+      },
+      {
+         "resources": {
+            "list": [
+               "/application/layouts/demo_application/default.theme/css/demo_application.css",
+               "/application/layouts/demo_application/default.theme/demo_application.html",
+               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
+               "/application/layouts/demo_application/cube.theme/demo_application.html",
+               "/includes/themes/cube.theme/layouts/demo_application/css/demo_application.css",
+               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+            ],
+            "watch": [
+               "/application/layouts/demo_application/default.theme/css/demo_application.css",
+               "/application/layouts/demo_application/default.theme/demo_application.html",
+               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
+               "/application/layouts/demo_application/cube.theme/demo_application.html",
+               "/includes/themes/cube.theme/layouts/demo_application/css/demo_application.css",
+               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+            ],
+            "embed": [
+               "/application/layouts/demo_application/default.theme/demo_application.html",
+               "/application/layouts/demo_application/cube.theme/demo_application.html",
+               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "demo_application"
+            }
+         }
+      },
+      {
+         "resources": {
+            "list": [
+               "/application/layouts/popup/default.theme/css/popup.css",
+               "/application/layouts/popup/default.theme/popup.html",
+               "/application/layouts/popup/cube.theme/css/popup.css",
+               "/application/layouts/popup/cube.theme/popup.html",
+               "/includes/themes/cube.theme/layouts/popup/css/popup.css",
+               "/includes/themes/cube.theme/layouts/popup/popup.html"
+            ],
+            "watch": [
+               "/application/layouts/popup/default.theme/css/popup.css",
+               "/application/layouts/popup/default.theme/popup.html",
+               "/application/layouts/popup/cube.theme/css/popup.css",
+               "/application/layouts/popup/cube.theme/popup.html",
+               "/includes/themes/cube.theme/layouts/popup/css/popup.css",
+               "/includes/themes/cube.theme/layouts/popup/popup.html"
+            ],
+            "embed": [
+               "/application/layouts/popup/default.theme/popup.html",
+               "/application/layouts/popup/cube.theme/popup.html",
+               "/includes/themes/cube.theme/layouts/popup/popup.html"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "popup"
+            }
+         }
+      }
+   ],
+   "widgets": [
+      {
+         "path": "includes/widgets/laxarjs/ax-command-bar-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/ax-command-bar-widget.html",
+               "*.theme/css/ax-command-bar-widget.css",
+               "ax-command-bar-widget.js",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/ax-command-bar-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html"
+            ],
+            "list": [
+               "*.theme/css/ax-command-bar-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "laxarjs/ax-command-bar-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget"
+            }
+         },
+         "controls": [
+            "laxar-button-list-control"
+         ]
+      },
+      {
+         "path": "includes/widgets/laxarjs/ax-developer-tools-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/ax-developer-tools-widget.html",
+               "*.theme/css/ax-developer-tools-widget.css",
+               "ax-developer-tools-widget.js",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/ax-developer-tools-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html"
+            ],
+            "list": [
+               "*.theme/css/ax-developer-tools-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "laxarjs/ax-developer-tools-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/laxarjs/ax-headline-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/ax-headline-widget.html",
+               "*.theme/css/ax-headline-widget.css",
+               "ax-headline-widget.js",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/ax-headline-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html"
+            ],
+            "list": [
+               "*.theme/css/ax-headline-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "laxarjs/ax-headline-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/laxarjs/ax-headline-widget/ax-headline-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n",
+            "laxar-button-list-control"
+         ]
+      },
+      {
+         "path": "includes/widgets/laxarjs/ax-popup-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/ax-popup-widget.html",
+               "*.theme/css/ax-popup-widget.css",
+               "ax-popup-widget.js",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/ax-popup-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html"
+            ],
+            "list": [
+               "*.theme/css/ax-popup-widget.css",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "laxarjs/ax-popup-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/laxarjs/ax-popup-widget/ax-popup-widget"
+            }
+         },
+         "controls": [
+            "laxar-layer-control"
+         ]
+      },
+      {
+         "path": "includes/widgets/release-station/activity-calendar-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/activity-calendar-widget.html",
+               "*.theme/css/activity-calendar-widget.css",
+               "activity-calendar-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/activity-calendar-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html"
+            ],
+            "list": [
+               "*.theme/css/activity-calendar-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/activity-calendar-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/activity-calendar-widget/activity-calendar-widget"
+            }
+         },
+         "controls": [
+            "laxar-color-scale-control"
+         ]
+      },
+      {
+         "path": "includes/widgets/release-station/activity-grid-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/activity-grid-widget.html",
+               "*.theme/css/activity-grid-widget.css",
+               "activity-grid-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/activity-grid-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html"
+            ],
+            "list": [
+               "*.theme/css/activity-grid-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/activity-grid-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/activity-grid-widget/activity-grid-widget"
+            }
+         },
+         "controls": [
+            "laxar-color-scale-control"
+         ]
+      },
+      {
+         "path": "includes/widgets/release-station/details-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/details-widget.html",
+               "*.theme/css/details-widget.css",
+               "details-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/details-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html"
+            ],
+            "list": [
+               "*.theme/css/details-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/details-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/details-widget/details-widget"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/github-data-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "github-data-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css",
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html"
+            ],
+            "embed": [
+               "widget.json",
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html"
+            ],
+            "list": [
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/github-data-activity"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/github-data-activity/github-data-activity"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/github-events-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "github-events-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css",
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html"
+            ],
+            "embed": [
+               "widget.json",
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html"
+            ],
+            "list": [
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/github-events-activity"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/github-events-activity/github-events-activity"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/github-login-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/github-login-widget.html",
+               "*.theme/css/github-login-widget.css",
+               "github-login-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/github-login-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html"
+            ],
+            "list": [
+               "*.theme/css/github-login-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/github-login-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/github-login-widget/github-login-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n"
+         ]
+      },
+      {
+         "path": "includes/widgets/release-station/navigation-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/navigation-widget.html",
+               "*.theme/css/navigation-widget.css",
+               "navigation-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/navigation-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html"
+            ],
+            "list": [
+               "*.theme/css/navigation-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/navigation-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/navigation-widget/navigation-widget"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/oauth-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "oauth-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css",
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html"
+            ],
+            "embed": [
+               "widget.json",
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html"
+            ],
+            "list": [
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/oauth-activity"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/oauth-activity/oauth-activity"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/release-history-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/release-history-widget.html",
+               "*.theme/css/release-history-widget.css",
+               "release-history-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/release-history-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html"
+            ],
+            "list": [
+               "*.theme/css/release-history-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/release-history-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/release-history-widget/release-history-widget"
+            }
+         },
+         "controls": []
+      },
+      {
+         "path": "includes/widgets/release-station/search-box-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/search-box-widget.html",
+               "*.theme/css/search-box-widget.css",
+               "search-box-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html"
+            ],
+            "list": [
+               "*.theme/css/search-box-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/search-box-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/search-box-widget/search-box-widget"
+            }
+         },
+         "controls": [
+            "laxar-uikit/controls/i18n"
+         ]
+      },
+      {
+         "path": "includes/widgets/release-station/settings-widget",
+         "integration": {
+            "technology": "angular",
+            "type": "widget"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "*.theme/settings-widget.html",
+               "*.theme/css/settings-widget.css",
+               "settings-widget.js",
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html"
+            ],
+            "embed": [
+               "widget.json",
+               "*.theme/settings-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html"
+            ],
+            "list": [
+               "*.theme/css/settings-widget.css",
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css"
+            ]
+         },
+         "references": {
+            "file": {
+               "reference": "release-station/settings-widget"
+            },
+            "amd": {
+               "module": "laxar-application/includes/widgets/release-station/settings-widget/settings-widget"
+            }
+         },
+         "controls": []
+      }
+   ],
+   "controls": [
+      {
+         "path": "bower_components/laxar-button-list-control",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/ax-button-list-control.css",
+               "ax-button-list-control.js",
+               "includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/ax-button-list-control.css",
+               "includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "laxar-button-list-control",
+               "module": "laxar-button-list-control/ax-button-list-control"
+            }
+         }
+      },
+      {
+         "path": "bower_components/laxar-color-scale-control",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/ax-color-scale-control.css",
+               "ax-color-scale-control.js",
+               "includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/ax-color-scale-control.css",
+               "includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "laxar-color-scale-control",
+               "module": "laxar-color-scale-control/ax-color-scale-control"
+            }
+         }
+      },
+      {
+         "path": "bower_components/laxar-layer-control",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/ax-layer-control.css",
+               "ax-layer-control.js",
+               "includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/ax-layer-control.css",
+               "includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "laxar-layer-control",
+               "module": "laxar-layer-control/ax-layer-control"
+            }
+         }
+      },
+      {
+         "path": "bower_components/laxar-uikit/dist/controls/i18n",
+         "integration": {
+            "technology": "angular",
+            "type": "control"
+         },
+         "resources": {
+            "watch": [
+               "*.theme/css/ax-i18n-control.css",
+               "ax-i18n-control.js",
+               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+            ],
+            "embed": [
+               "control.json"
+            ],
+            "list": [
+               "*.theme/css/ax-i18n-control.css",
+               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+            ]
+         },
+         "references": {
+            "amd": {
+               "reference": "laxar-uikit/controls/i18n",
+               "module": "laxar-uikit/controls/i18n/ax-i18n-control"
+            }
+         }
+      }
+   ]
+}

@@ -3,9 +3,7 @@ atlassian-ide-plugin.xml
 *.orig
 *.log
 .sass-cache
-/var
 /node_modules
-/bower_components
 *.backup.json
 release-station-*.zip
 test-results.xml

@@ -1,0 +1,58 @@
+{
+   "cssmin": {
+      "laxar-flow-main": {
+         "files": [
+            {
+               "src": [
+                  "bower_components/laxar-uikit/dist/themes/default.theme/css/theme.css",
+                  "includes/widgets/laxarjs/ax-command-bar-widget/default.theme/css/ax-command-bar-widget.css",
+                  "includes/widgets/laxarjs/ax-headline-widget/default.theme/css/ax-headline-widget.css",
+                  "includes/widgets/laxarjs/ax-popup-widget/default.theme/css/ax-popup-widget.css",
+                  "includes/widgets/release-station/activity-calendar-widget/default.theme/css/activity-calendar-widget.css",
+                  "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
+                  "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
+                  "includes/widgets/release-station/github-login-widget/default.theme/css/github-login-widget.css",
+                  "includes/widgets/release-station/navigation-widget/default.theme/css/navigation-widget.css",
+                  "includes/widgets/release-station/release-history-widget/default.theme/css/release-history-widget.css",
+                  "includes/widgets/release-station/search-box-widget/default.theme/css/search-box-widget.css",
+                  "includes/widgets/release-station/settings-widget/default.theme/css/settings-widget.css",
+                  "application/layouts/application/default.theme/css/application.css"
+               ],
+               "dest": "var/flows/main/dist/default.theme.css"
+            },
+            {
+               "src": [
+                  "includes/themes/cube.theme/css/theme.css",
+                  "includes/widgets/laxarjs/ax-command-bar-widget/default.theme/css/ax-command-bar-widget.css",
+                  "includes/widgets/laxarjs/ax-headline-widget/default.theme/css/ax-headline-widget.css",
+                  "includes/widgets/laxarjs/ax-popup-widget/default.theme/css/ax-popup-widget.css",
+                  "includes/widgets/release-station/activity-calendar-widget/default.theme/css/activity-calendar-widget.css",
+                  "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
+                  "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
+                  "includes/widgets/release-station/github-login-widget/default.theme/css/github-login-widget.css",
+                  "includes/widgets/release-station/navigation-widget/default.theme/css/navigation-widget.css",
+                  "includes/widgets/release-station/release-history-widget/default.theme/css/release-history-widget.css",
+                  "includes/widgets/release-station/search-box-widget/default.theme/css/search-box-widget.css",
+                  "includes/widgets/release-station/settings-widget/default.theme/css/settings-widget.css",
+                  "application/layouts/application/default.theme/css/application.css"
+               ],
+               "dest": "var/flows/main/dist/cube.theme.css"
+            }
+         ],
+         "options": {
+            "sourceMap": true,
+            "rebase": true,
+            "target": "var/flows/main/dist",
+            "keepSpecialComments": 0,
+            "saveConfig": true,
+            "tasks": [
+               "cssmin:laxar-flow-main"
+            ],
+            "flow": {
+               "target": "main",
+               "src": "application/flow/flow.json"
+            }
+         }
+      }
+   }
+}

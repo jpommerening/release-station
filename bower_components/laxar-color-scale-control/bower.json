@@ -1,0 +1,19 @@
+{
+   "name": "laxar-color-scale-control",
+   "version": "1.0.0-pre",
+   "description": "A control for CSS styled, bezier interpolated color scales.",
+   "authors": [],
+   "license": "MIT",
+   "main": "ax-color-scale-control.js",
+   "moduleType": "amd",
+   "ignore": [
+      ".*",
+      "Gruntfile.js",
+      "node_modules",
+      "bower_components"
+   ],
+   "dependencies": {
+      "angular": "^1.3.16",
+      "chroma-js": "^1.0.1"
+   }
+}
