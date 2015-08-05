@@ -3,7 +3,7 @@
    <li ng-repeat="tab in tabs"
        ng-class="{ active: selected == tab.name, disabled: tab.disabled }"
        role="presentation">
-      <a ng-click="selectTab(tab.name)" role="tab">
+      <a ng-click="selectTab(tab.name)" href="" role="tab">
          {{tab.title}}
       </a>
    </li>
