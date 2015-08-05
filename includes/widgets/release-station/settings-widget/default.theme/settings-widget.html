@@ -2,7 +2,7 @@
    <li ng-repeat="account in accounts"
        ng-class="{ active: ( account.login == login ) }"
        role="presentation">
-      <a ng-click="selectAccount( account )" role="tab">
+      <a ng-click="selectAccount( account )" href="#" role="tab">
          <img ng-src="{{account.avatar_url}}" alt="{{account.login}}"/>
          {{account.login}}
       </a>
@@ -12,20 +12,28 @@
 <div class="tab-content">
    <div role="tabpanel" class="tab-pane active">
 
-      <nav ng-if="pager" class="text-center">
-         <ul class="pagination">
-            <li ng-if="{ disabled: (pager.first == pager.current) }">
-               <a href="#" ng-click="selectPage(pager.current - 1)">&laquo;</a>
-            </li>
-            <li ng-repeat="page in pager.pages"
-                ng-class="{ active: (pager.current == page) }">
-               <a href="#" ng-click="selectPage(page)">{{page}}</a>
-            </li>
-            <li ng-class="{ disabled: (pager.last == pager.current) }">
-               <a href="#" ng-click="selectPage(pager.current + 1)">&raquo;</a>
-            </li>
-         </ul>
-      </nav>
+      <div class="text-center">
+         <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default navbar-btn"
+                    ng-click="setAllEnabled( repositories, false )">none</button>
+            <button type="button" class="btn btn-default navbar-btn"
+                    ng-click="setAllEnabled( repositories, true )">all</button>
+         </div>
+         <div class="btn-group" role="group" ng-if="pager.first !== pager.last">
+            <ul class="pagination">
+               <li ng-if="{ disabled: (pager.first == pager.current) }">
+                  <a href="#" ng-click="selectPage(pager.current - 1)">&laquo;</a>
+               </li>
+               <li ng-repeat="page in pager.pages"
+                   ng-class="{ active: (pager.current == page) }">
+                  <a href="#" ng-click="selectPage(page)">{{page}}</a>
+               </li>
+               <li ng-class="{ disabled: (pager.last == pager.current) }">
+                  <a href="#" ng-click="selectPage(pager.current + 1)">&raquo;</a>
+               </li>
+            </ul>
+         </div>
+      </div>
 
       <ul ng-if="repositories" class="list-group">
          <li class="list-group-item"
@@ -36,14 +44,14 @@
                   <input type="radio" name="toggle-{{repo.full_name}}"
                          ng-model="repo.enabled"
                          ng-value="false"
-                         ng-change="toggleRepository( repo )"></input>
+                         ng-change="repositoryChanged( repo )"></input>
                   <span>off</span>
                </label>
                <label ng-class="{ active: repo.enabled }">
                   <input type="radio" name="toggle-{{repo.full_name}}"
                          ng-model="repo.enabled"
                          ng-value="true"
-                         ng-change="toggleRepository( repo )"></input>
+                         ng-change="repositoryChanged( repo )"></input>
                   <span>on</span>
                </label>
             </div>

@@ -47,19 +47,16 @@ define( [
          }
       };
 
-      $scope.toggleRepository = function( repository ) {
-         var index = settings.repositories.indexOf( repository.url );
-         if( repository.enabled && index == -1 ) {
-            settings.repositories.push( repository.url );
-            eventSources.push( eventSourceForRepository( repository ) );
-            dataSources.push( dataSourceForRepository( repository ) );
-         } else if( index >= 0 ) {
-            var patches = [ { op: 'remove', path: '/' + index } ];
-            settings.repositories.splice( index, 1 );
-            eventSources.update( patches );
-            dataSources.update( patches );
-         }
+      $scope.repositoryChanged = function( repository ) {
+         updateSettings( settings, repository );
+         saveSettings( settings );
+      };
 
+      $scope.setAllEnabled = function( repositories, value ) {
+         repositories.forEach( function( repository ) {
+            repository.enabled = value;
+            updateSettings( settings, repository );
+         } );
          saveSettings( settings );
       };
 
@@ -73,6 +70,20 @@ define( [
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
          saveSettings( settings );
       } );
+
+      function updateSettings( settings, repository ) {
+         var index = settings.repositories.indexOf( repository.url );
+         if( repository.enabled && index == -1 ) {
+            settings.repositories.push( repository.url );
+            eventSources.push( eventSourceForRepository( repository ) );
+            dataSources.push( dataSourceForRepository( repository ) );
+         } else if( index >= 0 ) {
+            var patches = [ { op: 'remove', path: '/' + index } ];
+            settings.repositories.splice( index, 1 );
+            eventSources.update( patches );
+            dataSources.update( patches );
+         }
+      }
 
       function saveSettings( settings ) {
          if( settings.repositories.length ) {
@@ -101,7 +112,6 @@ define( [
          return getAccountOrganizations( user )
             .then( function( organizations ) {
                $scope.accounts.push.apply( $scope.accounts, organizations );
-
                return Promise.all( [ promise ].concat( organizations.map( addAccount ) ) );
             } );
       }

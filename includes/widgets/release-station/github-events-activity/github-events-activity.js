@@ -60,11 +60,14 @@ define( [
             .registerResourceFromFeature( 'events.sources', {
                onReplace: function( event ) {
                   disconnectStreams( streams );
+                  eventsPublisher.replace( [] );
                   streams = provideStreams( event.data );
                },
                onUpdate: function( event ) {
                   var patches = event.patches.map( mapPatchValue.bind( null, provideStream ) );
-                  disconnectStreams( removedItems( streams, patches ) );
+                  var removed = removedItems( streams, patches );
+                  disconnectStreams( removed );
+                  eventsPublisher.update( [] ); // TODO: determine removed indexes?
                   patterns.json.applyPatch( streams, patches );
                }
             } );
@@ -104,10 +107,11 @@ define( [
 
       function provideStream( source ) {
          var options = Object.create( baseOptions );
+         var stream;
 
          options.events = source.events;
 
-         var stream = new EventStream[ source.type ]( options );
+         stream = new EventStream[ source.type ]( options );
 
          return ready.then( function() {
             stream.connect( source.url );

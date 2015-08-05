@@ -13,6 +13,11 @@
    width: 2em;
 }
 
+.settings-widget .btn-group .pagination {
+   margin: 8px 0;
+   vertical-align: middle;
+}
+
 .settings-widget .toggle {
    display: inline-block;
    background-color: #dfdfdf;
