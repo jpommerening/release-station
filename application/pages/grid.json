@@ -75,7 +75,7 @@
          }
       ],
 
-      "content1a": [
+      "content": [
          {
             "widget": "release-station/activity-grid-widget",
             "features": {

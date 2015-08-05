@@ -54,7 +54,7 @@
          }
       ],
 
-      "content1a": [
+      "content": [
          {
             "widget": "release-station/release-history-widget",
             "features": {

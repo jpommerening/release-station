@@ -104,6 +104,15 @@
       ],
 
       "navigation": [
+         {
+            "widget": "release-station/search-box-widget",
+            "insertBeforeId": "login",
+            "features": {
+               "search": {
+                  "resource": "searchString"
+               }
+            }
+         }
       ],
 
       "headline": [
@@ -120,10 +129,7 @@
          }
       ],
 
-      "content1a": [
-      ],
-
-      "content1b": [
+      "content": [
          {
             "widget": "release-station/activity-calendar-widget",
             "features": {

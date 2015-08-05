@@ -160,6 +160,7 @@
          },
          {
             "widget": "release-station/github-login-widget",
+            "id": "login",
             "features": {
                "auth": {
                   "action": "authenticate",

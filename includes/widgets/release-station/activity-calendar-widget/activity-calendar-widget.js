@@ -141,20 +141,20 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function initMonth( startOfMonth, endOfMonth ) {
-         var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
+         var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 1 ? 0 : -7 );
          var endOfCalendar = moment( startOfCalendar ).add( 6, 'weeks' );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
       function previousMonth( startOfMonth, endOfMonth ) {
-         var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 2 ? 0 : -7 );
+         var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 1 ? 0 : -7 );
          var endOfCalendar = moment( $scope.weeks[0][0].date );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
       function nextMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add( 1, 'day' );
-         var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 3 ? 14 : 7 );
+         var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 2 ? 14 : 7 );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
