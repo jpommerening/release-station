@@ -92,6 +92,13 @@ define( [
                if( newValue > 0 ) {
                   setGauge( $fill[0], newValue );
                   setGauge( $glow[0], newValue );
+                  $fill.css( { visibility: 'visible' } );
+                  $glow.css( { visibility: 'visible' } );
+               } else {
+                  setGauge( $fill[0], 0.01 );
+                  setGauge( $glow[0], 0.01 );
+                  $fill.css( { visibility: 'hidden' } );
+                  $glow.css( { visibility: 'hidden' } );
                }
             } );
             scope.$watch( 'active', function( newValue, oldValue ) {
@@ -102,13 +109,17 @@ define( [
                */
             } );
             scope.$watch( 'fill', function( newValue, oldValue ) {
-               $fill.css( 'fill', newValue );
+               if( newValue ) {
+                  $fill.css( { fill: newValue } );
+               } else {
+                  $fill.css( { display: 'none' } );
+               }
             } );
             scope.$watch( 'glow', function( newValue, oldValue ) {
                if( newValue ) {
-                  $glow.css( 'fill', newValue );
+                  $glow.css( { fill: newValue } );
                } else {
-                  $glow.css( 'display', 'none' );
+                  $glow.css( { display: 'none' } );
                }
             } );
 
