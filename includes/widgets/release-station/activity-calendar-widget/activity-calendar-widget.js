@@ -210,15 +210,23 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function fuzzyMatchPointers( search, pointers, object ) {
-      return search ? pointers.some( function( pointer ) {
-         var value = patterns.json.getPointer( object, pointer );
-         if( typeof value === 'string' ) {
-            return ( value.toUpperCase().indexOf( search.toUpperCase() ) >= 0 );
-         } else {
-            return value === search;
-         }
-         return false;
-      } ) : true;
+      var terms = ( search || '' ).split(/\W+/);
+
+      if( !terms ) {
+         return true;
+      }
+
+      return terms.every( function( term ) {
+         return pointers.some( function( pointer ) {
+            var value = patterns.json.getPointer( object, pointer );
+            if( typeof value === 'string' ) {
+               return ( value.toUpperCase().indexOf( term.toUpperCase() ) >= 0 );
+            } else {
+               return value === search;
+            }
+            return false;
+         } );
+      } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
