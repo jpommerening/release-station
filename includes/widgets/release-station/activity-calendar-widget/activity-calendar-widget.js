@@ -42,13 +42,9 @@ define( [
             data: events
          } );
 
-         if( date.isSame( selected ) ) {
-            $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
-               action: $scope.features.details.action
-            } );
-            return false;
-         }
-         return true;
+         $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
+            action: $scope.features.details.action
+         } );
       };
 
       eventPipeline( $scope, 'events', {

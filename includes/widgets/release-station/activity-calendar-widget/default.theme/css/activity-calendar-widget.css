@@ -31,6 +31,36 @@
    font-size: 0.9em;
    overflow: hidden;
 }
+.activity-calendar-widget td > a {
+   z-index: 2;
+}
+
+.activity-calendar-widget td.selected {
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/**
+ * Hacky way to highlight cells.
+ * Since cells have a dynamic style="background-color: " applied, we
+ * use an overlay to simulate the color change.
+ */
+.activity-calendar-widget td:hover::before,
+.activity-calendar-widget td.selected::before {
+   display: block;
+   content: " ";
+   position: absolute;
+   z-index: 1;
+   background-color: rgba(38, 38, 38, 0.1);
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+}
+
+.activity-calendar-widget td.not-in-month:hover::before,
+.activity-calendar-widget td.not-in-month.selected::before {
+   background-color: #d8d8d8;
+}
 
 /**
  * Animation magic START
@@ -104,10 +134,6 @@
    text-decoration: none;
 }
 
-.activity-calendar-widget td.selected a.day:focus {
-   outline: none;
-}
-
 .activity-calendar-widget td a {
    color: #fff;
 }
@@ -145,8 +171,8 @@
 }
 
 .activity-calendar-widget .ax-color-scale .ax-color-stop-0 { background-color: #c0c3c4; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #40b0a0; }
-.activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #50a090; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-1 { background-color: #78b0a0; }
+.activity-calendar-widget .ax-color-scale .ax-color-stop-2 { background-color: #68a090; }
 .activity-calendar-widget .ax-color-scale .ax-color-stop-3 { background-color: #b0e090; }
 .activity-calendar-widget .ax-color-scale .ax-color-stop-4 { background-color: #c8f8a0; }
 
@@ -154,45 +180,20 @@
  * Clean up some stuff we don't want to be colored.
  */
 
-.activity-calendar-widget td.weekend.selected,
-.activity-calendar-widget td.future.selected {
-   background: #ddd;
-   box-shadow: 0 0 8px #ddd;
-}
-
 .activity-calendar-widget td.weekend,
 .activity-calendar-widget td.future {
-   background: #eee;
-}
-
-.activity-calendar-widget td.weekend:hover,
-.activity-calendar-widget td.future:hover {
-   background: #ddd;
-}
-
-.activity-calendar-widget td.not-in-month ul:after,
-.activity-calendar-widget td.not-in-month:hover ul:after,
-.activity-calendar-widget td.weekend ul:after,
-.activity-calendar-widget td.weekend:hover ul:after,
-.activity-calendar-widget td.future ul:after,
-.activity-calendar-widget td.future:hover ul:after {
-   background: transparent;
+   background: #d8d8d8;
 }
 
 .activity-calendar-widget td.not-in-month,
 .activity-calendar-widget td.not-in-month a,
 .activity-calendar-widget td.not-in-month h3 {
    background: transparent;
-   color: #eee;
+   color: #d8d8d8;
 }
 
+.activity-calendar-widget td.not-in-month:hover,
 .activity-calendar-widget td.not-in-month:hover a,
 .activity-calendar-widget td.not-in-month:hover h3 {
-   background: transparent;
-   color: #fff;
-}
-
-.activity-calendar-widget td.not-in-month:hover {
-   background: #eee;
    color: #fff;
 }

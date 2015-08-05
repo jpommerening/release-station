@@ -19,7 +19,7 @@
       <tbody>
          <tr ng-repeat="week in weeks">
             <td ng-repeat="day in week"
-                ng-style="{ 'background-color': day.isWorkingDay && (day.isSelected ? scale(day.activity).brighten(10) : scale(day.activity)) }"
+                ng-style="{ 'background-color': day.isWorkingDay && scale(day.activity) }"
                 ng-class="{ today: day.isToday,
                             selected: day.isSelected,
                             past: day.isPast,
@@ -27,7 +27,7 @@
                             weekend: day.isWeekend,
                             'not-in-month': !day.isInMonth,
                             'hidden-xs': day.isWeekend }">
-               <a ng-href="{{day.url}}" class="day" tabindex="0" ng-click="details(day.date)">
+               <a ng-href="{{day.url}}" ng-click="day.isInMonth && details(day.date)" class="day" tabindex="0">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>
                      <li ng-if="day.releases[0]">{{day.releases.length}} releases</li>
