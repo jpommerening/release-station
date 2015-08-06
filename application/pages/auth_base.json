@@ -178,7 +178,6 @@
                      }
                   },
                   {
-                     "icon": "fa-sign-out",
                      "action": "deauthenticate",
                      "i18nHtmlLabel": {
                         "en-US": "Sign out"

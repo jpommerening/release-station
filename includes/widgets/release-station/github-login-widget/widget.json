@@ -86,10 +86,6 @@
                      "type": "string",
                      "description": "The name of the place to navigate to when clicked.",
                      "format": "topic"
-                  },
-                  "icon": {
-                     "type": "string",
-                     "description": "A FontAwesome (or compatible) icon class to use for this navigation item."
                   }
                }
             }

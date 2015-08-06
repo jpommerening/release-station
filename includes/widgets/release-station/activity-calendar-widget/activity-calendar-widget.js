@@ -155,9 +155,8 @@ define( [
 
          object.date = date;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
-         object.commits_url = object.url + '/commits';
-         object.tags_url = object.url + '/tags';
-         object.issues_url = object.url + '/issues';
+
+         object.isWeekend = date.day() % 6 === 0;
 
          return object;
       }
@@ -237,9 +236,8 @@ define( [
             var date = day.date;
             day.isToday = date.isSame( today );
             day.isSelected = date.isSame( selected );
-            day.isPast = date.isBefore( today );
+            day.isPast = day.isPast || date.isBefore( today );
             day.isFuture = date.isAfter( today );
-            day.isWeekend = date.day() % 6 === 0;
             day.isInMonth = date.isSame( startOfMonth ) || date.isBetween( startOfMonth, endOfMonth );
             day.isWorkingDay = day.isInMonth && !(day.isWeekend || day.isFuture);
          } );

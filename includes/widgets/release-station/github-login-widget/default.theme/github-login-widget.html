@@ -10,16 +10,15 @@
          <span class="hidden-sm">{{features.auth.i18nHtmlLabel | axLocalize:i18n}}</span>
       </a>
       <ul class="dropdown-menu dropdown-menu-right" ng-if="authenticated" role="menu">
-         <li class="dropdown-header" ng-bind-html="features.user.i18nHtmlLabel | axLocalize:i18n"></li>
-         <li><a title="{{resources.user.name}}" ng-href="{{resources.user.html_url}}">{{resources.user.login}}</a></li>
-         <li class="divider" role="separator"></li>
+         <li class="hidden-xs dropdown-header" ng-bind-html="features.user.i18nHtmlLabel | axLocalize:i18n"></li>
+         <li class="hidden-xs"><a title="{{resources.user.name}}" ng-href="{{resources.user.html_url}}">{{resources.user.login}}</a></li>
+         <li class="hidden-xs divider" role="separator"></li>
          <li ng-repeat="item in dropdown.menu">
             <a ng-href="{{item.target || '#'}}"
-               ng-click="dropdown.click( item )">
-               <i class="fa" ng-class="[ item.icon ]" ng-if="item.icon"></i><!--
-            --><span ng-bind-html="item.i18nHtmlLabel | axLocalize:i18n"></span>
-            </a>
+               ng-click="dropdown.click( item )"
+               ng-bind-html="item.i18nHtmlLabel | axLocalize:i18n"></a>
          </li>
+         <li></li>
       </ul>
    </div>
 </div>
