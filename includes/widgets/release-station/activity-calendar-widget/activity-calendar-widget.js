@@ -9,8 +9,9 @@ define( [
    'angular',
    'moment',
    'release-station/event-pipeline',
-   'release-station/github-events'
-], function( ax, patterns, ng, moment, eventPipeline, githubEvents ) {
+   'release-station/github-events',
+   'release-station/object-filter'
+], function( ax, patterns, ng, moment, eventPipeline, githubEvents, objectFilter ) {
    'use strict';
 
    var DATE_FORMAT = 'YYYY-MM-DD';
@@ -21,7 +22,6 @@ define( [
 
    function Controller( $scope, $timeout, flowService ) {
       var dateParameter = $scope.features.calendar.parameter;
-      var searchFields = ( $scope.features.search.fields || [] ).map( toJsonPointer );
 
       var today = moment().startOf( 'day' );
       var tomorrow = moment( today ).add( 1, 'day' );
@@ -51,6 +51,15 @@ define( [
          } );
       };
 
+      var searchFilter = objectFilter.create( {
+         pointers: $scope.features.search.fields,
+         matchers: Object.keys( $scope.features.search.match || {} ).map( function( pattern ) {
+            return {
+               pattern: pattern,
+               pointers: $scope.features.search.match[ pattern ]
+            };
+         } )
+      } );
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.resources.events );
@@ -59,8 +68,7 @@ define( [
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
          .filter( function( event ) {
-            var searchString = $scope.resources.search;
-            return fuzzyMatchPointers( searchString, searchFields, event );
+            return ( !$scope.resources.search ) || searchFilter( $scope.resources.search, event );
          } )
          .classify( githubEvents.by.date )
          .classify( classifyEventByType );
@@ -195,38 +203,6 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function toJsonPointer( item ) {
-      if( typeof item === 'string' ) {
-         return item[ 0 ] === '/' ? item : patterns.json.pathToPointer( item );
-      } else if( item.join ) {
-         return '/' + item.join( '/' );
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function fuzzyMatchPointers( search, pointers, object ) {
-      var terms = ( search || '' ).split(/\W+/);
-
-      if( !terms ) {
-         return true;
-      }
-
-      return terms.every( function( term ) {
-         return pointers.some( function( pointer ) {
-            var value = patterns.json.getPointer( object, pointer );
-            if( typeof value === 'string' ) {
-               return ( value.toUpperCase().indexOf( term.toUpperCase() ) >= 0 );
-            } else {
-               return value === search;
-            }
-            return false;
-         } );
-      } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

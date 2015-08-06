@@ -149,7 +149,12 @@
                      "org.login",
                      "payload.message",
                      "payload.ref"
-                  ]
+                  ],
+                  "match": {
+                     "@(\\w+)": [ "actor.login" ],
+                     "#(\\d+)": [ "payload.issue.id" ],
+                     "([\\w-]+/[\\w-]+)": [ "repo.name" ]
+                  }
                },
                "details": {
                   "resource": "details",
