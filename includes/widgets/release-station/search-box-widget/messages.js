@@ -6,8 +6,8 @@
 define( {
 
    SEARCH_PLACEHOLDER: {
-      de: 'Suche etwas Großartiges',
-      en: 'Search for something awesome'
+      de: 'Suche nach Usern, Repositories, …',
+      en: 'Search for users, repos, …'
    }
 
 } );
