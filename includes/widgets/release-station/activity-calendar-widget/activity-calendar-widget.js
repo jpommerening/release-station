@@ -30,6 +30,7 @@ define( [
       $scope.weeks = [];
       $scope.resources = {
          events: {},
+         repos: [],
          search: ''
       };
 
@@ -39,11 +40,11 @@ define( [
       $scope.active = false;
 
       $scope.details = function details( date ) {
-         var events = eventBucket( $scope.resources.events, date );
+         var details = getDateDetails( date );
 
          $scope.eventBus.publish( 'didReplace.' + $scope.features.details.resource, {
             resource: $scope.features.details.resource,
-            data: events
+            data: details
          } );
 
          $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
@@ -60,6 +61,7 @@ define( [
             };
          } )
       } );
+
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.resources.events );
@@ -72,6 +74,9 @@ define( [
          } )
          .classify( githubEvents.by.date )
          .classify( classifyEventByType );
+
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'repos' );
 
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'search', {
@@ -146,6 +151,31 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      function getDateDetails( date ) {
+         var day = eventBucket( $scope.resources.events, date );
+         var repos = {};
+
+         flatObjectValues( day ).forEach( function( event ) {
+            var repo = event.repo;
+
+            if( repo ) {
+               repos[ repo.id ] = true;
+            }
+         } );
+
+         $scope.resources.repos.filter( function( repo ) {
+            if( repos.hasOwnProperty( repo.id ) ) {
+               repos[ repo.id ] = repo;
+            }
+         } );
+
+         day.repos = repos;
+
+         return day;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function constructDayObject( date ) {
          var base = eventBucket( $scope.resources.events, date );
          var object = Object.create( base );
@@ -202,6 +232,18 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function flatObjectValues( object ) {
+      return flatMapKeys( object, function( key ) { return object[ key ]; } );
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function flatMapKeys( object, callback ) {
+      return [].concat.apply( [], Object.keys( object ).map( callback ) );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

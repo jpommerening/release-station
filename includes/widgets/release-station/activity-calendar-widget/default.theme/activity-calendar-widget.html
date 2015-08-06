@@ -11,7 +11,7 @@
    </thead>
 </table>
 <div>
-   <table ng-class="{ active: active,
+   <table ng-class="{ 'active': active,
                       'push-4': pushedRows === 4,
                       'push-5': pushedRows === 5,
                       'unshift-4': unshiftedRows === 4,
@@ -27,7 +27,7 @@
                             weekend: day.isWeekend,
                             'not-in-month': !day.isInMonth,
                             'hidden-xs': day.isWeekend }">
-               <a ng-href="{{day.url}}" ng-click="day.isInMonth && details(day.date)" class="day" tabindex="0">
+               <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.activity > 0 && details(day.date)" class="day" tabindex="0">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>
                      <li ng-if="day.releases[0]">{{day.releases.length}} releases</li>

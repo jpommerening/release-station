@@ -10,19 +10,43 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function createFilter( options ) {
+      var matchers = ( options.matchers || [] ).map( createMatcher );
 
-      var matchers = [ createMatcher( {
-         pattern: /(\w+)/g,
-         pointers: options.pointers,
-         every: true,
-         callback: fuzzyCompare
-      } ) ].concat( ( options.matchers || [] ).map( createMatcher ) );
+      var keywordExtractor = createKeywordExtractor( options.matchers );
+      var textMatcher = createTextMatcher( options );
 
       return function match( search, object ) {
-         return matchers.every( function( matcher ) {
+         // strip special patterns from search to keep the keywords
+         var keywords = keywordExtractor( search );
+
+         return textMatcher( keywords, object ) && matchers.every( function( matcher ) {
             return matcher( search, object );
          } );
       };
+   }
+
+   function createKeywordExtractor( matchers ) {
+      var regExps = ( matchers || [] ).map( function( options ) {
+         var pattern = ( options.pattern || /\W+/g );
+         return ( pattern instanceof RegExp ) ? pattern : new RegExp( pattern, 'g' );
+      } );
+
+      function stripRegExp( text, regExp ) {
+         return text.replace( regExp, ' ' );
+      }
+
+      return function extract( text ) {
+         return regExps.reduce( stripRegExp, text || '' ).trim();
+      };
+   }
+
+   function createTextMatcher( options ) {
+      return createMatcher( {
+         pattern: /(\w+)/g,
+         pointers: options.pointers,
+         every: options.every || true,
+         callback: fuzzyCompare
+      } );
    }
 
    /**
