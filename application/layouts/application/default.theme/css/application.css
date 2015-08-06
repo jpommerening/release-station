@@ -9,7 +9,7 @@ body::before {
    display: none;
 }
 .app-content-wrapper {
-   top: 90px;
+   margin-top: 90px;
 }
 
 /**
