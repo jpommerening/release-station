@@ -136,7 +136,7 @@
                "calendar": {
                },
                "repos": {
-                  "resource": "repos"
+                  "resource": "data"
                },
                "events": {
                   "resource": "events"

@@ -26,7 +26,8 @@ define( [
       $scope.projects = [];
       $scope.resources = {
          events: {},
-         repos: []
+         repos: [],
+         search: ''
       };
 
       $scope.stats = [
@@ -57,6 +58,7 @@ define( [
             };
          } )
       } );
+
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.resources.events );
