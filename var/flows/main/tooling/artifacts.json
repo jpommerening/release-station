@@ -12,7 +12,9 @@
             "list": []
          },
          "references": {
-            "file": "application/flow/flow.json"
+            "local": {
+               "self": "application/flow/flow.json"
+            }
          }
       }
    ],
@@ -28,6 +30,11 @@
                "css/theme.css"
             ],
             "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "default.theme"
+            }
          }
       },
       {
@@ -41,6 +48,11 @@
                "css/theme.css"
             ],
             "embed": []
+         },
+         "references": {
+            "local": {
+               "self": "cube.theme"
+            }
          }
       }
    ],
@@ -57,7 +69,9 @@
             "list": []
          },
          "references": {
-            "file": "auth_base"
+            "local": {
+               "self": "auth_base"
+            }
          },
          "pages": [],
          "widgets": [
@@ -83,7 +97,9 @@
             "list": []
          },
          "references": {
-            "file": "calendar"
+            "local": {
+               "self": "calendar"
+            }
          },
          "pages": [
             "auth_base"
@@ -110,7 +126,9 @@
             "list": []
          },
          "references": {
-            "file": "grid"
+            "local": {
+               "self": "grid"
+            }
          },
          "pages": [
             "auth_base"
@@ -135,7 +153,9 @@
             "list": []
          },
          "references": {
-            "file": "history"
+            "local": {
+               "self": "history"
+            }
          },
          "pages": [
             "auth_base"
@@ -151,90 +171,72 @@
       {
          "resources": {
             "list": [
-               "/application/layouts/application/default.theme/css/application.css",
-               "/application/layouts/application/default.theme/application.html",
-               "/application/layouts/application/cube.theme/css/application.css",
-               "/application/layouts/application/cube.theme/application.html",
                "/includes/themes/cube.theme/layouts/application/css/application.css",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css"
             ],
             "watch": [
-               "/application/layouts/application/default.theme/css/application.css",
-               "/application/layouts/application/default.theme/application.html",
-               "/application/layouts/application/cube.theme/css/application.css",
-               "/application/layouts/application/cube.theme/application.html",
                "/includes/themes/cube.theme/layouts/application/css/application.css",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/cube.theme/css/application.css",
+               "/application/layouts/application/default.theme/css/application.css"
             ],
             "embed": [
-               "/application/layouts/application/default.theme/application.html",
+               "/includes/themes/cube.theme/layouts/application/application.html",
                "/application/layouts/application/cube.theme/application.html",
-               "/includes/themes/cube.theme/layouts/application/application.html"
+               "/application/layouts/application/default.theme/application.html"
             ]
          },
          "references": {
-            "file": {
-               "reference": "application"
+            "local": {
+               "self": "application"
             }
          }
       },
       {
          "resources": {
             "list": [
-               "/application/layouts/demo_application/default.theme/css/demo_application.css",
-               "/application/layouts/demo_application/default.theme/demo_application.html",
-               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
-               "/application/layouts/demo_application/cube.theme/demo_application.html",
                "/includes/themes/cube.theme/layouts/demo_application/css/demo_application.css",
-               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
+               "/application/layouts/demo_application/default.theme/css/demo_application.css"
             ],
             "watch": [
-               "/application/layouts/demo_application/default.theme/css/demo_application.css",
-               "/application/layouts/demo_application/default.theme/demo_application.html",
-               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
-               "/application/layouts/demo_application/cube.theme/demo_application.html",
                "/includes/themes/cube.theme/layouts/demo_application/css/demo_application.css",
-               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+               "/application/layouts/demo_application/cube.theme/css/demo_application.css",
+               "/application/layouts/demo_application/default.theme/css/demo_application.css"
             ],
             "embed": [
-               "/application/layouts/demo_application/default.theme/demo_application.html",
+               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html",
                "/application/layouts/demo_application/cube.theme/demo_application.html",
-               "/includes/themes/cube.theme/layouts/demo_application/demo_application.html"
+               "/application/layouts/demo_application/default.theme/demo_application.html"
             ]
          },
          "references": {
-            "file": {
-               "reference": "demo_application"
+            "local": {
+               "self": "demo_application"
             }
          }
       },
       {
          "resources": {
             "list": [
-               "/application/layouts/popup/default.theme/css/popup.css",
-               "/application/layouts/popup/default.theme/popup.html",
-               "/application/layouts/popup/cube.theme/css/popup.css",
-               "/application/layouts/popup/cube.theme/popup.html",
                "/includes/themes/cube.theme/layouts/popup/css/popup.css",
-               "/includes/themes/cube.theme/layouts/popup/popup.html"
+               "/application/layouts/popup/cube.theme/css/popup.css",
+               "/application/layouts/popup/default.theme/css/popup.css"
             ],
             "watch": [
-               "/application/layouts/popup/default.theme/css/popup.css",
-               "/application/layouts/popup/default.theme/popup.html",
-               "/application/layouts/popup/cube.theme/css/popup.css",
-               "/application/layouts/popup/cube.theme/popup.html",
                "/includes/themes/cube.theme/layouts/popup/css/popup.css",
-               "/includes/themes/cube.theme/layouts/popup/popup.html"
+               "/application/layouts/popup/cube.theme/css/popup.css",
+               "/application/layouts/popup/default.theme/css/popup.css"
             ],
             "embed": [
-               "/application/layouts/popup/default.theme/popup.html",
+               "/includes/themes/cube.theme/layouts/popup/popup.html",
                "/application/layouts/popup/cube.theme/popup.html",
-               "/includes/themes/cube.theme/layouts/popup/popup.html"
+               "/application/layouts/popup/default.theme/popup.html"
             ]
          },
          "references": {
-            "file": {
-               "reference": "popup"
+            "local": {
+               "self": "popup"
             }
          }
       }
@@ -248,34 +250,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css",
                "widget.json",
                "*.theme/ax-command-bar-widget.html",
                "*.theme/css/ax-command-bar-widget.css",
-               "ax-command-bar-widget.js",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html"
+               "ax-command-bar-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html",
                "widget.json",
-               "*.theme/ax-command-bar-widget.html",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget.html"
+               "*.theme/ax-command-bar-widget.html"
             ],
             "list": [
-               "*.theme/css/ax-command-bar-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css"
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-command-bar-widget/css/ax-command-bar-widget.css",
+               "*.theme/css/ax-command-bar-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "laxarjs/ax-command-bar-widget"
+            "local": {
+               "self": "laxarjs/ax-command-bar-widget"
             },
             "amd": {
+               "self": "../includes/widgets/laxarjs/ax-command-bar-widget",
                "module": "laxar-application/includes/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget"
             }
          },
          "controls": [
             "laxar-button-list-control"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "laxarjs/ax-command-bar-widget",
+            "derivedReference": "laxarjs/ax-command-bar-widget"
+         }
       },
       {
          "path": "includes/widgets/laxarjs/ax-developer-tools-widget",
@@ -285,32 +292,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
                "widget.json",
                "*.theme/ax-developer-tools-widget.html",
                "*.theme/css/ax-developer-tools-widget.css",
-               "ax-developer-tools-widget.js",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html"
+               "ax-developer-tools-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html",
                "widget.json",
-               "*.theme/ax-developer-tools-widget.html",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget.html"
+               "*.theme/ax-developer-tools-widget.html"
             ],
             "list": [
-               "*.theme/css/ax-developer-tools-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css"
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-developer-tools-widget/css/ax-developer-tools-widget.css",
+               "*.theme/css/ax-developer-tools-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "laxarjs/ax-developer-tools-widget"
+            "local": {
+               "self": "laxarjs/ax-developer-tools-widget"
             },
             "amd": {
+               "self": "../includes/widgets/laxarjs/ax-developer-tools-widget",
                "module": "laxar-application/includes/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "laxarjs/ax-developer-tools-widget",
+            "derivedReference": "laxarjs/ax-developer-tools-widget"
+         }
       },
       {
          "path": "includes/widgets/laxarjs/ax-headline-widget",
@@ -320,35 +332,40 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css",
                "widget.json",
                "*.theme/ax-headline-widget.html",
                "*.theme/css/ax-headline-widget.css",
-               "ax-headline-widget.js",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html"
+               "ax-headline-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html",
                "widget.json",
-               "*.theme/ax-headline-widget.html",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/ax-headline-widget.html"
+               "*.theme/ax-headline-widget.html"
             ],
             "list": [
-               "*.theme/css/ax-headline-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css"
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-headline-widget/css/ax-headline-widget.css",
+               "*.theme/css/ax-headline-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "laxarjs/ax-headline-widget"
+            "local": {
+               "self": "laxarjs/ax-headline-widget"
             },
             "amd": {
+               "self": "../includes/widgets/laxarjs/ax-headline-widget",
                "module": "laxar-application/includes/widgets/laxarjs/ax-headline-widget/ax-headline-widget"
             }
          },
          "controls": [
             "laxar-uikit/controls/i18n",
             "laxar-button-list-control"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "laxarjs/ax-headline-widget",
+            "derivedReference": "laxarjs/ax-headline-widget"
+         }
       },
       {
          "path": "includes/widgets/laxarjs/ax-popup-widget",
@@ -358,34 +375,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html",
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css",
                "widget.json",
                "*.theme/ax-popup-widget.html",
                "*.theme/css/ax-popup-widget.css",
-               "ax-popup-widget.js",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html"
+               "ax-popup-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html",
                "widget.json",
-               "*.theme/ax-popup-widget.html",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/ax-popup-widget.html"
+               "*.theme/ax-popup-widget.html"
             ],
             "list": [
-               "*.theme/css/ax-popup-widget.css",
-               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css"
+               "/includes/themes/cube.theme/widgets/laxarjs/ax-popup-widget/css/ax-popup-widget.css",
+               "*.theme/css/ax-popup-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "laxarjs/ax-popup-widget"
+            "local": {
+               "self": "laxarjs/ax-popup-widget"
             },
             "amd": {
+               "self": "../includes/widgets/laxarjs/ax-popup-widget",
                "module": "laxar-application/includes/widgets/laxarjs/ax-popup-widget/ax-popup-widget"
             }
          },
          "controls": [
             "laxar-layer-control"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "laxarjs/ax-popup-widget",
+            "derivedReference": "laxarjs/ax-popup-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/activity-calendar-widget",
@@ -395,34 +417,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css",
                "widget.json",
                "*.theme/activity-calendar-widget.html",
                "*.theme/css/activity-calendar-widget.css",
-               "activity-calendar-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html"
+               "activity-calendar-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html",
                "widget.json",
-               "*.theme/activity-calendar-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/activity-calendar-widget.html"
+               "*.theme/activity-calendar-widget.html"
             ],
             "list": [
-               "*.theme/css/activity-calendar-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/activity-calendar-widget/css/activity-calendar-widget.css",
+               "*.theme/css/activity-calendar-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/activity-calendar-widget"
+            "local": {
+               "self": "release-station/activity-calendar-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/activity-calendar-widget",
                "module": "laxar-application/includes/widgets/release-station/activity-calendar-widget/activity-calendar-widget"
             }
          },
          "controls": [
             "laxar-color-scale-control"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "release-station/activity-calendar-widget",
+            "derivedReference": "release-station/activity-calendar-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/activity-grid-widget",
@@ -432,34 +459,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css",
                "widget.json",
                "*.theme/activity-grid-widget.html",
                "*.theme/css/activity-grid-widget.css",
-               "activity-grid-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html"
+               "activity-grid-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html",
                "widget.json",
-               "*.theme/activity-grid-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/activity-grid-widget.html"
+               "*.theme/activity-grid-widget.html"
             ],
             "list": [
-               "*.theme/css/activity-grid-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/activity-grid-widget/css/activity-grid-widget.css",
+               "*.theme/css/activity-grid-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/activity-grid-widget"
+            "local": {
+               "self": "release-station/activity-grid-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/activity-grid-widget",
                "module": "laxar-application/includes/widgets/release-station/activity-grid-widget/activity-grid-widget"
             }
          },
          "controls": [
             "laxar-color-scale-control"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "release-station/activity-grid-widget",
+            "derivedReference": "release-station/activity-grid-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/details-widget",
@@ -469,32 +501,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css",
                "widget.json",
                "*.theme/details-widget.html",
                "*.theme/css/details-widget.css",
-               "details-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html"
+               "details-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html",
                "widget.json",
-               "*.theme/details-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/details-widget/details-widget.html"
+               "*.theme/details-widget.html"
             ],
             "list": [
-               "*.theme/css/details-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/details-widget/css/details-widget.css",
+               "*.theme/css/details-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/details-widget"
+            "local": {
+               "self": "release-station/details-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/details-widget",
                "module": "laxar-application/includes/widgets/release-station/details-widget/details-widget"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/details-widget",
+            "derivedReference": "release-station/details-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/github-data-activity",
@@ -504,28 +541,33 @@
          },
          "resources": {
             "watch": [
-               "widget.json",
-               "github-data-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html",
                "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css",
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html"
+               "widget.json",
+               "github-data-activity.js"
             ],
             "embed": [
-               "widget.json",
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html"
+               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html",
+               "widget.json"
             ],
             "list": [
                "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/github-data-activity"
+            "local": {
+               "self": "release-station/github-data-activity"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/github-data-activity",
                "module": "laxar-application/includes/widgets/release-station/github-data-activity/github-data-activity"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/github-data-activity",
+            "derivedReference": "release-station/github-data-activity"
+         }
       },
       {
          "path": "includes/widgets/release-station/github-events-activity",
@@ -535,28 +577,33 @@
          },
          "resources": {
             "watch": [
-               "widget.json",
-               "github-events-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html",
                "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css",
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html"
+               "widget.json",
+               "github-events-activity.js"
             ],
             "embed": [
-               "widget.json",
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html"
+               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html",
+               "widget.json"
             ],
             "list": [
                "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/github-events-activity"
+            "local": {
+               "self": "release-station/github-events-activity"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/github-events-activity",
                "module": "laxar-application/includes/widgets/release-station/github-events-activity/github-events-activity"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/github-events-activity",
+            "derivedReference": "release-station/github-events-activity"
+         }
       },
       {
          "path": "includes/widgets/release-station/github-login-widget",
@@ -566,34 +613,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css",
                "widget.json",
                "*.theme/github-login-widget.html",
                "*.theme/css/github-login-widget.css",
-               "github-login-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html"
+               "github-login-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html",
                "widget.json",
-               "*.theme/github-login-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/github-login-widget.html"
+               "*.theme/github-login-widget.html"
             ],
             "list": [
-               "*.theme/css/github-login-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/github-login-widget/css/github-login-widget.css",
+               "*.theme/css/github-login-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/github-login-widget"
+            "local": {
+               "self": "release-station/github-login-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/github-login-widget",
                "module": "laxar-application/includes/widgets/release-station/github-login-widget/github-login-widget"
             }
          },
          "controls": [
             "laxar-uikit/controls/i18n"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "release-station/github-login-widget",
+            "derivedReference": "release-station/github-login-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/navigation-widget",
@@ -603,32 +655,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css",
                "widget.json",
                "*.theme/navigation-widget.html",
                "*.theme/css/navigation-widget.css",
-               "navigation-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html"
+               "navigation-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html",
                "widget.json",
-               "*.theme/navigation-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/navigation-widget.html"
+               "*.theme/navigation-widget.html"
             ],
             "list": [
-               "*.theme/css/navigation-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/navigation-widget/css/navigation-widget.css",
+               "*.theme/css/navigation-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/navigation-widget"
+            "local": {
+               "self": "release-station/navigation-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/navigation-widget",
                "module": "laxar-application/includes/widgets/release-station/navigation-widget/navigation-widget"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/navigation-widget",
+            "derivedReference": "release-station/navigation-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/oauth-activity",
@@ -638,28 +695,33 @@
          },
          "resources": {
             "watch": [
-               "widget.json",
-               "oauth-activity.js",
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html",
                "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css",
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html"
+               "widget.json",
+               "oauth-activity.js"
             ],
             "embed": [
-               "widget.json",
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html"
+               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html",
+               "widget.json"
             ],
             "list": [
                "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/oauth-activity"
+            "local": {
+               "self": "release-station/oauth-activity"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/oauth-activity",
                "module": "laxar-application/includes/widgets/release-station/oauth-activity/oauth-activity"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/oauth-activity",
+            "derivedReference": "release-station/oauth-activity"
+         }
       },
       {
          "path": "includes/widgets/release-station/release-history-widget",
@@ -669,32 +731,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css",
                "widget.json",
                "*.theme/release-history-widget.html",
                "*.theme/css/release-history-widget.css",
-               "release-history-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html"
+               "release-history-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html",
                "widget.json",
-               "*.theme/release-history-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/release-history-widget.html"
+               "*.theme/release-history-widget.html"
             ],
             "list": [
-               "*.theme/css/release-history-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/release-history-widget/css/release-history-widget.css",
+               "*.theme/css/release-history-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/release-history-widget"
+            "local": {
+               "self": "release-station/release-history-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/release-history-widget",
                "module": "laxar-application/includes/widgets/release-station/release-history-widget/release-history-widget"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/release-history-widget",
+            "derivedReference": "release-station/release-history-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/search-box-widget",
@@ -704,34 +771,39 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css",
                "widget.json",
                "*.theme/search-box-widget.html",
                "*.theme/css/search-box-widget.css",
-               "search-box-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html"
+               "search-box-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html",
                "widget.json",
-               "*.theme/search-box-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/search-box-widget.html"
+               "*.theme/search-box-widget.html"
             ],
             "list": [
-               "*.theme/css/search-box-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/search-box-widget/css/search-box-widget.css",
+               "*.theme/css/search-box-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/search-box-widget"
+            "local": {
+               "self": "release-station/search-box-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/search-box-widget",
                "module": "laxar-application/includes/widgets/release-station/search-box-widget/search-box-widget"
             }
          },
          "controls": [
             "laxar-uikit/controls/i18n"
-         ]
+         ],
+         "referencedAs": {
+            "byUser": "release-station/search-box-widget",
+            "derivedReference": "release-station/search-box-widget"
+         }
       },
       {
          "path": "includes/widgets/release-station/settings-widget",
@@ -741,32 +813,37 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html",
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css",
                "widget.json",
                "*.theme/settings-widget.html",
                "*.theme/css/settings-widget.css",
-               "settings-widget.js",
-               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html"
+               "settings-widget.js"
             ],
             "embed": [
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html",
                "widget.json",
-               "*.theme/settings-widget.html",
-               "/includes/themes/cube.theme/widgets/release-station/settings-widget/settings-widget.html"
+               "*.theme/settings-widget.html"
             ],
             "list": [
-               "*.theme/css/settings-widget.css",
-               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css"
+               "/includes/themes/cube.theme/widgets/release-station/settings-widget/css/settings-widget.css",
+               "*.theme/css/settings-widget.css"
             ]
          },
          "references": {
-            "file": {
-               "reference": "release-station/settings-widget"
+            "local": {
+               "self": "release-station/settings-widget"
             },
             "amd": {
+               "self": "../includes/widgets/release-station/settings-widget",
                "module": "laxar-application/includes/widgets/release-station/settings-widget/settings-widget"
             }
          },
-         "controls": []
+         "controls": [],
+         "referencedAs": {
+            "byUser": "release-station/settings-widget",
+            "derivedReference": "release-station/settings-widget"
+         }
       }
    ],
    "controls": [
@@ -778,23 +855,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css",
                "*.theme/css/ax-button-list-control.css",
-               "ax-button-list-control.js",
-               "includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css"
+               "ax-button-list-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/ax-button-list-control.css",
-               "includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css"
+               "/includes/themes/cube.theme/controls/laxar-button-list-control/css/ax-button-list-control.css",
+               "*.theme/css/ax-button-list-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../laxar-button-list-control"
+            },
             "amd": {
-               "reference": "laxar-button-list-control",
+               "self": "laxar-button-list-control",
                "module": "laxar-button-list-control/ax-button-list-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "laxar-button-list-control",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-button-list-control"
          }
       },
       {
@@ -805,23 +890,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css",
                "*.theme/css/ax-color-scale-control.css",
-               "ax-color-scale-control.js",
-               "includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css"
+               "ax-color-scale-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/ax-color-scale-control.css",
-               "includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css"
+               "/includes/themes/cube.theme/controls/laxar-color-scale-control/css/ax-color-scale-control.css",
+               "*.theme/css/ax-color-scale-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../laxar-color-scale-control"
+            },
             "amd": {
-               "reference": "laxar-color-scale-control",
+               "self": "laxar-color-scale-control",
                "module": "laxar-color-scale-control/ax-color-scale-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "laxar-color-scale-control",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-color-scale-control"
          }
       },
       {
@@ -832,23 +925,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css",
                "*.theme/css/ax-layer-control.css",
-               "ax-layer-control.js",
-               "includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css"
+               "ax-layer-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/ax-layer-control.css",
-               "includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css"
+               "/includes/themes/cube.theme/controls/laxar-layer-control/css/ax-layer-control.css",
+               "*.theme/css/ax-layer-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../laxar-layer-control"
+            },
             "amd": {
-               "reference": "laxar-layer-control",
+               "self": "laxar-layer-control",
                "module": "laxar-layer-control/ax-layer-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "laxar-layer-control",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-layer-control"
          }
       },
       {
@@ -859,23 +960,31 @@
          },
          "resources": {
             "watch": [
+               "/includes/themes/cube.theme/controls/i18n/css/ax-i18n-control.css",
                "*.theme/css/ax-i18n-control.css",
-               "ax-i18n-control.js",
-               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+               "ax-i18n-control.js"
             ],
             "embed": [
                "control.json"
             ],
             "list": [
-               "*.theme/css/ax-i18n-control.css",
-               "includes/themes/cube.theme/controls/laxar-uikit/controls/i18n/css/ax-i18n-control.css"
+               "/includes/themes/cube.theme/controls/i18n/css/ax-i18n-control.css",
+               "*.theme/css/ax-i18n-control.css"
             ]
          },
          "references": {
+            "local": {
+               "self": "../laxar-uikit/dist/controls/i18n"
+            },
             "amd": {
-               "reference": "laxar-uikit/controls/i18n",
+               "self": "laxar-uikit/dist/controls/i18n",
                "module": "laxar-uikit/controls/i18n/ax-i18n-control"
             }
+         },
+         "referencedAs": {
+            "byUser": "laxar-uikit/controls/i18n",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-uikit/controls/i18n"
          }
       }
    ]
