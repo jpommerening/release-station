@@ -58,3 +58,9 @@ body::before {
 .app-content h2 {
    margin-top: 0.4ex;
 }
+
+.app-github {
+   padding-left: 26px;
+   padding-right: 26px;
+}
+
