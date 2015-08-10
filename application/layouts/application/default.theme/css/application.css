@@ -73,24 +73,26 @@ body::before {
 @media (max-width: 460px) {
 
    body > div > div.container {
-      transform-origin: top;
-      transform: scale(1, 1);
-      transform: scale3d(1, 1, 1);
+      -webkit-transform-origin: top;
+              transform-origin: top;
+      -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in -webkit-filter, 0.3s ease-in -webkit-transform, 0.3s ease-in filter;
+              transition: 0.3s ease-in transform, 0.3s ease-in filter;
+
       -webkit-transform: scale(1, 1);
+              transform: scale(1, 1);
       -webkit-transform: scale3d(1, 1, 1);
-      transition: 0.3s ease-in transform, 0.3s ease-in filter;
-      -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in -webkit-filter;
+              transform: scale3d(1, 1, 1);
    }
 
-   body[style*="overflow"] > div > div.container {
+   body[style*="overflow:"] > div > div.container {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
-      transform: scale(0.66, 0.66);
-      transform: scale3d(0.66, 0.66, 1);
       -webkit-transform: scale(0.66, 0.66);
+              transform: scale(0.66, 0.66);
       -webkit-transform: scale3d(0.66, 0.66, 1);
-      filter: blur(1px) brightness(0.9);
+              transform: scale3d(0.66, 0.66, 1);
       -webkit-filter: blur(1px) brightness(0.9);
+              filter: blur(1px) brightness(0.9);
    }
 
    .modal {
@@ -98,14 +100,21 @@ body::before {
    }
 
    .ax-popup {
-      transform: translateY(220px);
       opacity: 0;
-      transition: 0.3s ease-in transform, 0.3s ease-in opacity;
+      -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in opacity;
+              transition: 0.3s ease-in transform, 0.3s ease-in opacity;
+      -webkit-transform: translate(0, 220px);
+              transform: translate(0, 220px);
+      -webkit-transform: translate3d(0, 220px, 0);
+              transform: translate3d(0, 220px, 0);
    }
 
    .ax-popup.ax-showing {
-      transform: translateY(0px);
       opacity: 1;
+      -webkit-transform: translate(0, 0);
+              transform: translate(0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
    }
 
    .ax-popup > div {
