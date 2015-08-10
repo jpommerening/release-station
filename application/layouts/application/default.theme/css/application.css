@@ -64,3 +64,63 @@ body::before {
    padding-right: 26px;
 }
 
+.ax-popup {
+   margin-top: -20px;
+   margin-bottom: -20px;
+   height: auto !important;
+}
+
+@media (max-width: 460px) {
+
+   body > div > div.container {
+      transform-origin: top;
+      transform: scale(1, 1);
+      transform: scale3d(1, 1, 1);
+      -webkit-transform: scale(1, 1);
+      -webkit-transform: scale3d(1, 1, 1);
+      transition: 0.3s ease-in transform, 0.3s ease-in filter;
+      -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in -webkit-filter;
+   }
+
+   body[style*="overflow"] > div > div.container {
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+
+      transform: scale(0.66, 0.66);
+      transform: scale3d(0.66, 0.66, 1);
+      -webkit-transform: scale(0.66, 0.66);
+      -webkit-transform: scale3d(0.66, 0.66, 1);
+      filter: blur(1px) brightness(0.9);
+      -webkit-filter: blur(1px) brightness(0.9);
+   }
+
+   .modal {
+      padding-top: 110px;
+   }
+
+   .ax-popup {
+      transform: translateY(220px);
+      opacity: 0;
+      transition: 0.3s ease-in transform, 0.3s ease-in opacity;
+   }
+
+   .ax-popup.ax-showing {
+      transform: translateY(0px);
+      opacity: 1;
+   }
+
+   .ax-popup > div {
+
+   }
+
+   .ax-popup > div > div.modal-dialog {
+      padding: 0;
+      margin: 0;
+   }
+
+   .ax-popup .modal-content {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+   }
+
+}

@@ -11,7 +11,9 @@
 -->
 
 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12"
-     ng-repeat="project in projects | orderBy: 'activity': true | limitTo: 18">
+     ng-repeat="project in projects | orderBy: 'activity': true"
+     ng-if="project.activity > 0 || projects[ $index - ( $index % 6 ) - 6 ].activity > 0"
+     ng-class="{ 'inactive': project.activity <= 0 }">
    <div class="col-md-12">
       <h3>
          <a ng-href="{{project.repo.repository_url}}"><span>{{project.repo.owner.login}}/</span>{{project.repo.name}}</a>
@@ -23,7 +25,7 @@
    <div class="col-md-4 col-sm-4 col-xs-6">
       <ol ax-gauge="project.activity"
           ax-gauge-interval="features.gauge.interval"
-          ax-gauge-fill="scale(project.activity)">
+          ax-gauge-fill="scale(project.activity).hex()">
          <!--
           ax-gauge-fill="scale(project.gauge).darken(0.1)"
           ax-gauge-glow="scale(project.gauge).brighten(0.1)"
