@@ -4,9 +4,10 @@
  * http://laxarjs.org
  */
 define( [
+   'laxar-patterns',
    'angular',
    'semver'
-], function( ng, semver ) {
+], function( patterns, ng, semver ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,9 +15,14 @@ define( [
    Controller.$inject = [ '$scope', 'axFlowService' ];
 
    function Controller( $scope, flowService ) {
-      $scope.versions = {};
 
       var selected;
+
+      $scope.resources = {
+         repos: []
+      };
+
+      $scope.versions = {};
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', beginLifecycle );
       $scope.eventBus.subscribe( 'endLifecycleRequest', endLifecycle );
@@ -44,6 +50,13 @@ define( [
          var version = event.data[ 'version' ] ? event.data[ 'version' ] : '';
          selectVersion( version );
       } );
+
+      patterns.resources.handlerFor( $scope )
+         .registerResourceFromFeature( 'repos', {
+            onUpdateReplace: function() {
+               $scope.projects = $scope.resources.repos.map( constructProjectObject );
+            }
+         } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

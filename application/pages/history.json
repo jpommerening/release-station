@@ -58,6 +58,9 @@
          {
             "widget": "release-station/release-history-widget",
             "features": {
+               "repos": {
+                  "resource": "data"
+               }
             }
          }
       ],

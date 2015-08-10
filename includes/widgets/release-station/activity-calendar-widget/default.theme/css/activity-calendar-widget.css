@@ -204,7 +204,7 @@
    }
 }
 
-@media (min-height: 768px) {
+@media (min-height: 640px) {
    .activity-calendar-widget td {
       height: 68px;
       max-height: 68px;
