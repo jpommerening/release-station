@@ -1,4 +1,5 @@
-<div>
+<div ng-repeat="repo in resources.repos">
+   <h3>{{repo.name}}</h3>
    <ul ng-repeat="(major, track) in versions" class="semver-list inline">
       <li ng-repeat="version in track"
           ng-click="console.log( version )"

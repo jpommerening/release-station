@@ -11,6 +11,18 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
+         "repos": {
+            "type": "object",
+            "description": "Which projects to display in the grid.",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the projects resource, a list of repository resources",
+                  "format": "topic"
+               }
+            }
+         },
          "semver": {
             "type": "object"
          }
