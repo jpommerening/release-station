@@ -15,20 +15,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
-         }
-      }
-   },
-   "laxar-merge-require-config": {
-      "main": {
-         "src": "var/flows",
-         "options": {
-            "flow": {
-               "target": "main",
-               "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -39,8 +26,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -51,8 +37,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -63,8 +48,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -78,8 +62,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -90,8 +73,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -102,8 +84,7 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
@@ -117,20 +98,18 @@
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    },
-   "laxar-test-configure-flow": {
+   "laxar-test-configure-widget": {
       "main": {
          "src": "var/flows",
          "options": {
             "flow": {
                "target": "main",
                "src": "application/flow/flow.json"
-            },
-            "testDirectory": "var/tests"
+            }
          }
       }
    }
