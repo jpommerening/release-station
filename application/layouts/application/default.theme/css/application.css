@@ -99,22 +99,22 @@ body::before {
    body[style*="overflow:"] > div > div.container {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
-      -webkit-transform: scale(0.66, 0.66);
-              transform: scale(0.66, 0.66);
-      -webkit-transform: scale3d(0.66, 0.66, 1);
-              transform: scale3d(0.66, 0.66, 1);
+      -webkit-transform: scale(0.618, 0.618);
+              transform: scale(0.618, 0.618);
+      -webkit-transform: scale3d(0.618, 0.618, 1);
+              transform: scale3d(0.618, 0.618, 1);
       -webkit-filter: blur(1px) brightness(0.9);
               filter: blur(1px) brightness(0.9);
    }
 
    .modal {
-      padding-top: 110px;
+      padding-top: 184px;
    }
 
    .ax-popup {
       opacity: 0;
-      -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in opacity;
-              transition: 0.3s ease-in transform, 0.3s ease-in opacity;
+      -webkit-transition: 0.35s ease-out -webkit-transform, 0.3s ease-in opacity;
+              transition: 0.35s ease-out transform, 0.3s ease-in opacity;
       -webkit-transform: translate(0, 220px);
               transform: translate(0, 220px);
       -webkit-transform: translate3d(0, 220px, 0);
