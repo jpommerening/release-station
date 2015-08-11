@@ -204,6 +204,13 @@
    }
 }
 
+@media (max-width: 360px) {
+   /* hide weekends in portrait mode on small devices */
+   .activity-calendar-widget .weekend {
+      display: none;
+   }
+}
+
 @media (min-height: 640px) {
    .activity-calendar-widget td {
       height: 68px;

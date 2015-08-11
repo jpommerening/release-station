@@ -3,7 +3,7 @@
 <table>
    <thead>
       <tr>
-         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ 'hidden-xs': day.weekend }">
+         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ weekend: day.isWeekend }">
             <span class="hidden-sm hidden-xs">{{day.date.format('dddd')}}</span>
             <span class="hidden-lg hidden-md">{{day.date.format('ddd')}}</span>
          </th>
@@ -25,8 +25,7 @@
                             past: day.isPast,
                             future: day.isFuture,
                             weekend: day.isWeekend,
-                            'not-in-month': !day.isInMonth,
-                            'hidden-xs': day.isWeekend }">
+                            'not-in-month': !day.isInMonth }">
                <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.activity > 0 && details(day.date)" class="day" tabindex="0">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>

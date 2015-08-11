@@ -70,7 +70,7 @@ body::before {
    height: auto !important;
 }
 
-@media (max-width: 460px) {
+@media (max-width: 640px) {
 
    .app-content {
       padding-top: 60px;
@@ -84,7 +84,24 @@ body::before {
    body > div > div.container {
       padding-left: 0;
       padding-right: 0;
+   }
 
+   .ax-popup > div > div.modal-dialog {
+      padding: 0;
+      margin: 0;
+   }
+
+   .ax-popup .modal-content {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+   }
+
+}
+
+@media (max-width: 460px) {
+
+   body > div > div.container {
       -webkit-transform-origin: top;
               transform-origin: top;
       -webkit-transition: 0.3s ease-in -webkit-transform, 0.3s ease-in -webkit-filter, 0.3s ease-in filter;
@@ -127,17 +144,6 @@ body::before {
               transform: translate(0, 0);
       -webkit-transform: translate3d(0, 0, 0);
               transform: translate3d(0, 0, 0);
-   }
-
-   .ax-popup > div > div.modal-dialog {
-      padding: 0;
-      margin: 0;
-   }
-
-   .ax-popup .modal-content {
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
    }
 
    .ax-popup div.tab-content {
