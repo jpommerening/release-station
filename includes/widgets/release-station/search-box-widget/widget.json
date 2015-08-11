@@ -21,6 +21,11 @@
             "type": "object",
             "required": [ "resource" ],
             "properties": {
+               "parameter": {
+                  "type": "string",
+                  "description": "The name of the URL parameter to use",
+                  "default": "q"
+               },
                "resource": {
                   "type": "string",
                   "format": "topic"

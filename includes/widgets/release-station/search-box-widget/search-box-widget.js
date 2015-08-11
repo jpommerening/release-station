@@ -12,9 +12,10 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', 'axEventBus' ];
+   Controller.$inject = [ '$scope', '$location', 'axEventBus' ];
 
-   function Controller( $scope, eventBus ) {
+   function Controller( $scope, $location, eventBus ) {
+      var queryParameter = $scope.features.search.parameter;
 
       $scope.messages = messages;
 
@@ -29,7 +30,7 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       eventBus.subscribe( 'didNavigate', function( event ) {
-         var query = ax.object.path( event, 'data.query', '' );
+         var query = $location.search()[ queryParameter ] || '';
          if( query && query.length > 0 ) {
             $scope.model.queryString = query;
             $scope.functions.startSearch();
@@ -41,6 +42,7 @@ define( [
       $scope.functions = {
 
          startSearch: function() {
+            $location.search( queryParameter, $scope.model.queryString || null );
             searchPublisher( $scope.model.queryString );
          }
 
