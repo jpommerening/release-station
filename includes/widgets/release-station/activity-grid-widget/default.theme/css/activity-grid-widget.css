@@ -104,18 +104,15 @@
 @media (min-width: 992px) and (max-width: 1199px) {
    /* fade out first and second row of inactive items, hide everything beyond */
    /* two column case */
-   .activity-grid-widget > div.inactive:nth-child(2n),
-   .activity-grid-widget > div.inactive:nth-child(2n) + div {
+   .activity-grid-widget > div.inactive:nth-child(2n+1) ~ div {
       opacity: 0.66;
    }
 
-   .activity-grid-widget > div.inactive:nth-child(2n) + div + div,
-   .activity-grid-widget > div.inactive:nth-child(2n) + div + div + div {
+   .activity-grid-widget > div.inactive:nth-child(2n+1) + div + div ~ div {
       opacity: 0.33;
    }
 
-   .activity-grid-widget > div.inactive:nth-child(2n) + div + div + div + div,
-   .activity-grid-widget > div.inactive:nth-child(2n) + div + div + div + div + div {
+   .activity-grid-widget > div.inactive:nth-child(2n+1) + div + div + div + div ~ div {
       display: none;
    }
 }
@@ -127,21 +124,15 @@
 
    /* fade out first and second row of inactive items, hide everything beyond */
    /* three column case */
-   .activity-grid-widget > div.inactive:nth-child(3n-1),
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div,
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div {
+   .activity-grid-widget > div.inactive:nth-child(3n+1) ~ div {
       opacity: 0.66;
    }
 
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div,
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div + div,
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div + div + div {
+   .activity-grid-widget > div.inactive:nth-child(3n+1) + div + div + div ~ div {
       opacity: 0.33;
    }
 
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div + div + div + div,
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div + div + div + div + div,
-   .activity-grid-widget > div.inactive:nth-child(3n-1) + div + div + div + div + div + div + div + div {
+   .activity-grid-widget > div.inactive:nth-child(3n+1) + div + div + div + div + div + div ~ div {
       display: none;
    }
 }
