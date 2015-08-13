@@ -105,7 +105,7 @@
                      "org.login"
                   ],
                   "match": {
-                     "@(\\w+)": [ "actor.login" ],
+                     "@([\\w-]+)": [ "actor.login" ],
                      "([\\w-]+/[\\w-]+)": [ "repo.name" ]
                   }
                }

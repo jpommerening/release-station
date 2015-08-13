@@ -62,7 +62,6 @@ var require = {
       'release-station': '../includes/lib/release-station',
 
       'laxar': 'laxar/dist/laxar',
-      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
       'laxar-uikit': 'laxar-uikit/dist/laxar-uikit',
       'laxar-uikit/controls': 'laxar-uikit/dist/controls',
       'laxar-patterns': 'laxar-patterns/dist/laxar-patterns',

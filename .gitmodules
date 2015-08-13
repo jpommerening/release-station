@@ -4,9 +4,6 @@
 [submodule "includes/widgets/laxarjs/ax-headline-widget"]
 	path = includes/widgets/laxarjs/ax-headline-widget
 	url = https://github.com/LaxarJS/ax-headline-widget.git
-[submodule "includes/widgets/laxarjs/ax-popup-widget"]
-	path = includes/widgets/laxarjs/ax-popup-widget
-	url = https://github.com/LaxarJS/ax-popup-widget.git
 [submodule "includes/widgets/laxarjs/ax-command-bar-widget"]
 	path = includes/widgets/laxarjs/ax-command-bar-widget
 	url = https://github.com/LaxarJS/ax-command-bar-widget.git

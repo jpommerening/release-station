@@ -251,7 +251,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      name: 'oauthActivity',
+      name: 'oauth-activity',
       create: Controller.create,
       injections: Controller.injections
    };

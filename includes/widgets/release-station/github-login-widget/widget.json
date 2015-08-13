@@ -1,5 +1,5 @@
 {
-   "name": "GitHubLoginWidget",
+   "name": "github-login-widget",
    "description": "Trigger an OAuth authentication, validate the access token with GitHub and display login information.",
 
    "integration": {

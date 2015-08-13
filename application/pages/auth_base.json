@@ -31,7 +31,7 @@
 
       "popups": [
          {
-            "widget": "laxarjs/ax-popup-widget",
+            "widget": "amd:laxar-popup-widget",
             "id": "auth",
             "features": {
                "content": {
@@ -49,7 +49,7 @@
             }
          },
          {
-            "widget": "laxarjs/ax-popup-widget",
+            "widget": "amd:laxar-popup-widget",
             "id": "settings",
             "features": {
                "content": {

@@ -10,9 +10,6 @@ define( [
 ], function( ng, ax, patterns ) {
    'use strict';
 
-   var moduleName = 'gitHubLoginWidget';
-   var module     = ng.module( moduleName, [] );
-
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    Controller.$inject = [ '$scope', 'axFlowService' ];
@@ -92,8 +89,6 @@ define( [
          } );
       }
    }
-
-   module.controller( 'GitHubLoginWidgetController', Controller );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -192,6 +187,7 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return module;
+   return ng.module( 'githubLoginWidget', [] )
+            .controller( 'GithubLoginWidgetController', Controller );
 
 } );

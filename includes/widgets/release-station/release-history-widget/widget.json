@@ -1,5 +1,5 @@
 {
-   "name": "ReleaseHistoryWidget",
+   "name": "release-history-widget",
    "description": "Display releases",
 
    "integration": {

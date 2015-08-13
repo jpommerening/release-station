@@ -253,7 +253,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      name: 'githubDataActivity',
+      name: 'github-data-activity',
       create: Controller.create,
       injections: Controller.injections
    };

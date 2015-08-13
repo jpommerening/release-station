@@ -1,5 +1,5 @@
 {
-   "name": "OauthActivity",
+   "name": "oauth-activity",
    "description": "Authenticate with external OAuth2 providers",
 
    "integration": {
