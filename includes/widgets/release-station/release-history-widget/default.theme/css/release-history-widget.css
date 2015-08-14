@@ -15,6 +15,33 @@
    border-radius: 3px;
 }
 
+.release-history-widget ol.v {
+   list-style-type: none;
+   background-color: #efefef;
+   display: inline-block;
+   padding: 0;
+   margin-right: 4px;
+}
+
+.release-history-widget ol.v > li {
+   display: inline-block;
+   margin: 10px 0 0 0;
+   background-color: #ddd;
+   padding: 4px 8px;
+}
+
+.release-history-widget .ax-color-scale .ax-color-stop-0 { background-color: #6090c0; }
+.release-history-widget .ax-color-scale .ax-color-stop-1 { background-color: #68a090; }
+.release-history-widget .ax-color-scale .ax-color-stop-2 { background-color: #b0e090; }
+
+.release-history-widget ol.v > li > h3 {
+   margin: 2px 0;
+}
+
+.release-history-widget ol.v > li:last-child {
+   background-color: transparent;
+}
+
 .release-history-widget ul.semver-list {
    list-style-type: none;
    margin: 7px;

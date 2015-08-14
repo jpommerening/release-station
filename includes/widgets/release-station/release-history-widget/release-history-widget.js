@@ -54,7 +54,7 @@ define( [
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'repos', {
             onUpdateReplace: function() {
-               $scope.projects = $scope.resources.repos.map( constructProjectObject );
+               $scope.projects = $scope.resources.repos.map( constructVersionObject );
             }
          } );
 
