@@ -40,7 +40,7 @@
 
       "header": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "i18nHtmlText": {
@@ -70,7 +70,7 @@
 
       "headline": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "level": 2,
@@ -105,7 +105,7 @@
                      "org.login"
                   ],
                   "match": {
-                     "@(\\w+)": [ "actor.login" ],
+                     "@([\\w-]+)": [ "actor.login" ],
                      "([\\w-]+/[\\w-]+)": [ "repo.name" ]
                   }
                }

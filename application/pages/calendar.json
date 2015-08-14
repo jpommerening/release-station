@@ -40,7 +40,7 @@
 
       "popups": [
          {
-            "widget": "laxarjs/ax-popup-widget",
+            "widget": "amd:laxar-popup-widget",
             "id": "details",
             "features": {
                "content": {
@@ -61,7 +61,7 @@
 
       "details.header": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "level": 3,
@@ -87,7 +87,7 @@
 
       "header": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "i18nHtmlText": {
@@ -117,7 +117,7 @@
 
       "headline": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "level": 2,
@@ -151,7 +151,7 @@
                      "payload.ref"
                   ],
                   "match": {
-                     "@(\\w+)": [ "actor.login" ],
+                     "@([\\w-]+)": [ "actor.login" ],
                      "#(\\d+)": [ "payload.issue.id" ],
                      "([\\w-]+/[\\w-]+)": [ "repo.name" ]
                   }

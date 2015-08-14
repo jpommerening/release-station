@@ -318,7 +318,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      name: 'githubEventsActivity',
+      name: 'github-events-activity',
       create: Controller.create,
       injections: Controller.injections
    };

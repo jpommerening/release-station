@@ -5,7 +5,7 @@
  */
 @charset "UTF-8";
 
-.git-hub-login-widget .icon {
+.github-login-widget .icon {
    width: 32px;
    height: 32px;
    margin: -5px 0;
@@ -13,20 +13,20 @@
    padding: 0;
 }
 
-.git-hub-login-widget .icon + span {
+.github-login-widget .icon + span {
    margin-left: 1ex;
 }
 
-.git-hub-login-widget span.icon {
+.github-login-widget span.icon {
    display: inline-block;
    background-image: url(github-mark.png);
    background-size: 32px 32px;
 }
 
-.git-hub-login-widget .circular {
+.github-login-widget .circular {
    border-radius: 50%;
 }
 
-.git-hub-login-widget li .fa {
+.github-login-widget li .fa {
    margin-left: -13px;
 }
