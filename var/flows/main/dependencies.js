@@ -3,10 +3,9 @@ define( [
    'laxar-color-scale-control/ax-color-scale-control',
    'laxar-layer-control/ax-layer-control',
    'laxar-uikit/controls/i18n/ax-i18n-control',
-   'laxar-application/includes/widgets/laxarjs/ax-command-bar-widget/ax-command-bar-widget',
-   'laxar-application/includes/widgets/laxarjs/ax-developer-tools-widget/ax-developer-tools-widget',
-   'laxar-application/includes/widgets/laxarjs/ax-headline-widget/ax-headline-widget',
-   'laxar-application/includes/widgets/laxarjs/ax-popup-widget/ax-popup-widget',
+   'laxar-developer-tools-widget/ax-developer-tools-widget',
+   'laxar-headline-widget/ax-headline-widget',
+   'laxar-popup-widget/ax-popup-widget',
    'laxar-application/includes/widgets/release-station/activity-calendar-widget/activity-calendar-widget',
    'laxar-application/includes/widgets/release-station/activity-grid-widget/activity-grid-widget',
    'laxar-application/includes/widgets/release-station/details-widget/details-widget',
@@ -23,7 +22,7 @@ define( [
 
    var modules = [].slice.call( arguments );
    return {
-      'angular': modules.slice( 0, 16 ),
-      'plain': modules.slice( 16, 19 )
+      'angular': modules.slice( 0, 15 ),
+      'plain': modules.slice( 15, 18 )
    };
 } );

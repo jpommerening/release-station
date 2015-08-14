@@ -5,9 +5,8 @@
             {
                "src": [
                   "bower_components/laxar-uikit/dist/themes/default.theme/css/theme.css",
-                  "includes/widgets/laxarjs/ax-command-bar-widget/default.theme/css/ax-command-bar-widget.css",
-                  "includes/widgets/laxarjs/ax-headline-widget/default.theme/css/ax-headline-widget.css",
-                  "includes/widgets/laxarjs/ax-popup-widget/default.theme/css/ax-popup-widget.css",
+                  "bower_components/laxar-headline-widget/default.theme/css/ax-headline-widget.css",
+                  "bower_components/laxar-popup-widget/default.theme/css/ax-popup-widget.css",
                   "includes/widgets/release-station/activity-calendar-widget/default.theme/css/activity-calendar-widget.css",
                   "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
                   "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
@@ -23,9 +22,8 @@
             {
                "src": [
                   "includes/themes/cube.theme/css/theme.css",
-                  "includes/widgets/laxarjs/ax-command-bar-widget/default.theme/css/ax-command-bar-widget.css",
-                  "includes/widgets/laxarjs/ax-headline-widget/default.theme/css/ax-headline-widget.css",
-                  "includes/widgets/laxarjs/ax-popup-widget/default.theme/css/ax-popup-widget.css",
+                  "bower_components/laxar-headline-widget/default.theme/css/ax-headline-widget.css",
+                  "bower_components/laxar-popup-widget/default.theme/css/ax-popup-widget.css",
                   "includes/widgets/release-station/activity-calendar-widget/default.theme/css/activity-calendar-widget.css",
                   "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
                   "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
