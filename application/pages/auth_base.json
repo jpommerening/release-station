@@ -2,7 +2,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "laxarjs/ax-developer-tools-widget",
+            "widget": "amd:laxar-developer-tools-widget",
             "features": {
                "button": {
                   "enabled": false
@@ -70,7 +70,7 @@
 
       "auth.header": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "level": 3,
@@ -83,20 +83,11 @@
       ],
 
       "auth.content": [
-         {
-            "widget": "laxarjs/ax-command-bar-widget",
-            "features": {
-               "ok": {
-                  "enabled": true,
-                  "action": "authenticate"
-               }
-            }
-         }
       ],
 
       "settings.header": [
          {
-            "widget": "laxarjs/ax-headline-widget",
+            "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
                   "level": 4,
