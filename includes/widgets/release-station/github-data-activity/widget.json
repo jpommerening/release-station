@@ -44,8 +44,13 @@
                   "items": {
                      "type": "object",
                      "description": "The event source",
-                     "required": [ "url" ],
+                     "required": [],
                      "properties": {
+                        "follow": {
+                           "type": [ "string", "array", "object" ],
+                           "description": "Which fields to follow for URLs. Maps all leaves to resources.",
+                           "default": "url"
+                        },
                         "url": {
                            "type": "string",
                            "description": "The URL associated with the resource."

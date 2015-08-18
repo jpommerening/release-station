@@ -4,8 +4,9 @@
  * http://laxarjs.org
  */
 define( [
-   'laxar-patterns'
-], function( patterns ) {
+   'laxar-patterns',
+   'release-station/populate-object'
+], function( patterns, populateObject ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,10 +87,16 @@ define( [
 
       function provideResource( source ) {
          var options = Object.create( baseOptions );
+         var follow = '/url';
 
          return ready
             .then( function() {
-               return fetch( source.url, options )
+               console.log( 'p', source );
+               return populateObject( follow, function( path ) {
+                  var url = patterns.json.getPointer( source, path );
+                  console.log( 'f', url );
+                  return fetch( url, options );
+               } );
             } )
             .then( function handleResponse( response ) {
                var promise = response.json();
