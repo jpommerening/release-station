@@ -18,6 +18,11 @@ var require = {
          main: 'init'
       },
       {
+         name: 'laxar',
+         location: 'laxar',
+         main: 'laxar'
+      },
+      {
          name: 'moment',
          location: 'moment',
          main: 'moment'

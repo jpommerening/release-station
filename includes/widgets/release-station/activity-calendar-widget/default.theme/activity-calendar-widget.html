@@ -3,7 +3,7 @@
 <table>
    <thead>
       <tr>
-         <th ng-repeat="day in weeks[0]" class="day-of-week" ng-class="{ weekend: day.isWeekend }">
+         <th ng-repeat="day in weeks[0] track by $index" class="day-of-week" ng-class="{ weekend: day.isWeekend }">
             <span class="hidden-sm hidden-xs">{{day.date.format('dddd')}}</span>
             <span class="hidden-lg hidden-md">{{day.date.format('ddd')}}</span>
          </th>
@@ -17,8 +17,8 @@
                       'unshift-4': unshiftedRows === 4,
                       'unshift-5': unshiftedRows === 5 }">
       <tbody>
-         <tr ng-repeat="week in weeks">
-            <td ng-repeat="day in week"
+         <tr ng-repeat="week in weeks track by week[0].date">
+            <td ng-repeat="day in week track by day.date"
                 ng-style="{ 'background-color': day.isWorkingDay && scale(day.activity).hex() }"
                 ng-class="{ today: day.isToday,
                             selected: day.isSelected,

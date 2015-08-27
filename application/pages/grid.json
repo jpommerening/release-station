@@ -5,7 +5,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "release-station/github-events-activity",
+            "widget": "amd:laxar-github/events-activity",
             "features": {
                "auth": {
                   "resource": "accessToken",
@@ -21,7 +21,7 @@
             }
          },
          {
-            "widget": "release-station/github-data-activity",
+            "widget": "amd:laxar-github/data-activity",
             "features": {
                "auth": {
                   "resource": "accessToken",

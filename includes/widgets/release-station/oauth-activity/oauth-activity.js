@@ -10,17 +10,13 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   // TODO LaxarJS/laxar#221:
-   //      Inject axFlowService and use flowService.contructAbsoluteUrl( '_self' ) instead of
-   //      window.location.href for redirect_uri
+   Controller.injections = [ 'axEventBus', 'axFeatures', 'axFlowService' ];
 
-   Controller.injections = [ 'axEventBus', 'axFeatures' ];
-
-   Controller.create = function create( eventBus, features ) {
-      return new Controller( eventBus, features );
+   Controller.create = function create( eventBus, features, flowService ) {
+      return new Controller( eventBus, features, flowService );
    };
 
-   function Controller( eventBus, features ) {
+   function Controller( eventBus, features, flowService ) {
       var oauthProvider = features.provider;
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
@@ -114,7 +110,7 @@ define( [
       function redirectToAuthProvider() {
          var parameters = {
             client_id: oauthProvider.clientId,
-            redirect_uri: oauthProvider.redirectUrl || window.location.href,
+            redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
             response_type: oauthProvider.clientSecret ? 'code' : 'token',
             scope: oauthProvider.scope,
             state: auth.state
