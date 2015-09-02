@@ -27,23 +27,20 @@ define( [
       var authResourceName = features.auth.resource;
       var authFlagName = features.auth.flag;
 
-      var auth = {
-         data: oauthStorage.getItem( 'data' ) || authToken && {
+      var promise = new Promise( function( resolve, reject ) {
+         var auth = authToken ? {
             access_token: authToken,
             token_type: 'bearer',
             scopes: ''
-         },
-         state: oauthStorage.getItem( 'state' ) || generateRandomString(),
-         save: false
-      };
+         } : oauthStorage.getItem( 'data' );
 
-      var promise = new Promise( function( resolve, reject ) {
-         if( helper.search.code && ( helper.search.state === auth.state ) ) {
+         if( helper.search.code && ( helper.search.state === oauthStorage.getItem( 'state' ) ) ) {
+            oauthStorage.removeItem( 'state' );
             resolve( getAccessToken( helper.search.code ) );
          } else if( helper.hash.access_token ) {
             resolve( helper.hash );
-         } else if( auth.data ) {
-            resolve( auth.data );
+         } else if( auth ) {
+            resolve( auth );
          } else {
             reject();
          }
@@ -61,97 +58,22 @@ define( [
 
       eventBus.subscribe( 'beginLifecycleRequest', function() {
          promise
-            .then( function( data ) {
-               if( auth.data !== data ) {
-                  auth.save = true;
-                  auth.data = data;
-               }
-
-               return data;
-            } )
             .then( publishAuthResource )
             .then( validateAuthResource )
             .then( publishAuthFlag )
-            .then( function() {
-               if( auth.save ) {
-                  return saveAuthResource();
-               }
-            } );
+            .then( saveAuthResource );
       } );
 
       function publishAuthResource( data ) {
          return eventBus.publish( 'didReplace.' + authResourceName, {
             resource: authResourceName,
             data: data
+         } ).then( function() {
+            return data;
          } );
       }
 
-      function publishAuthFlag( state ) {
-         return eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + state, {
-            flag: authFlagName,
-            state: state
-         } );
-      }
-
-      function saveAuthResource() {
-         if( auth.data ) {
-            oauthStorage.setItem( 'data', auth.data );
-         } else {
-            oauthStorage.removeItem( 'data' );
-            console.log( 'remove' );
-         }
-
-         return eventBus.publish( 'didSave.' + authResourceName, {
-            resource: authResourceName,
-            outcome: 'SUCCESS'
-         } );
-      }
-
-      function redirectToAuthProvider() {
-         var parameters = {
-            client_id: oauthProvider.clientId,
-            redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
-            response_type: oauthProvider.clientSecret ? 'code' : 'token',
-            scope: oauthProvider.scope,
-            state: auth.state
-         };
-
-         oauthStorage.setItem( 'state', auth.state );
-
-         window.location.href = oauthProvider.url + '?' + encodeArguments( parameters ).join( '&' );
-      }
-
-      function dropAuth() {
-         auth.data = undefined;
-
-         return publishAuthFlag( false )
-            .then( saveAuthResource );
-      }
-
-      function getAccessToken( code ) {
-         // discard the previous random state
-         auth.state = generateRandomString();
-         oauthStorage.removeItem( 'state' );
-
-         // ask the provider for an access token
-         fetch( {
-            method: 'post',
-            ur: oauthProvider.accessTokenUrl + '?' + encodeArguments( {
-               client_id: oauthProvider.clientId,
-               client_secret: oauthProvider.clientSecret,
-               code: code
-            } ),
-            headers: {
-               'Accept': 'application/x-www-urlencoded, application/json'
-            }
-         } ).then( function( response ) {
-               var contentType = response.headers.get( 'Content-Type' );
-               var urlencoded = /^application\/x-www-urlencoded(; *)?$/.test( contentType );
-               return urlencoded ? response.text().then( decodeArguments ) : response.json();
-         } );
-      }
-
-      function validateAuthResource() {
+      function validateAuthResource( data ) {
          return eventBus.publishAndGatherReplies( 'validateRequest.' + authResourceName, {
             resource: authResourceName
          } ).then( function( replies ) {
@@ -163,11 +85,72 @@ define( [
                }
             } );
 
-            if( failures.length > 0 || replies <= 0 ) {
-               return false;
-            } else {
-               return true;
+            return ( failures.length == 0 && replies.length > 0 ) && data;
+         } );
+      }
+
+      function publishAuthFlag( data ) {
+         var state = !!data;
+
+         return eventBus.publish( 'didChangeFlag.' + authFlagName + '.' + state, {
+            flag: authFlagName,
+            state: state
+         } ).then( function() {
+            return data;
+         } );
+      }
+
+      function saveAuthResource( data ) {
+         if( data ) {
+            oauthStorage.setItem( 'data', data );
+         } else {
+            oauthStorage.removeItem( 'data' );
+         }
+
+         return eventBus.publish( 'didSave.' + authResourceName, {
+            resource: authResourceName,
+            outcome: 'SUCCESS'
+         } ).then( function() {
+            return data;
+         } );
+      }
+
+      function redirectToAuthProvider() {
+         var parameters = {
+            client_id: oauthProvider.clientId,
+            redirect_uri: oauthProvider.redirectUrl || flowService.constructAbsoluteUrl( '_self' ),
+            response_type: oauthProvider.clientSecret ? 'code' : 'token',
+            scope: oauthProvider.scope,
+            state: generateRandomString()
+         };
+
+         oauthStorage.setItem( 'state', parameters.state );
+
+         window.location.href = oauthProvider.url + '?' + encodeArguments( parameters ).join( '&' );
+      }
+
+      function dropAuth() {
+         return publishAuthFlag()
+            .then( saveAuthResource );
+      }
+
+      function getAccessToken( code ) {
+         var url = oauthProvider.accessTokenUrl + '?' + encodeArguments( {
+            client_id: oauthProvider.clientId,
+            client_secret: oauthProvider.clientSecret,
+            code: code
+         } ).join( '&' );
+
+         // ask the provider for an access token
+         fetch( url, {
+            method: 'post',
+            headers: {
+               'Accept': 'application/x-www-urlencoded, application/json'
             }
+         } ).then( function( response ) {
+            var contentType = response.headers.get( 'Content-Type' );
+            var isUrlEncoded = /^application\/x-www-urlencoded(; *)?$/.test( contentType );
+            return isUrlEncoded ? response.text().then( decodeArguments ) : response.json();
          } );
       }
 
@@ -183,7 +166,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function provideStorage( prefix ) {
-      var backend = window.sessionStorage || window.localStorage || cookieStorageFallback( 900 );
+      var backend = window.localStorage || cookieStorageFallback( 900 );
 
       return {
          getItem: function( key ) {
