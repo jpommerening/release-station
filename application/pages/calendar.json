@@ -153,7 +153,7 @@
                   "match": {
                      "@([\\w-]+)": [ "actor.login" ],
                      "#(\\d+)": [ "payload.issue.id" ],
-                     "([\\w-]+/[\\w-]+)": [ "repo.name" ]
+                     "([\\w-]+/[\\w.-]+)": [ "repo.name" ]
                   }
                },
                "details": {
