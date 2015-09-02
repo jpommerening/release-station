@@ -26,6 +26,23 @@
                   }
                }
             }
+         },
+         {
+            "widget": "amd:laxar-github/userdata-activity",
+            "features": {
+               "user": {
+                  "resource": "user"
+               },
+               "repos": {
+                  "resource": "userrepos",
+                  "type": "all",
+                  "sort": "updated",
+                  "direction": "asc"
+               },
+               "auth": {
+                  "resource": "accessToken"
+               }
+            }
          }
       ],
 

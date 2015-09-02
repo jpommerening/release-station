@@ -13,7 +13,6 @@
                },
                "events": {
                   "resource": "events",
-                  "onActions": [ "provide-stream" ],
                   "sources": {
                      "resource": "eventSources"
                   }
@@ -29,7 +28,6 @@
                },
                "data": {
                   "resource": "data",
-                  "onActions": [ "provide-resource" ],
                   "sources": {
                      "resource": "dataSources"
                   }

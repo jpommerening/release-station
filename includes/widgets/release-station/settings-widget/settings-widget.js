@@ -6,8 +6,9 @@
 define( [
    'angular',
    'laxar',
-   'laxar-patterns'
-], function( ng, ax, patterns ) {
+   'laxar-patterns',
+   'laxar-github/lib/handle-auth'
+], function( ng, ax, patterns, handleAuth ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +20,15 @@ define( [
          .registerResourceFromFeature( 'user', {
             onReplace: replaceUser
          } );
+
+      var auth = handleAuth( $scope.eventBus, {
+         auth: {
+            resource: 'accessToken',
+            flag: 'authenticated'
+         },
+      }, 'auth' ).then( function( data ) {
+         return data;
+      } );
 
       var eventSources = publisherForFeature( $scope, 'settings.events' );
       var dataSources = publisherForFeature( $scope, 'settings.data' );
@@ -165,27 +175,12 @@ define( [
       }
 
       function getResource( url ) {
-         var resource;
-         var id = Math.ceil( Math.random() * 1345981345 ).toString( 16 );
-
-         $scope.eventBus.subscribe( 'didReplace.' + id, function onReplace( event ) {
-            $scope.eventBus.unsubscribe( onReplace );
-            resource = event.data;
-         } );
-
-         return $scope.eventBus.publishAndGatherReplies( 'takeActionRequest.provide-resource-' + id, {
-            action: 'provide-resource',
-            data: {
-               resource: id,
-               url: url
-            }
-         } )
-         .then( function( replies ) {
-            if( !(replies.length) || resource === undefined ) {
-               return Promise.reject();
-            }
-
-            return resource;
+         return auth.then( function( data ) {
+            return fetch( url, { headers: {
+               'Authorization': 'token ' + data.access_token
+            } } ).then( function( response ) {
+               return response.json();
+            } );
          } );
       }
    }
