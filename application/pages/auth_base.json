@@ -14,7 +14,7 @@
             "features": {
                "provider": {
                   "url": "https://github-live-events.herokuapp.com/auth",
-                  "clientId": "91ef4687546730fb6b2d",
+                  "scope": "read:org",
                   "sessionStorageId": "release-station"
                },
                "auth": {

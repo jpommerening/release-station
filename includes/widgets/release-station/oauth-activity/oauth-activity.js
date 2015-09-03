@@ -31,7 +31,6 @@ define( [
          var auth = authToken ? {
             access_token: authToken,
             token_type: 'bearer',
-            scopes: ''
          } : oauthStorage.getItem( 'data' );
 
          if( helper.search.code && ( helper.search.state === oauthStorage.getItem( 'state' ) ) ) {
