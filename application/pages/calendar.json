@@ -14,22 +14,7 @@
                "events": {
                   "resource": "events",
                   "sources": {
-                     "resource": "eventSources"
-                  }
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-github/data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
-                  "resource": "data",
-                  "sources": {
-                     "resource": "dataSources"
+                     "resource": "repos"
                   }
                }
             }
@@ -134,7 +119,7 @@
                "calendar": {
                },
                "repos": {
-                  "resource": "data"
+                  "resource": "repos"
                },
                "events": {
                   "resource": "events"

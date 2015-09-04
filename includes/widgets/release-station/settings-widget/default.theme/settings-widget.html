@@ -39,7 +39,7 @@
       <ul ng-if="resources.repos" class="list-group">
          <li class="list-group-item"
             ng-repeat="repo in resources.repos | filter:{ owner: { login: model.login } }
-                                               | orderBy:'updated_at':true
+                                               | orderBy:'pushed_at':true
                                                | filter:pager.filter">
             <div class="toggle" ng-class="{ on: enabled(repo), off: disabled(repo) }">
                <label ng-class="{ active: !enabled(repo) }">

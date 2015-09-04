@@ -130,11 +130,8 @@
                   "resource": "userrepos"
                },
                "settings": {
-                  "events": {
-                     "resource": "eventSources"
-                  },
-                  "data": {
-                     "resource": "dataSources"
+                  "repos": {
+                     "resource": "repos"
                   }
                }
             }

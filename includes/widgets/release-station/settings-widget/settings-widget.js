@@ -42,13 +42,11 @@ define( [
          .registerResourceFromFeature( 'repos', {
             onUpdateReplace: function() {
                var repos = $scope.resources.repos.filter( $scope.enabled );
-               eventSources.replace( repos.map( eventSourceForRepository ) );
-               dataSources.replace( repos.map( dataSourceForRepository ) );
+               publisher.replace( repos );
             }
          } );
 
-      var eventSources = publisherForFeature( $scope, 'settings.events' );
-      var dataSources = publisherForFeature( $scope, 'settings.data' );
+      var publisher = publisherForFeature( $scope, 'settings.repos' );
 
       var storage = ax.storage.getApplicationLocalStorage();
       var settings = {
@@ -87,15 +85,11 @@ define( [
          var index = settings.repositories.indexOf( repository.id );
          if( enabled && index == -1 ) {
             settings.repositories.push( repository.id );
-            eventSources.push( eventSourceForRepository( repository ) );
-            dataSources.push( dataSourceForRepository( repository ) );
-            console.log( 'push' );
+            publisher.push( repository );
          } else if( index >= 0 ) {
             var patches = [ { op: 'remove', path: '/' + index } ];
             settings.repositories.splice( index, 1 );
-            eventSources.update( patches );
-            dataSources.update( patches );
-            console.log( 'remove' );
+            publisher.update( patches );
          }
       }
 
@@ -113,24 +107,6 @@ define( [
          };
       }
 
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function eventSourceForRepository( repository ) {
-      return {
-         type: /^(https?):/.exec( repository.events_url )[ 1 ],
-         url: repository.events_url,
-         events: [ "push", "issues", "release", "create" ]
-      };
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function dataSourceForRepository( repository ) {
-      return {
-         url: repository.url
-      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
