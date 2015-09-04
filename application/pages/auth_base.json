@@ -33,11 +33,11 @@
                "user": {
                   "resource": "user"
                },
+               "orgs": {
+                  "resource": "userorgs"
+               },
                "repos": {
-                  "resource": "userrepos",
-                  "type": "all",
-                  "sort": "updated",
-                  "direction": "asc"
+                  "resource": "userrepos"
                },
                "auth": {
                   "resource": "accessToken"
@@ -122,6 +122,12 @@
             "features": {
                "user": {
                   "resource": "user"
+               },
+               "orgs": {
+                  "resource": "userorgs"
+               },
+               "repos": {
+                  "resource": "userrepos"
                },
                "settings": {
                   "events": {

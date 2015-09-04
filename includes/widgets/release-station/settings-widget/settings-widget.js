@@ -6,9 +6,8 @@
 define( [
    'angular',
    'laxar',
-   'laxar-patterns',
-   'laxar-github/lib/handle-auth'
-], function( ng, ax, patterns, handleAuth ) {
+   'laxar-patterns'
+], function( ng, ax, patterns ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,82 +15,87 @@ define( [
    Controller.$inject = [ '$scope', 'axFlowService' ];
 
    function Controller( $scope, axFlowService ) {
+      $scope.model = {
+         login: null,
+         settings: { repos: {} }
+      };
+
+      $scope.select = function( login ) {
+         $scope.model.login = login;
+      };
+
+      $scope.enabled = function( repo ) {
+         return !!($scope.model.settings.repos[ repo.id ]);
+      };
+
+      $scope.disabled = function( repo ) {
+         return !$scope.enabled( repo );
+      };
+
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'user', {
-            onReplace: replaceUser
+            onReplace: function() {
+               $scope.model.login = $scope.resources.user.login;
+            }
+         } )
+         .registerResourceFromFeature( 'orgs' )
+         .registerResourceFromFeature( 'repos', {
+            onUpdateReplace: function() {
+               var repos = $scope.resources.repos.filter( $scope.enabled );
+               eventSources.replace( repos.map( eventSourceForRepository ) );
+               dataSources.replace( repos.map( dataSourceForRepository ) );
+            }
          } );
-
-      var auth = handleAuth( $scope.eventBus, {
-         auth: {
-            resource: 'accessToken',
-            flag: 'authenticated'
-         },
-      }, 'auth' ).then( function( data ) {
-         return data;
-      } );
 
       var eventSources = publisherForFeature( $scope, 'settings.events' );
       var dataSources = publisherForFeature( $scope, 'settings.data' );
 
-      var ITEMS_PER_PAGE = 10;
-
       var storage = ax.storage.getApplicationLocalStorage();
-      var settings = restoreSettings();
-      var repositories = {};
-      var pager = {};
-
-      $scope.selectAccount = function( account ) {
-         var login = account.login;
-
-         $scope.login = login;
-         $scope.pager = pager[ login ];
-         $scope.repositories = repositories[ login ];
-         $scope.selectPage( $scope.pager.current );
+      var settings = {
+         repositories: []
       };
 
-      $scope.selectPage = function( page ) {
-         if( page >= $scope.pager.first && page <= $scope.pager.last ) {
-            $scope.pager.current = page;
-            $scope.pager.start = (page - 1) * ITEMS_PER_PAGE;
-            $scope.pager.end = $scope.pager.start + ITEMS_PER_PAGE;
-         }
-      };
-
-      $scope.repositoryChanged = function( repository ) {
-         updateSettings( settings, repository );
+      $scope.repositoryChanged = function( repo ) {
+         var value = $scope.enabled( repo );
+         updateSettings( settings, repo, value );
          saveSettings( settings );
       };
 
-      $scope.setAllEnabled = function( repositories, value ) {
-         repositories.forEach( function( repository ) {
-            repository.enabled = value;
-            updateSettings( settings, repository );
+      $scope.setAllEnabled = function( value ) {
+         $scope.resources.repos.filter( function( repo ) {
+            return repo.owner.login === $scope.model.login;
+         } ).forEach( function( repo ) {
+            $scope.model.settings.repos[ repo.id ] = value;
+            updateSettings( settings, repo, value );
          } );
          saveSettings( settings );
       };
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
-         return Promise.all( settings.repositories.map( getResource ) ).then( function( repositories ) {
-            eventSources.replace( repositories.map( eventSourceForRepository ) );
-            dataSources.replace( repositories.map( dataSourceForRepository ) );
-         } );
+         settings = restoreSettings();
+         $scope.model.settings.repos = settings.repositories.reduce( function( repos, repo ) {
+            repos[ repo ] = true;
+            return repos;
+         }, {} );
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {
          saveSettings( settings );
       } );
 
-      function updateSettings( settings, repository ) {
-         var index = settings.repositories.indexOf( repository.url );
-         if( repository.enabled && index == -1 ) {
-            settings.repositories.push( repository.url );
+      function updateSettings( settings, repository, enabled ) {
+         var index = settings.repositories.indexOf( repository.id );
+         if( enabled && index == -1 ) {
+            settings.repositories.push( repository.id );
             eventSources.push( eventSourceForRepository( repository ) );
             dataSources.push( dataSourceForRepository( repository ) );
+            console.log( 'push' );
          } else if( index >= 0 ) {
             var patches = [ { op: 'remove', path: '/' + index } ];
             settings.repositories.splice( index, 1 );
             eventSources.update( patches );
             dataSources.update( patches );
+            console.log( 'remove' );
          }
       }
 
@@ -109,80 +113,6 @@ define( [
          };
       }
 
-      function replaceUser( event ) {
-         var user = event.data;
-
-         $scope.accounts = [ user ];
-
-         var promise = addAccount( user ).then( function() {
-            $scope.selectAccount( user );
-            $scope.selectPage( 1 );
-         } );
-
-         return getAccountOrganizations( user )
-            .then( function( organizations ) {
-               $scope.accounts.push.apply( $scope.accounts, organizations );
-               return Promise.all( [ promise ].concat( organizations.map( addAccount ) ) );
-            } );
-      }
-
-      function addAccount( account ) {
-         return getAccountRepos( account )
-            .then( addSortedRepositories )
-            .then( addPager );
-      }
-
-      function addSortedRepositories( repos ) {
-         if( repos && repos.length ) {
-            var owner = repos[ 0 ].owner.login;
-            repositories[ owner ] = repos.sort( function( a, b ) {
-               return ( new Date( b.pushed_at ).getTime() - new Date( a.pushed_at ).getTime() );
-            } ).map( function( repository ) {
-               repository.enabled = ( settings.repositories.indexOf( repository.url ) >= 0 );
-               return repository;
-            } );
-         }
-
-         return repos;
-      }
-
-      function addPager( repos ) {
-         if( repos && repos.length ) {
-            var owner = repos[ 0 ].owner.login;
-            pager[ owner ] = {
-               current: 1,
-               first: 1,
-               last: Math.ceil( repos.length / 10 ),
-               start: 0,
-               end: 0,
-               pages: []
-            };
-
-            for( var page = pager[ owner ].first; page <= pager[ owner ].last; page++ ) {
-               pager[ owner ].pages.push( page );
-            }
-         }
-
-         return repos;
-      }
-
-      function getAccountOrganizations( account ) {
-         return getResource( account.organizations_url );
-      }
-
-      function getAccountRepos( account ) {
-         return getResource( account.repos_url );
-      }
-
-      function getResource( url ) {
-         return auth.then( function( data ) {
-            return fetch( url, { headers: {
-               'Authorization': 'token ' + data.access_token
-            } } ).then( function( response ) {
-               return response.json();
-            } );
-         } );
-      }
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,6 +161,90 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'settingsWidget', [] ).controller( 'SettingsWidgetController', Controller );
+   function buildPages( first, last, selected ) {
+      var WINDOW_SIZE = 1; // number of page entries shown before and after current page
+      var DWINDOW_SIZE = 2 * WINDOW_SIZE;
+      var QWINDOW_SIZE = 2 * DWINDOW_SIZE;
+
+      var pages = [];
+      var i;
+
+      var start = Math.min( selected - WINDOW_SIZE, last - QWINDOW_SIZE );
+      var end = Math.max( selected + WINDOW_SIZE, first + QWINDOW_SIZE );
+
+      for( var i = first; i <= last; i++ ) {
+         if( i == first || i === last ) {
+            pages.push( i ); // first or last page
+         } else if( i >= start && i <= end ) {
+            pages.push( i ); // inside page "window"
+         } else if( i < start && start - first <= DWINDOW_SIZE ) {
+            pages.push( i ); // avoid ellipses for small amounts of pages (front)
+         } else if( i > end && last - end <= DWINDOW_SIZE ) {
+            pages.push( i ); // avoid ellipses for small amounts pages (back)
+         } else if( pages[ pages.length - 1 ] !== '' ) {
+            pages.push( '' );
+         }
+      }
+
+      return pages;
+
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function PagerController() {
+      var ITEMS_PER_PAGE = 10;
+      var $scope = this;
+
+      $scope.pages = [];
+      $scope.selected = 0;
+      $scope.first = 0;
+      $scope.last = 0;
+
+      $scope.text = function( page ) {
+         if( page === '' ) {
+            return '\u2026'
+         } else {
+            return page+1;
+         }
+      };
+
+      $scope.select = function( page ) {
+         if( page < $scope.first ) page = $scope.first;
+         if( page > $scope.last )  page = $scope.last;
+
+         $scope.selected = page;
+         $scope.pages = buildPages( $scope.first, $scope.last, $scope.selected );
+      };
+      $scope.previous = function() {
+         $scope.select( $scope.selected - 1 );
+      };
+      $scope.next = function() {
+         $scope.select( $scope.selected + 1 );
+      };
+      $scope.filter = ( function () {
+         var length = 0;
+
+         return function( value, index, array ) {
+            if( array.length !== length ) {
+               length = array.length;
+
+               $scope.first = 0;
+               $scope.last = Math.ceil( length / ITEMS_PER_PAGE ) - 1;
+               $scope.selected = 0;
+               $scope.pages = buildPages( $scope.first, $scope.last, $scope.selected );
+            }
+            var start = $scope.selected * ITEMS_PER_PAGE;
+
+            return ( ( index >= start ) && ( index < start + ITEMS_PER_PAGE ) );
+         };
+      } )();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   return ng.module( 'SettingsWidget', [] )
+            .controller( 'SettingsWidgetController', Controller )
+            .controller( 'PagerController', PagerController );
 
 } );
