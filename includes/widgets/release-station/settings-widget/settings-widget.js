@@ -22,12 +22,16 @@ define( [
          settings: { repos: {} }
       };
 
-      $scope.select = function( login ) {
-         $scope.model.login = login;
-      };
+      function selected( repo ) {
+         return repo.owner.login === $scope.model.login;
+      }
 
       function enabled( repo ) {
          return !!($scope.model.settings.repos[ repo.id ]);
+      }
+
+      $scope.select = function( login ) {
+         $scope.model.login = login;
       };
 
       patterns.resources.handlerFor( $scope )
@@ -53,7 +57,7 @@ define( [
 
       $scope.repositoryChanged = function( repo ) {
          var value = enabled( repo );
-         var patch = createPatch( settings, repo, value );
+         var patch = createPatch( settings.repositories, repo, value );
          if( patch ) {
             publisher.update( [ patch ] );
          }
@@ -61,16 +65,14 @@ define( [
       };
 
       $scope.setAllEnabled = function( value ) {
-         var repos = $scope.resources.repos.filter( function( repo ) {
-            return repo.owner.login === $scope.model.login;
-         } );
+         var repos = $scope.resources.repos.filter( selected );
 
          repos.forEach( function( repo ) {
             $scope.model.settings.repos[ repo.id ] = value;
          } );
 
          publisher.update( repos.map( function( repo ) {
-            return createPatch( settings, repo, value );
+            return createPatch( settings.repositories, repo, value );
          } ).filter( function( patch ) { return !!patch; } ) );
          saveSettings( settings );
       };
@@ -87,13 +89,13 @@ define( [
          saveSettings( settings );
       } );
 
-      function createPatch( settings, repository, enabled ) {
-         var index = settings.repositories.indexOf( repository.id );
+      function createPatch( repositories, repository, enabled ) {
+         var index = repositories.indexOf( repository.id );
          if( enabled && index == -1 ) {
-            settings.repositories.push( repository.id );
+            repositories.push( repository.id );
             return { op: 'add', path: '/-', value: repository };
          } else if( index >= 0 ) {
-            settings.repositories.splice( index, 1 );
+            repositories.splice( index, 1 );
             return { op: 'remove', path: '/' + index };
          }
       }
