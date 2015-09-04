@@ -6,8 +6,10 @@
 define( [
    'angular',
    'laxar',
-   'laxar-patterns'
-], function( ng, ax, patterns ) {
+   'laxar-patterns',
+   './pager-directive',
+   './toggle-directive'
+], function( ng, ax, patterns, pager, toggle ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,12 +26,8 @@ define( [
          $scope.model.login = login;
       };
 
-      $scope.enabled = function( repo ) {
+      function enabled( repo ) {
          return !!($scope.model.settings.repos[ repo.id ]);
-      };
-
-      $scope.disabled = function( repo ) {
-         return !$scope.enabled( repo );
       };
 
       patterns.resources.handlerFor( $scope )
@@ -41,7 +39,7 @@ define( [
          .registerResourceFromFeature( 'orgs' )
          .registerResourceFromFeature( 'repos', {
             onUpdateReplace: function() {
-               var repos = $scope.resources.repos.filter( $scope.enabled );
+               var repos = $scope.resources.repos.filter( enabled );
                publisher.replace( repos );
             }
          } );
@@ -54,18 +52,26 @@ define( [
       };
 
       $scope.repositoryChanged = function( repo ) {
-         var value = $scope.enabled( repo );
-         updateSettings( settings, repo, value );
+         var value = enabled( repo );
+         var patch = createPatch( settings, repo, value );
+         if( patch ) {
+            publisher.update( [ patch ] );
+         }
          saveSettings( settings );
       };
 
       $scope.setAllEnabled = function( value ) {
-         $scope.resources.repos.filter( function( repo ) {
+         var repos = $scope.resources.repos.filter( function( repo ) {
             return repo.owner.login === $scope.model.login;
-         } ).forEach( function( repo ) {
-            $scope.model.settings.repos[ repo.id ] = value;
-            updateSettings( settings, repo, value );
          } );
+
+         repos.forEach( function( repo ) {
+            $scope.model.settings.repos[ repo.id ] = value;
+         } );
+
+         publisher.update( repos.map( function( repo ) {
+            return createPatch( settings, repo, value );
+         } ).filter( function( patch ) { return !!patch; } ) );
          saveSettings( settings );
       };
 
@@ -81,15 +87,14 @@ define( [
          saveSettings( settings );
       } );
 
-      function updateSettings( settings, repository, enabled ) {
+      function createPatch( settings, repository, enabled ) {
          var index = settings.repositories.indexOf( repository.id );
          if( enabled && index == -1 ) {
             settings.repositories.push( repository.id );
-            publisher.push( repository );
+            return { op: 'add', path: '/-', value: repository };
          } else if( index >= 0 ) {
-            var patches = [ { op: 'remove', path: '/' + index } ];
             settings.repositories.splice( index, 1 );
-            publisher.update( patches );
+            return { op: 'remove', path: '/' + index };
          }
       }
 
@@ -126,10 +131,7 @@ define( [
 
       var publisher = {
          replace: patterns.resources.replacePublisherForFeature( $scope, feature ),
-         update: patterns.resources.updatePublisherForFeature( $scope, feature ),
-         push: function( item ) {
-            return publisher.update( [ { op: 'add', path: '/-', value: item } ] );
-         }
+         update: patterns.resources.updatePublisherForFeature( $scope, feature )
       };
 
       return publisher;
@@ -137,90 +139,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function buildPages( first, last, selected ) {
-      var WINDOW_SIZE = 1; // number of page entries shown before and after current page
-      var DWINDOW_SIZE = 2 * WINDOW_SIZE;
-      var QWINDOW_SIZE = 2 * DWINDOW_SIZE;
-
-      var pages = [];
-      var i;
-
-      var start = Math.min( selected - WINDOW_SIZE, last - QWINDOW_SIZE );
-      var end = Math.max( selected + WINDOW_SIZE, first + QWINDOW_SIZE );
-
-      for( var i = first; i <= last; i++ ) {
-         if( i == first || i === last ) {
-            pages.push( i ); // first or last page
-         } else if( i >= start && i <= end ) {
-            pages.push( i ); // inside page "window"
-         } else if( i < start && start - first <= DWINDOW_SIZE ) {
-            pages.push( i ); // avoid ellipses for small amounts of pages (front)
-         } else if( i > end && last - end <= DWINDOW_SIZE ) {
-            pages.push( i ); // avoid ellipses for small amounts pages (back)
-         } else if( pages[ pages.length - 1 ] !== '' ) {
-            pages.push( '' );
-         }
-      }
-
-      return pages;
-
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function PagerController() {
-      var ITEMS_PER_PAGE = 10;
-      var $scope = this;
-
-      $scope.pages = [];
-      $scope.selected = 0;
-      $scope.first = 0;
-      $scope.last = 0;
-
-      $scope.text = function( page ) {
-         if( page === '' ) {
-            return '\u2026'
-         } else {
-            return page+1;
-         }
-      };
-
-      $scope.select = function( page ) {
-         if( page < $scope.first ) page = $scope.first;
-         if( page > $scope.last )  page = $scope.last;
-
-         $scope.selected = page;
-         $scope.pages = buildPages( $scope.first, $scope.last, $scope.selected );
-      };
-      $scope.previous = function() {
-         $scope.select( $scope.selected - 1 );
-      };
-      $scope.next = function() {
-         $scope.select( $scope.selected + 1 );
-      };
-      $scope.filter = ( function () {
-         var length = 0;
-
-         return function( value, index, array ) {
-            if( array.length !== length ) {
-               length = array.length;
-
-               $scope.first = 0;
-               $scope.last = Math.ceil( length / ITEMS_PER_PAGE ) - 1;
-               $scope.selected = 0;
-               $scope.pages = buildPages( $scope.first, $scope.last, $scope.selected );
-            }
-            var start = $scope.selected * ITEMS_PER_PAGE;
-
-            return ( ( index >= start ) && ( index < start + ITEMS_PER_PAGE ) );
-         };
-      } )();
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    return ng.module( 'SettingsWidget', [] )
-            .controller( 'SettingsWidgetController', Controller )
-            .controller( 'PagerController', PagerController );
+            .directive( 'axPager', pager.axPager )
+            .directive( 'axToggle', toggle.axToggle )
+            .controller( 'SettingsWidgetController', Controller );
 
 } );

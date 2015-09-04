@@ -1,62 +1,35 @@
 <ul class="nav nav-tabs" role="tablist">
-   <li ng-repeat="user in [ resources.user ].concat( resources.orgs )"
-       ng-class="{ active: ( user.login === model.login ) }"
+   <li data-ng-repeat="user in [ resources.user ].concat( resources.orgs )"
+       data-ng-class="{ active: ( user.login === model.login ) }"
        role="presentation">
-      <a ng-click="select( user.login )" href="#" role="tab">
-         <img ng-src="{{user.avatar_url}}" alt="{{org.login}}"/>
+      <a href="#" role="tab" data-ng-click="select( user.login )">
+         <img data-ng-src="{{user.avatar_url}}" alt="{{org.login}}"/>
          {{user.login}}
       </a>
    </li>
 </ul>
 
 <div class="tab-content">
-   <div role="tabpanel" class="tab-pane active"
-        ng-controller="PagerController as pager">
+   <div role="tabpanel" class="tab-pane active">
 
       <div class="text-center">
          <div class="btn-group" role="group">
             <button type="button" class="btn btn-default navbar-btn"
-                    ng-click="setAllEnabled( false )">none</button>
+                    data-ng-click="setAllEnabled( false )">none</button>
             <button type="button" class="btn btn-default navbar-btn"
-                    ng-click="setAllEnabled( true )">all</button>
+                    data-ng-click="setAllEnabled( true )">all</button>
          </div>
-         <div class="btn-group" role="group">
-            <ul class="pagination">
-               <li ng-class="{ disabled: (pager.first === pager.page) }">
-                  <a href="#" ng-click="pager.previous()">&laquo;</a>
-               </li>
-               <li ng-repeat="page in pager.pages track by $index"
-                   ng-class="{ active: (pager.selected === page) }">
-                  <a href="#" ng-click="pager.select(page)">{{pager.text(page)}}</a>
-               </li>
-               <li ng-class="{ disabled: (pager.last === pager.page) }">
-                  <a href="#" ng-click="pager.next()">&raquo;</a>
-               </li>
-            </ul>
-         </div>
+         <div ax-pager="pager"></div>
       </div>
 
-      <ul ng-if="resources.repos" class="list-group">
+      <ul class="list-group">
          <li class="list-group-item"
-            ng-repeat="repo in resources.repos | filter:{ owner: { login: model.login } }
-                                               | orderBy:'pushed_at':true
-                                               | filter:pager.filter">
-            <div class="toggle" ng-class="{ on: enabled(repo), off: disabled(repo) }">
-               <label ng-class="{ active: !enabled(repo) }">
-                  <input type="radio" name="toggle-{{repo.full_name}}"
-                         ng-model="model.settings.repos[ repo.id ]"
-                         ng-value="false"
-                         ng-change="repositoryChanged( repo )"></input>
-                  <span>off</span>
-               </label>
-               <label ng-class="{ active: enabled(repo) }">
-                  <input type="radio" name="toggle-{{repo.full_name}}"
-                         ng-model="model.settings.repos[ repo.id ]"
-                         ng-value="true"
-                         ng-change="repositoryChanged( repo )"></input>
-                  <span>on</span>
-               </label>
-            </div>
+             data-ng-repeat="repo in resources.repos | orderBy:'pushed_at':true
+                                                     | filter:{ owner: { login: model.login } }
+                                                     | filter:pager">
+            <input ax-toggle type="toggle"
+                   ng-model="model.settings.repos[ repo.id ]"
+                   ng-change="repositoryChanged( repo )"></input>
             <i class="fa" ng-class="{ 'fa-code-fork': repo.fork, 'fa-code': !repo.fork }"></i>
             <a ng-href="{{repo.html_url}}">
                {{repo.name}}
