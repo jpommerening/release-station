@@ -4,8 +4,9 @@
  * http://laxarjs.org/license
  */
 define( [
-   'laxar-patterns'
-], function( patterns ) {
+   'laxar-patterns',
+   './to-json-pointer'
+], function( patterns, toJsonPointer ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,18 +101,6 @@ define( [
          return ( value.toUpperCase().indexOf( term.toUpperCase() ) >= 0 );
       } else {
          return value == term;
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function toJsonPointer( item ) {
-      if( typeof item === 'number' ) {
-         return '/' + item.toString(10);
-      } if( typeof item === 'string' ) {
-         return item[ 0 ] === '/' ? item : patterns.json.pathToPointer( item );
-      } else if( item.join ) {
-         return '/' + item.join( '/' );
       }
    }
 

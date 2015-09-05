@@ -5,7 +5,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "release-station/github-events-activity",
+            "widget": "amd:laxar-github/events-activity",
             "features": {
                "auth": {
                   "resource": "accessToken",
@@ -13,25 +13,8 @@
                },
                "events": {
                   "resource": "events",
-                  "onActions": [ "provide-stream" ],
                   "sources": {
-                     "resource": "eventSources"
-                  }
-               }
-            }
-         },
-         {
-            "widget": "release-station/github-data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
-                  "resource": "data",
-                  "onActions": [ "provide-resource" ],
-                  "sources": {
-                     "resource": "dataSources"
+                     "resource": "repos"
                   }
                }
             }
@@ -95,7 +78,7 @@
                   "resource": "events"
                },
                "repos": {
-                  "resource": "data"
+                  "resource": "repos"
                },
                "search": {
                   "resource": "searchString",
@@ -106,7 +89,7 @@
                   ],
                   "match": {
                      "@([\\w-]+)": [ "actor.login" ],
-                     "([\\w-]+/[\\w-]+)": [ "repo.name" ]
+                     "([\\w-]+/[\\w.-]+)": [ "repo.name" ]
                   }
                }
             }

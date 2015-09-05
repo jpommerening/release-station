@@ -16,8 +16,8 @@
         ng-class="{ active: selected == 'commits' }">
       <table class="table">
          <tr ng-repeat="commit in resources.details.commits">
-            <td><a ng-href="{{commit.repo.url}}">{{commit.repo.name}}</td>
-            <td><a ng-href="{{commit.payload.url}}">{{commit.payload.sha.substring(0, 6)}}</a></td>
+            <td><a ng-href="{{resources.details.repos[ commit.repo.id ].html_url}}">{{commit.repo.name}}</td>
+            <td>{{commit.payload.sha.substring(0, 6)}}</td>
             <td>{{commit.payload.message}}</td>
          </tr>
       </table>
@@ -27,7 +27,7 @@
         ng-class="{ active: selected == 'tags' }">
       <table class="table">
          <tr ng-repeat="tag in resources.details.tags">
-            <td><a ng-href="{{tag.repo.url}}">{{tag.repo.name}}</td>
+            <td><a ng-href="{{resources.details.repos[ tag.repo.id ].html_url}}">{{tag.repo.name}}</td>
             <td>{{tag.payload.ref}}</td>
          </tr>
       </table>

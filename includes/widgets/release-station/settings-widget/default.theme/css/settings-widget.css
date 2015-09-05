@@ -18,29 +18,29 @@
    vertical-align: middle;
 }
 
-.settings-widget .toggle {
+.settings-widget .ax-toggle {
    display: inline-block;
    background-color: #dfdfdf;
    border-radius: 4px;
    margin: 1px;
    padding: 3px;
-   width: 55px;
+   width: 50px;
    height: 28px;
    margin-right: 1ex;
 }
 
-.settings-widget .toggle.on {
+.settings-widget .ax-toggle.on {
    background-color: #a8d870;
 }
 
-.settings-widget .toggle {
+.settings-widget .ax-toggle {
 }
 
-.settings-widget .toggle + i {
+.settings-widget .ax-toggle + i {
    width: 2ex;
 }
 
-.settings-widget .toggle label {
+.settings-widget .ax-toggle label {
    position: relative;
    width: 22px;
    height: 22px;
@@ -50,16 +50,16 @@
    text-align: center;
 }
 
-.settings-widget .toggle label,
-.settings-widget .toggle label span {
+.settings-widget .ax-toggle label,
+.settings-widget .ax-toggle label span {
    cursor: pointer;
 }
 
-.settings-widget .toggle label.active {
+.settings-widget .ax-toggle label.active {
    background-color: #fff;
 }
 
-.settings-widget .toggle input[type="radio"] {
+.settings-widget .ax-toggle input[type="radio"] {
    position: absolute;
    opacity: 0;
    cursor: pointer;

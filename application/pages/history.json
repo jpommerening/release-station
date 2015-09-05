@@ -5,7 +5,7 @@
    "areas": {
       "activities": [
          {
-            "widget": "release-station/github-data-activity",
+            "widget": "amd:laxar-github/data-activity",
             "features": {
                "auth": {
                   "resource": "accessToken",
@@ -13,9 +13,24 @@
                },
                "data": {
                   "resource": "data",
-                  "onActions": [ "provide-resource" ],
                   "sources": {
                      "resource": "dataSources"
+                  }
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-github/data-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "data": {
+                  "resource": "tags",
+                  "sources": {
+                     "resource": "data",
+                     "follow": "tags_url"
                   }
                }
             }

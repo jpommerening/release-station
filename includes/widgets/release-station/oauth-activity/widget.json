@@ -14,7 +14,7 @@
          "provider": {
             "type": "object",
             "description": "The OAuth2 endpoint configuration.",
-            "required": [ "url", "clientId" ],
+            "required": [ "url" ],
             "properties": {
                "url": {
                   "type": "string",

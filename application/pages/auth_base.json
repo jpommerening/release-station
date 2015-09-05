@@ -14,7 +14,7 @@
             "features": {
                "provider": {
                   "url": "https://github-live-events.herokuapp.com/auth",
-                  "clientId": "91ef4687546730fb6b2d",
+                  "scope": "read:org",
                   "sessionStorageId": "release-station"
                },
                "auth": {
@@ -24,6 +24,23 @@
                   "drop": {
                      "onActions": [ "deauthenticate" ]
                   }
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-github/userdata-activity",
+            "features": {
+               "user": {
+                  "resource": "user"
+               },
+               "orgs": {
+                  "resource": "userorgs"
+               },
+               "repos": {
+                  "resource": "userrepos"
+               },
+               "auth": {
+                  "resource": "accessToken"
                }
             }
          }
@@ -106,12 +123,15 @@
                "user": {
                   "resource": "user"
                },
+               "orgs": {
+                  "resource": "userorgs"
+               },
+               "repos": {
+                  "resource": "userrepos"
+               },
                "settings": {
-                  "events": {
-                     "resource": "eventSources"
-                  },
-                  "data": {
-                     "resource": "dataSources"
+                  "repos": {
+                     "resource": "repos"
                   }
                }
             }
