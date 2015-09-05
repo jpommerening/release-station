@@ -1,15 +1,16 @@
 {
   "name": "laxar",
-  "version": "1.1.0-alpha.2",
   "description": "Building large applications is hard, so don't do that!",
-  "main": "dist/laxar.js",
+  "private": true,
   "authors": [],
   "license": "MIT",
+  "main": "laxar.js",
   "ignore": [
     ".*",
     "Gruntfile.js",
     "node_modules",
-    "bower_components"
+    "bower_components",
+    "docs"
   ],
   "dependencies": {
     "angular": "~1.3.16 || ~1.4.1",
@@ -24,16 +25,16 @@
     "requirejs-plugins": "1.0.x"
   },
   "devDependencies": {
-    "laxar": "LaxarJS/laxar#^1.1.0-alpha.2"
+    "jasmine": "~1.3.1"
   },
-  "homepage": "https://github.com/LaxarJS/dist-laxar",
-  "_release": "1.1.0-alpha.2",
+  "homepage": "https://github.com/LaxarJS/laxar",
+  "_release": "9a3f57495a",
   "_resolution": {
-    "type": "version",
-    "tag": "v1.1.0-alpha.2",
-    "commit": "6f03f8589c3502075b3d49c33a46a69a768eb610"
+    "type": "branch",
+    "branch": "master",
+    "commit": "9a3f57495a168eae6c3542cc7df2d0c683d6c6c2"
   },
-  "_source": "git://github.com/LaxarJS/dist-laxar.git",
-  "_target": "^1.1.0-alpha",
-  "_originalSource": "laxar"
+  "_source": "git://github.com/LaxarJS/laxar.git",
+  "_target": "master",
+  "_originalSource": "LaxarJS/laxar"
 }

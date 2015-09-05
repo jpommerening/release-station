@@ -1,0 +1,15 @@
+{
+   "name": "laxar-github",
+   "version": "0.1.0",
+   "description": "Activities to query data and events (commits, tags, issues) from GitHub",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "^1.1.0",
+      "laxar-patterns": "^1.0.0",
+      "socket.io-client": "1.3.x"
+   },
+   "devDependencies": {
+      "es5-shim": "2.3.x",
+      "jasmine": "1.3.x"
+   }
+}

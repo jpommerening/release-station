@@ -23,6 +23,6 @@
     "commit": "47988e9f3778aeb71088610f3d18ce2e73a34d25"
   },
   "_source": "git://github.com/jpommerening/ax-color-scale-control.git",
-  "_target": "*",
+  "_target": "master",
   "_originalSource": "jpommerening/ax-color-scale-control"
 }

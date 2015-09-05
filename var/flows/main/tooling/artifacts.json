@@ -77,6 +77,7 @@
          "widgets": [
             "amd:laxar-developer-tools-widget",
             "release-station/oauth-activity",
+            "amd:laxar-github/userdata-activity",
             "amd:laxar-popup-widget",
             "amd:laxar-headline-widget",
             "release-station/settings-widget",
@@ -104,8 +105,7 @@
             "auth_base"
          ],
          "widgets": [
-            "release-station/github-events-activity",
-            "release-station/github-data-activity",
+            "amd:laxar-github/events-activity",
             "amd:laxar-popup-widget",
             "amd:laxar-headline-widget",
             "release-station/details-widget",
@@ -133,8 +133,7 @@
             "auth_base"
          ],
          "widgets": [
-            "release-station/github-events-activity",
-            "release-station/github-data-activity",
+            "amd:laxar-github/events-activity",
             "amd:laxar-headline-widget",
             "release-station/search-box-widget",
             "release-station/activity-grid-widget"
@@ -160,7 +159,7 @@
             "auth_base"
          ],
          "widgets": [
-            "release-station/github-data-activity",
+            "amd:laxar-github/data-activity",
             "amd:laxar-headline-widget",
             "release-station/release-history-widget"
          ]
@@ -280,6 +279,102 @@
             "byUser": "amd:laxar-developer-tools-widget",
             "derivedScheme": "amd",
             "derivedReference": "laxar-developer-tools-widget"
+         }
+      },
+      {
+         "path": "bower_components/laxar-github/data-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "github-data-activity.js"
+            ],
+            "embed": [
+               "widget.json"
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "../../bower_components/laxar-github/data-activity"
+            },
+            "amd": {
+               "self": "laxar-github/data-activity",
+               "module": "laxar-github/data-activity/github-data-activity"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "amd:laxar-github/data-activity",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-github/data-activity"
+         }
+      },
+      {
+         "path": "bower_components/laxar-github/events-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "github-events-activity.js"
+            ],
+            "embed": [
+               "widget.json"
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "../../bower_components/laxar-github/events-activity"
+            },
+            "amd": {
+               "self": "laxar-github/events-activity",
+               "module": "laxar-github/events-activity/github-events-activity"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "amd:laxar-github/events-activity",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-github/events-activity"
+         }
+      },
+      {
+         "path": "bower_components/laxar-github/userdata-activity",
+         "integration": {
+            "technology": "plain",
+            "type": "activity"
+         },
+         "resources": {
+            "watch": [
+               "widget.json",
+               "github-userdata-activity.js"
+            ],
+            "embed": [
+               "widget.json"
+            ],
+            "list": []
+         },
+         "references": {
+            "local": {
+               "self": "../../bower_components/laxar-github/userdata-activity"
+            },
+            "amd": {
+               "self": "laxar-github/userdata-activity",
+               "module": "laxar-github/userdata-activity/github-userdata-activity"
+            }
+         },
+         "controls": [],
+         "referencedAs": {
+            "byUser": "amd:laxar-github/userdata-activity",
+            "derivedScheme": "amd",
+            "derivedReference": "laxar-github/userdata-activity"
          }
       },
       {
@@ -494,78 +589,6 @@
          }
       },
       {
-         "path": "includes/widgets/release-station/github-data-activity",
-         "integration": {
-            "technology": "plain",
-            "type": "activity"
-         },
-         "resources": {
-            "watch": [
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html",
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css",
-               "widget.json",
-               "github-data-activity.js"
-            ],
-            "embed": [
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/github-data-activity.html",
-               "widget.json"
-            ],
-            "list": [
-               "/includes/themes/cube.theme/widgets/release-station/github-data-activity/css/github-data-activity.css"
-            ]
-         },
-         "references": {
-            "local": {
-               "self": "release-station/github-data-activity"
-            },
-            "amd": {
-               "self": "../includes/widgets/release-station/github-data-activity",
-               "module": "laxar-application/includes/widgets/release-station/github-data-activity/github-data-activity"
-            }
-         },
-         "controls": [],
-         "referencedAs": {
-            "byUser": "release-station/github-data-activity",
-            "derivedReference": "release-station/github-data-activity"
-         }
-      },
-      {
-         "path": "includes/widgets/release-station/github-events-activity",
-         "integration": {
-            "technology": "plain",
-            "type": "activity"
-         },
-         "resources": {
-            "watch": [
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html",
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css",
-               "widget.json",
-               "github-events-activity.js"
-            ],
-            "embed": [
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/github-events-activity.html",
-               "widget.json"
-            ],
-            "list": [
-               "/includes/themes/cube.theme/widgets/release-station/github-events-activity/css/github-events-activity.css"
-            ]
-         },
-         "references": {
-            "local": {
-               "self": "release-station/github-events-activity"
-            },
-            "amd": {
-               "self": "../includes/widgets/release-station/github-events-activity",
-               "module": "laxar-application/includes/widgets/release-station/github-events-activity/github-events-activity"
-            }
-         },
-         "controls": [],
-         "referencedAs": {
-            "byUser": "release-station/github-events-activity",
-            "derivedReference": "release-station/github-events-activity"
-         }
-      },
-      {
          "path": "includes/widgets/release-station/github-login-widget",
          "integration": {
             "technology": "angular",
@@ -655,18 +678,13 @@
          },
          "resources": {
             "watch": [
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html",
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css",
                "widget.json",
                "oauth-activity.js"
             ],
             "embed": [
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/oauth-activity.html",
                "widget.json"
             ],
-            "list": [
-               "/includes/themes/cube.theme/widgets/release-station/oauth-activity/css/oauth-activity.css"
-            ]
+            "list": []
          },
          "references": {
             "local": {

@@ -1,0 +1,167 @@
+{
+   "name": "github-userdata-activity",
+   "description": "Request user data from GitHub",
+
+   "integration": {
+      "technology": "plain",
+      "type": "activity"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "user": {
+            "type": "object",
+            "description": "Configuration for publishing GitHub user data.",
+            "default": {},
+            "properties": {
+               "url": {
+                  "type": "string",
+                  "description": "The user URL to lookup.",
+                  "default": "https://api.github.com/user"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user data.",
+                  "format": "topic"
+               }
+            }
+         },
+         "orgs": {
+            "type": "object",
+            "description": "Configuration for publishing a GitHub user's organizations.",
+            "default": {},
+            "properties": {
+               "url": {
+                  "type": "string",
+                  "description": "The organizations URL to lookup.",
+                  "default": "https://api.github.com/user/orgs"
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user's organizations.",
+                  "format": "topic"
+               }
+            }
+         },
+         "repos": {
+            "type": "object",
+            "description": "Configuration for publishing a GitHub user's repositories.",
+            "default": {},
+            "properties": {
+               "url": {
+                  "type": "string",
+                  "description": "The repos URL to lookup.",
+                  "default": "https://api.github.com/user/repos"
+               },
+               "visibility": {
+                  "type": "string",
+                  "description": "Which type of repositories to show.",
+                  "valid": [ "all", "public", "private" ]
+               },
+               "affiliation": {
+                  "type": [ "string", "array" ],
+                  "description": "Which type of repositories to show.",
+                  "items": {
+                     "type": "string",
+                     "valid": [ "owner", "collaborator", "organization_member" ]
+                  }
+               },
+               "type": {
+                  "type": "string",
+                  "description": "Which type of repositories to show. Some may not work on all API endpoints.",
+                  "valid": [ "all", "owner", "member", "public", "private", "forks", "sources" ]
+               },
+               "sort": {
+                  "type": "string",
+                  "description": "How to sort repositories.",
+                  "valid": [ "created", "updated", "pushed", "full_name" ]
+               },
+               "direction": {
+                  "type": "string",
+                  "valid": [ "asc", "desc" ]
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user's repositories.",
+                  "format": "topic"
+               }
+            }
+         },
+         "keys": {
+            "type": "object",
+            "description": "Configuration for publishing a GitHub user's public keys.",
+            "default": {},
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user's public keys.",
+                  "format": "topic"
+               }
+            }
+         },
+         "followers": {
+            "type": "object",
+            "description": "Configuration for publishing a GitHub user's followers.",
+            "default": {},
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user's followers.",
+                  "format": "topic"
+               }
+            }
+         },
+         "following": {
+            "type": "object",
+            "description": "Configuration for publishing the users a GitHub user is following.",
+            "default": {},
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the users the user is following.",
+                  "format": "topic"
+               }
+            }
+         },
+         "starred": {
+            "type": "object",
+            "description": "Configuration for publishing a GitHub user's starred repositories.",
+            "default": {},
+            "properties": {
+               "sort": {
+                  "type": "string",
+                  "description": "How to sort repositories.",
+                  "valid": [ "created", "updated" ]
+               },
+               "direction": {
+                  "type": "string",
+                  "valid": [ "asc", "desc" ]
+               },
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish the user's starred repositories.",
+                  "format": "topic"
+               }
+            }
+         },
+         "auth": {
+            "type": "object",
+            "description": "Authorization with the GitHub API",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the authorization resource to listen for.",
+                  "format": "topic"
+               },
+               "flag": {
+                  "type": "string",
+                  "description": "The name of the flag indicating the current authentication state.",
+                  "format": "topic"
+               }
+            }
+         }
+      }
+   }
+}

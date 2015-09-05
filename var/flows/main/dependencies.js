@@ -14,8 +14,9 @@ define( [
    'laxar-application/includes/widgets/release-station/release-history-widget/release-history-widget',
    'laxar-application/includes/widgets/release-station/search-box-widget/search-box-widget',
    'laxar-application/includes/widgets/release-station/settings-widget/settings-widget',
-   'laxar-application/includes/widgets/release-station/github-data-activity/github-data-activity',
-   'laxar-application/includes/widgets/release-station/github-events-activity/github-events-activity',
+   'laxar-github/data-activity/github-data-activity',
+   'laxar-github/events-activity/github-events-activity',
+   'laxar-github/userdata-activity/github-userdata-activity',
    'laxar-application/includes/widgets/release-station/oauth-activity/oauth-activity'
 ], function() {
    'use strict';
@@ -23,6 +24,6 @@ define( [
    var modules = [].slice.call( arguments );
    return {
       'angular': modules.slice( 0, 15 ),
-      'plain': modules.slice( 15, 18 )
+      'plain': modules.slice( 15, 19 )
    };
 } );

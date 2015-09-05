@@ -1,0 +1,96 @@
+{
+   "name": "github-events-activity",
+   "description": "Query events (commits, tags, issues) from GitHub",
+
+   "integration": {
+      "technology": "plain",
+      "type": "activity"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "events": {
+            "type": "object",
+            "description": "Configuration for publishing GitHub events.",
+            "required": [ "resource" ],
+            "default": {},
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the resource under which to publish events.",
+                  "format": "topic",
+                  "default": "events"
+               },
+               "sources": {
+                  "type": [ "array", "object" ],
+                  "description": "Event sources.",
+                  "default": [],
+                  "properties": {
+                     "resource": {
+                        "type": "string",
+                        "description": "The name of the resource supplying the the sources.",
+                        "format": "topic"
+                     },
+                     "follow": {
+                        "type": [ "string", "array", "object" ],
+                        "description": "Which fields to follow for URLs. Maps all leaves to resources.",
+                        "default": "events_url"
+                     }
+                  },
+                  "items": {
+                     "type": "object",
+                     "description": "The event source",
+                     "required": [ "url" ],
+                     "properties": {
+                        "follow": {
+                           "type": [ "string", "array", "object" ],
+                           "description": "Which fields to follow for URLs. Maps all leaves to resources.",
+                           "default": "url"
+                        },
+                        "url": {
+                           "type": "string",
+                           "description": "The URL associated with the resource."
+                        },
+                        "resource": {
+                           "type": "string",
+                           "description": "The name under which to publish the events.",
+                           "format": "topic"
+                        },
+                        "type": {
+                           "type": "string",
+                           "description": "The resource type. Either 'socket.io' or 'http'."
+                        },
+                        "events": {
+                           "type": "array",
+                           "description": "Which events to monitor. Refer to the 'Event names' (lower_case) listed at https://developer.github.com/v3/activity/events/types/ for details.",
+                           "items": {
+                              "type": "string"
+                           },
+                           "default": [ "*" ]
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "auth": {
+            "type": "object",
+            "description": "Authorization with the GitHub API",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "The name of the authorization resource to listen for.",
+                  "format": "topic"
+               },
+               "flag": {
+                  "type": "string",
+                  "description": "The name of the flag indicating the current authentication state.",
+                  "format": "topic"
+               }
+            }
+         }
+      }
+   }
+}
