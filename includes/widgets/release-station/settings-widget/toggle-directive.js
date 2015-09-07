@@ -23,6 +23,7 @@ define( function() {
          },
          link: function( scope, iElement, iAttrs, ngModelController ) {
             scope.id = id++;
+            scope.value = !!(ngModelController.$viewValue);
 
             scope.change = function() {
                ngModelController.$setViewValue(scope.value);
