@@ -27,7 +27,7 @@
              data-ng-repeat="repo in resources.repos | orderBy:'pushed_at':true
                                                      | filter:{ owner: { login: model.login } }
                                                      | filter:pager">
-            <input ax-toggle type="toggle"
+            <input type="toggle" ax-toggle
                    ng-model="model.settings.repos[ repo.id ]"
                    ng-change="repositoryChanged( repo )"></input>
             <i class="fa" ng-class="{ 'fa-code-fork': repo.fork, 'fa-code': !repo.fork }"></i>
