@@ -21,18 +21,12 @@ var require = {
          name: 'laxar',
          location: 'laxar',
          main: 'laxar'
-      },
-      {
-         name: 'moment',
-         location: 'moment',
-         main: 'moment'
       }
    ],
    paths: {
       // LaxarJS Core:
       requirejs: 'requirejs/require',
       jquery: 'jquery/dist/jquery',
-      underscore: 'underscore/underscore',
       angular: 'angular/angular',
       'angular-mocks': 'angular-mocks/angular-mocks',
       'angular-route': 'angular-route/angular-route',
@@ -40,9 +34,6 @@ var require = {
       'angular-animate': 'angular-animate/angular-animate',
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
-      'socket.io': 'socket.io-client/socket.io',
-      semver: 'semver/semver.browser',
-      'chroma-js': 'chroma-js/chroma',
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
