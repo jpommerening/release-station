@@ -70,7 +70,7 @@ define( [
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
          .filter( function( event ) {
-            return ( !$scope.resources.search ) || searchFilter( $scope.resources.search, event );
+            return searchFilter( $scope.resources.search, event );
          } )
          .classify( githubEvents.by.date )
          .classify( classifyEventByType );

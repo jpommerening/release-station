@@ -68,7 +68,7 @@ define( [
          .synthesize( githubEvents.generate.commits )
          .filter( githubEvents.by.date.after( date ) )
          .filter( function( event ) {
-            return ( !$scope.resources.search ) || searchFilter( $scope.resources.search, event );
+            return searchFilter( $scope.resources.search, event );
          } )
          .classify( githubEvents.by.repository )
          .classify( classifyEventByType );

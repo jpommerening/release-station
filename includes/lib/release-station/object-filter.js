@@ -74,6 +74,10 @@ define( [
          var term;
          var result = true;
 
+         if( !search ) {
+            return true;
+         }
+
          values = pointers.map( function( pointer ) {
             return patterns.json.getPointer( object, pointer );
          } );
