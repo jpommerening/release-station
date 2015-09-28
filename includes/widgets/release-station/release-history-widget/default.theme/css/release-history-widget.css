@@ -18,9 +18,9 @@
 .release-history-widget ol.v {
    list-style-type: none;
    background-color: #efefef;
-   display: inline-block;
    padding: 0;
-   margin-right: 4px;
+   margin: 7px;
+   margin-bottom: 7px;
 }
 
 .release-history-widget ol.v > li {
@@ -42,70 +42,18 @@
    background-color: transparent;
 }
 
-.release-history-widget ul.semver-list {
-   list-style-type: none;
-   margin: 7px;
-   padding-bottom: 7px;
-   border-bottom: 1px dashed #ddd;
+.release-history-widget svg {
+   margin: 10px;
 }
 
-.release-history-widget ul.semver-list:last-child {
-   padding-bottom: 0px;
-   border-bottom: none;
+.release-history-widget circle,
+.release-history-widget path {
+   stroke: #626262;
+   stroke-width: 2;
+   fill: transparent;
 }
 
-.release-history-widget ul.semver-list > li {
-   max-width: 15%;
-   border: none;
-   width: 100px;
-   height: 50px;
-   margin: 0 4px;
-   padding: 3px;
-   clear: both;
-   background: #44a9e0;
-}
-
-.release-history-widget ul.semver-list > li:hover {
-   background: #55b9f0;
-}
-
-.release-history-widget ul.semver-list > li.selected {
-   background: #f90;
-   box-shadow: 0 0 6px #f8c283, inset 2px 2px 7px #fdb124, inset -2px -2px 7px #fdb124;
-}
-
-.release-history-widget ul.semver-list > li.selected:hover {
-   background: #fe9800;
-   box-shadow: 0 0 8px #fdb124, inset 2px 2px 7px #f8c283, inset -2px -2px 7px #f8c283;
-}
-
-.release-history-widget ul.semver-list > li a {
-   position: relative;
-   display: block;
-   height: 50px;
-   text-decoration: none;
-   margin: -3px;
-   padding: 3px;
-}
-
-.release-history-widget ul.semver-list > li h3 {
-   color: white;
-   font-weight: bold;
-   margin: 2px 4px;
-   font-size: 1.1em;
-}
-
-.release-history-widget ul.semver-list > li.major {
-}
-
-.release-history-widget ul.semver-list > li.minor {
-}
-
-.release-history-widget ul.semver-list > li.patch {
-   margin-right: -4px;
-   border-right: 1px solid #55b9f0;
-}
-
-.release-history-widget ul.inline > li {
-   display: inline-block;
-}
+.release-history-widget circle.highlight,
+.release-history-widget path.highlight {
+   stroke: #dd7700;
+};
