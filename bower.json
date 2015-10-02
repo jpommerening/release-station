@@ -6,9 +6,9 @@
       "dependencies": {
          "requirejs": "^2.1.12",
          "requirejs-plugins": "^1.0.0",
-         "laxar": "LaxarJS/laxar#master",
-         "laxar-uikit": "^1.0.0",
-         "laxar-patterns": "^1.0.0",
+         "laxar": "^1.1.0-alpha.9",
+         "laxar-patterns": "^1.1.0-alpha.2",
+         "laxar-uikit": "^1.1.0",
          "laxar-button-list-control": "LaxarJS/ax-button-list-control#^1.0.0",
          "laxar-layer-control": "LaxarJS/ax-layer-control#^1.0.0",
          "laxar-popup-widget": "LaxarJS/ax-popup-widget#^2.2.0",
