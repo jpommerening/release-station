@@ -5,8 +5,9 @@
  */
 define( [
    'angular',
-   'laxar-patterns'
-], function( ng, patterns ) {
+   'laxar-patterns',
+   'release-station/to-json-pointer'
+], function( ng, patterns, toJsonPointer ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,40 +16,61 @@ define( [
 
    function Controller( $scope ) {
 
-      $scope.selectTab = function( tab ) {
-         $scope.selected = tab;
+      $scope.model = {
+         tab: $scope.features.tabs[ 0 ],
+         selected: 0,
+         select: function( index ) {
+            $scope.model.tab = $scope.features.tabs[ index ];
+            $scope.model.selected = index;
+         }
       };
-      $scope.tabs = [
-         { name: 'commits', title: 'Commits', columns: [
-            {
-               title: 'Repository',
-               value: 'repo.name'
-            }
-         ] },
-         { name: 'tags', title: 'Tags' },
-         { name: 'issues', title: 'Issues' }
-      ];
+
+      $scope.resources = {
+         details: [],
+         links: []
+      };
 
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'details', {
             onReplace: function( event ) {
                var data = event.data;
 
-               $scope.tabs.forEach( function( tab ) {
-                  tab.enabled = !!(data[ tab.name ] && data[ tab.name ].length);
-
-                  if( tab.enabled && !$scope.selected ) {
-                     $scope.selected = tab.name;
-                  }
-               } );
-
                console.log( data );
             }
          } );
+
+      if( $scope.features.links ) {
+         $scope.features.links.forEach( function( link, index ) {
+            patterns.resources.handlerFor( $scope )
+               .registerResourceFromFeature( 'links.' + index, {
+                  onReplace: function( event ) {
+                     console.log( 'link', event );
+                  },
+                  modelKey: link.resource
+               } );
+         } );
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return ng.module( 'detailsWidget', [] ).controller( 'DetailsWidgetController', Controller );
+   return ng.module( 'detailsWidget', [] )
+            .controller( 'DetailsWidgetController', Controller )
+            .filter( 'pointer', function() {
+               return function( object, pointer ) {
+                  return patterns.json.getPointer( object, toJsonPointer( pointer ) );
+               };
+            } )
+            .filter( 'tab', function() {
+               return function( events, tab ) {
+                  if( !tab.filter ) {
+                     return events;
+                  }
+                  var pointer = toJsonPointer( tab.filter.field );
+                  return events.filter( function( event ) {
+                     return ( patterns.json.getPointer( event, pointer ) === tab.filter.value );
+                  } );
+               };
+            } );
 
 } );

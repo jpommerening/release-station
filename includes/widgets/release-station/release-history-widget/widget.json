@@ -17,12 +17,24 @@
       "properties": {
          "repos": {
             "type": "object",
-            "description": "Which projects to display in the grid.",
+            "description": "Which projects to display.",
             "required": [ "resource" ],
             "properties": {
                "resource": {
                   "type": "string",
-                  "description": "The name of the projects resource, a list of repository resources",
+                  "description": "",
+                  "format": "topic"
+               }
+            }
+         },
+         "tags": {
+            "type": "object",
+            "description": "",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "",
                   "format": "topic"
                }
             }

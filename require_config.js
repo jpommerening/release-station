@@ -16,11 +16,6 @@ var require = {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'laxar',
-         location: 'laxar',
-         main: 'laxar'
       }
    ],
    paths: {
@@ -54,6 +49,9 @@ var require = {
       'bootstrap-tooltip': 'bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
       'bootstrap-affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
       trunk8: 'trunk8/trunk8',
+
+      'es6': 'requirejs-babel/es6',
+      'babel': 'requirejs-babel/babel-5.8.22.min',
 
       'release-station': '../includes/lib/release-station',
 
@@ -126,6 +124,15 @@ var require = {
          init: function () {
             'use strict';
             return this._.noConflict();
+         }
+      }
+   },
+   config: {
+      es6: {
+         sourceMap: 'inline',
+         resolveModuleSource: function( source ) {
+            // Assume relative paths from within an ES6 import are also ES6 modules
+            return ( source[0] === '.' ) ? 'es6!'+source : source;
          }
       }
    }

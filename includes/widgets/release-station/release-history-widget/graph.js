@@ -142,11 +142,7 @@ define( function() {
            }
         }
 
-        if (track >= 0) {
-          tracks[ track ] = parents.shift();
-        }
-
-        for (i = 0; parents.length; i++) {
+        for (i = (track < 0) ? 0 : track; parents.length; i++) {
            if (typeof tracks[ i ] === 'undefined') {
               tracks[ i ] = parents.shift();
               if (track < 0) track = i;
@@ -165,6 +161,82 @@ define( function() {
     };
   }
 
+  function nodelist(options) {
+    var nodes = [];
+    var pivot = 0;
+
+    function sort() {
+      var i = pivot, j, k;
+      var ppivot = pivot, start;
+      var node, time, parents;
+
+      // First, record all sorted ids for easy lookup
+      var ids = nodes.slice(0, pivot).map(options.id);
+
+      // then, iterate through all unsorted nodes
+      while (i < nodes.length) {
+        start = 0;
+        node = nodes[i];
+        parents = options.parents(node);
+
+        // check if all parents are in the sorted sublist
+        for (j = 0; j < parents.length; j++) {
+          k = ids.indexOf(parents[j]);
+
+          // if the parent was not found (but is present in the set)
+          if (k < 0 && options.lookup(parents[j])) {
+            start = -1;
+            break;
+          } else if (k >= start) {
+            // record largest index pointing to a parent
+            start = k + 1;
+          }
+        }
+
+        // if we found all parents
+        if (start >= 0) {
+          // add the id
+          time = options.time(node);
+
+          // move the pivot element to place where "node" was
+          nodes[ i ] = nodes[ pivot ];
+
+          // shift all sorted elements between "start" and "pivot"
+          // to the back until we find a slot for "node" depending
+          // on the configured notion of "time"
+          for (j = pivot; j > start; j--) {
+            if (options.time(nodes[j-1]) < time) {
+              break;
+            }
+            nodes[ j ] = nodes[ j-1 ];
+            ids[ j ] = ids[ j-1 ];
+          }
+
+          // insert the node into the correct slot
+          nodes[ j ] = node;
+          ids[ j ] = options.id(node);
+
+          // move pivot to the next element
+          pivot += 1;
+        }
+
+        // if we reached the end of the array, repeat from the pivot,
+        // unless the pivot did not change from the last run
+        if( ++i === nodes.length && ppivot != pivot) {
+          i = ppivot = pivot;
+        }
+      }
+      return nodes.slice(0, pivot).reverse();
+    }
+
+    function add() {
+      nodes.push.apply(nodes, arguments);
+      return sort();
+    }
+
+    return add;
+  }
+
   return {
     isParent: isParent,
     isAncestor: isAncestor,
@@ -173,6 +245,7 @@ define( function() {
     nodeResolver: nodeResolver,
     childResolver: childResolver,
     branchTracker: branchTracker,
-    distanceAccumulator: distanceAccumulator
+    distanceAccumulator: distanceAccumulator,
+    nodelist: nodelist
   };
 } );

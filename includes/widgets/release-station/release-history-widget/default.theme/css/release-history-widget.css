@@ -7,12 +7,7 @@
 
 .release-history-widget > div {
    overflow: hidden;
-   white-space: nowrap;
-   background-color: #efefef;
-   box-shadow: inset 1px 2px 5px #ddd;
-   margin: 8px 15px;
-   padding: 4px;
-   border-radius: 3px;
+   margin: 7px;
 }
 
 .release-history-widget ol.v {
@@ -42,18 +37,21 @@
    background-color: transparent;
 }
 
-.release-history-widget svg {
-   margin: 10px;
-}
-
 .release-history-widget circle,
 .release-history-widget path {
    stroke: #626262;
-   stroke-width: 2;
+   stroke-width: 2px;
    fill: transparent;
 }
 
 .release-history-widget circle.highlight,
-.release-history-widget path.highlight {
+.release-history-widget path.highlight.to {
    stroke: #dd7700;
-};
+}
+
+.release-history-widget path.grid {
+   stroke: #e4e4e4;
+   stroke-width: 1px;
+   fill: transparent;
+   stroke-dasharray: 5, 3;
+}

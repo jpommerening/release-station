@@ -12,24 +12,9 @@
                   "flag": "authenticated"
                },
                "data": {
-                  "resource": "data",
-                  "sources": {
-                     "resource": "dataSources"
-                  }
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-github/data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
                   "resource": "tags",
                   "sources": {
-                     "resource": "data",
+                     "resource": "repos",
                      "follow": "tags_url"
                   }
                }
@@ -74,7 +59,10 @@
             "widget": "release-station/release-history-widget",
             "features": {
                "repos": {
-                  "resource": "data"
+                  "resource": "repos"
+               },
+               "tags": {
+                  "resource": "tags"
                }
             }
          }

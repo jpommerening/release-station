@@ -8,9 +8,10 @@ define( [
 ], function( patterns ) {
 
    return function toJsonPointer( item ) {
-      if( typeof item === 'number' ) {
+      var type = typeof item;
+      if( type === 'number' ) {
          return '/' + item.toString(10);
-      } if( typeof item === 'string' ) {
+      } if( type === 'string' ) {
          return item[ 0 ] === '/' ? item : patterns.json.pathToPointer( item );
       } else if( item.join ) {
          return '/' + item.join( '/' );

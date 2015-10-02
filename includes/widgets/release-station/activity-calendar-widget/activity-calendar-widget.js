@@ -40,7 +40,10 @@ define( [
       $scope.active = false;
 
       $scope.details = function details( date ) {
-         var details = getDateDetails( date );
+         var day = eventBucket( $scope.resources.events, date );
+         var details = Object.keys( day ).reduce( function( events, key ) {
+            return events.concat( day[ key ] || [] );
+         }, [] );
 
          $scope.eventBus.publish( 'didReplace.' + $scope.features.details.resource, {
             resource: $scope.features.details.resource,
@@ -151,31 +154,6 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function getDateDetails( date ) {
-         var day = eventBucket( $scope.resources.events, date );
-         var repos = {};
-
-         flatObjectValues( day ).forEach( function( event ) {
-            var repo = event.repo;
-
-            if( repo ) {
-               repos[ repo.id ] = true;
-            }
-         } );
-
-         $scope.resources.repos.filter( function( repo ) {
-            if( repos.hasOwnProperty( repo.id ) ) {
-               repos[ repo.id ] = repo;
-            }
-         } );
-
-         day.repos = repos;
-
-         return day;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
       function constructDayObject( date ) {
          var base = eventBucket( $scope.resources.events, date );
          var object = Object.create( base );
@@ -232,18 +210,6 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function flatObjectValues( object ) {
-      return flatMapKeys( object, function( key ) { return object[ key ]; } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function flatMapKeys( object, callback ) {
-      return [].concat.apply( [], Object.keys( object ).map( callback ) );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

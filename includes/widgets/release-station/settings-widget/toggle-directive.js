@@ -6,7 +6,6 @@
 define( function() {
    'use strict';
 
-   var directiveName = 'axToggle';
    var ACTIVE_CLASS = 'active';
    var DEFAULT_OFF_LABEL = 'off';
    var DEFAULT_ON_LABEL = 'on';

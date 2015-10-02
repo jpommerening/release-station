@@ -1,35 +1,31 @@
-
 <ul class="nav nav-tabs" role="tablist">
-   <li ng-repeat="tab in tabs"
-       ng-if="tab.enabled"
-       ng-class="{ active: selected == tab.name }"
+
+   <li ng-repeat="tab in features.tabs track by $index"
+       ng-if="( resources.details | tab:tab ).length"
+       ng-class="{ active: model.selected === $index }"
        role="presentation">
-      <a ng-click="selectTab(tab.name)" href="" role="tab">
-         {{tab.title}}
+      <a ng-click="model.select($index)" href="#" role="tab">
+         {{tab.i18nHtmlTitle | axLocalize:i18n}}
       </a>
    </li>
+
 </ul>
 
 <div class="tab-content">
 
-   <div class="tab-pane" role="tabpanel"
-        ng-class="{ active: selected == 'commits' }">
+   <div class="tab-pane active"
+        role="tabpanel">
       <table class="table">
-         <tr ng-repeat="commit in resources.details.commits">
-            <td><a ng-href="{{resources.details.repos[ commit.repo.id ].html_url}}">{{commit.repo.name}}</td>
-            <td>{{commit.payload.sha.substring(0, 6)}}</td>
-            <td>{{commit.payload.message}}</td>
-         </tr>
-      </table>
-   </div>
-
-   <div class="tab-pane" role="tabpanel"
-        ng-class="{ active: selected == 'tags' }">
-      <table class="table">
-         <tr ng-repeat="tag in resources.details.tags">
-            <td><a ng-href="{{resources.details.repos[ tag.repo.id ].html_url}}">{{tag.repo.name}}</td>
-            <td>{{tag.payload.ref}}</td>
-         </tr>
+         <thead>
+            <tr>
+               <th ng-repeat="column in model.tab.columns track by $index">{{column.i18nHtmlTitle | axLocalize:i18n}}</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr ng-repeat="event in resources.details | tab:model.tab track by event.id">
+               <td ng-repeat="column in model.tab.columns track by $index">{{event | pointer:column.field}}</td>
+            </tr>
+         </tbody>
       </table>
    </div>
 

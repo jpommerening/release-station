@@ -9,7 +9,7 @@ define( [
    'use strict';
 
    var SPACING = 32;
-   var RADIUS = 2;
+   var RADIUS = 4;
 
    var directive = function() {
       return {
@@ -33,18 +33,18 @@ define( [
                distance: function (commit1, commit2) {
                   var t1 = options.time(commit1);
                   var t2 = options.time(commit2);
-                  var d = (t1 <= t2) ? 0 : Math.log( (t2 - t1) / 1000 ) * 10;
+                  var d = (t2 <= t1) ? 0 : Math.log( 1 + ((t2 - t1) / 86400000) ) * SPACING;
 
                   if( graph.isParent(options, commit1, commit2) ) {
-                     return SPACING + (d / 2);
+                     return SPACING + (d / 3);
                   } else {
-                     return d;
+                     return (SPACING / 3) + d;
                   }
                }
             };
 
             var lookup = options.lookup = graph.nodeResolver(options, scope.commits);
-            var commits = scope.commits.sort(graph.nodeSorter(options));
+            var commits = graph.nodelist(options).apply(null, scope.commits);
 
             var children = graph.childResolver(options);
             var distance = graph.distanceAccumulator(options, 0);
@@ -65,7 +65,7 @@ define( [
                   id: node.id,
                   parents: node.parents,
                   children: node.children,
-                  x: (nodes[ nodes.length - 1 ].delta) - node.delta,
+                  x: Math.round( (nodes[ nodes.length - 1 ].delta) - node.delta ) + 0.5,
                   y: node.track * SPACING
                };
             } );
@@ -90,7 +90,7 @@ define( [
             }, { /* map parent -> children */ } ) );
 
             element.attr( {
-               width: scope.nodes[ 0 ].x + 20,
+               width: scope.nodes[ 0 ].x + 19.5,
                height: 200
             } );
 
@@ -184,20 +184,23 @@ define( [
    var template = '' +
       '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
          '<g transform="translate(10 10)">' +
+            '<path class="grid" ' +
+               'ng-repeat="node in nodes" ' +
+               'ng-attr-d="M {{node.x}} 200 L {{node.x}} {{node.y + ' + RADIUS + '}}"/>' +
+            '<path ' +
+               'ng-repeat="connection in connections"' +
+            /* 'ng-mouseenter="highlight($event, true)" ' +
+               'ng-mouseleave="highlight($event, false)" ' + */
+               'ng-attr-d="{{formatPath(connection.from, connection.to)}}" ' +
+               'data-from="{{connection.from.id}}" ' +
+               'data-to="{{connection.to.id}}"/>' +
             '<a ng-repeat="node in nodes" xlink:href="" ng-click="clk(node)" xlink:title="{{node.title}}">' +
                '<circle ' +
-                  'ng-attr-cx="{{node.x}}" ng-attr-cy="{{node.y}}" r="3" ' +
+                  'ng-attr-cx="{{node.x}}" ng-attr-cy="{{node.y}}" r="' + RADIUS + '" ' +
                   'ng-mouseenter="highlight($event, true)" ' +
                   'ng-mouseleave="highlight($event, false)" ' +
                   'data-node="{{node.id}}"/>' +
             '</a>' +
-            '<path ' +
-               'ng-repeat="connection in connections"' +
-               'ng-mouseenter="highlight($event, true)" ' +
-               'ng-mouseleave="highlight($event, false)" ' +
-               'ng-attr-d="{{formatPath(connection.from, connection.to)}}" ' +
-               'data-from="{{connection.from.id}}" ' +
-               'data-to="{{connection.to.id}}"/>' +
          '</g>' +
       '</svg>';
 

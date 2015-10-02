@@ -7,6 +7,10 @@
       "type": "widget"
    },
 
+   "controls": [
+      "laxar-uikit/controls/i18n"
+   ],
+
    "features": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
@@ -20,6 +24,81 @@
                   "type": "string",
                   "description": "The name of the resource providing details.",
                   "format": "topic"
+               }
+            }
+         },
+         "tabs": {
+            "type": "array",
+            "items": {
+               "type": "object",
+               "required": [],
+               "description": "",
+               "properties": {
+                  "i18nHtmlTitle": {
+                     "type": [
+                        "string",
+                        "object"
+                     ],
+                     "description": "The (internationalized) HTML title content."
+                  },
+                  "filter": {
+                     "type": "object",
+                     "description": "How to filter the events to display on this tab.",
+                     "required": [ "field", "value" ],
+                     "properties": {
+                        "field": {
+                           "type": "string"
+                        },
+                        "value": {
+                           "type": [ "string", "number", "boolean" ]
+                        }
+                     }
+                  },
+                  "columns": {
+                     "type": "array",
+                     "description": "The list of rows to display for each event.",
+                     "items": {
+                        "type": "object",
+                        "properties": {
+                           "i18nHtmlTitle": {
+                              "type": [
+                                 "string",
+                                 "object"
+                              ],
+                              "description": "The (internationalized) HTML title content."
+                           },
+                           "field": {
+                              "type": "string",
+                              "description": "The field (JSON pointer) inside the details resource to display."
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "links": {
+            "type": "array",
+            "description": "Linked resources for cross referencing items in the details resource.",
+            "default": [],
+            "items": {
+               "type": "object",
+               "required": [ "resource" ],
+               "description": "",
+               "properties": {
+                  "resource": {
+                     "type": "string",
+                     "description": "The name of the resource providing linked data.",
+                     "format": "topic"
+                  },
+                  "from": {
+                     "type": "string",
+                     "description": "The field (JSON pointer) inside the details resource item to link."
+                  },
+                  "to": {
+                     "type": "string",
+                     "description": "the field (JSON pointer) inside the linked resource to compare to."
+                  }
                }
             }
          }

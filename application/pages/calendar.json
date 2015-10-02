@@ -18,6 +18,39 @@
                   }
                }
             }
+         },
+         {
+            "widget": "amd:laxar-github/data-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "log": "info",
+               "data": {
+                  "resource": "commits",
+                  "sources": {
+                     "resource": "details",
+                     "follow": "payload.url"
+                  }
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-github/data-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "data": {
+                  "resource": "issues",
+                  "sources": {
+                     "resource": "details",
+                     "follow": "payload.issue.url"
+                  }
+               }
+            }
          }
       ],
 
@@ -62,7 +95,95 @@
             "features": {
                "details": {
                   "resource": "details"
-               }
+               },
+               "tabs": [
+                  {
+                     "i18nHtmlTitle": {
+                        "en-US": "Commits"
+                     },
+                     "filter": {
+                        "field": "type",
+                        "value": "CommitEvent"
+                     },
+                     "columns": [
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Repository"
+                           },
+                           "field": "repo.name"
+                        },
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "SHA"
+                           },
+                           "field": "payload.sha"
+                        },
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Message"
+                           },
+                           "field": "payload.message"
+                        }
+                     ]
+                  },
+                  {
+                     "i18nHtmlTitle": {
+                        "en-US": "Tags"
+                     },
+                     "filter": {
+                        "field": "payload.ref_type",
+                        "value": "tag"
+                     },
+                     "columns": [
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Repository"
+                           },
+                           "field": "repo.name"
+                        },
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Name"
+                           },
+                           "field": "payload.ref"
+                        }
+                     ]
+                  },
+                  {
+                     "i18nHtmlTitle": {
+                        "en-US": "Issues"
+                     },
+                     "filter": {
+                        "field": "type",
+                        "value": "IssuesEvent"
+                     },
+                     "columns": [
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Repository"
+                           },
+                           "field": "repo.name"
+                        }
+                     ]
+                  }
+               ],
+               "links": [
+                  {
+                     "resource": "commits",
+                     "from": "payload.url",
+                     "to": "url"
+                  },
+                  {
+                     "resource": "issues",
+                     "from": "payload.issues.url",
+                     "to": "url"
+                  },
+                  {
+                     "from": "repo.url",
+                     "to": "url",
+                     "resource": "repos"
+                  }
+               ]
             }
          }
       ],

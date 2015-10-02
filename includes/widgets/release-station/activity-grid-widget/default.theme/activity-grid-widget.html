@@ -16,10 +16,10 @@
      ng-class="{ 'inactive': project.activity <= 0 }">
    <div class="col-md-12">
       <h3>
-         <a ng-href="{{project.repo.repository_url}}"><span>{{project.repo.owner.login}}/</span>{{project.repo.name}}</a>
-         <a ng-href="{{project.repo.html_url}}"
+         <span><a ng-href="{{project.repo.owner.html_url}}">{{project.repo.owner.login}}</a>/</span><a ng-href="{{project.repo.html_url}}">{{project.repo.name}}</a>
+     <!--<a ng-href="{{project.repo.html_url}}"
             class="github"
-            title="{{project.repo.full_name}} on GitHub"><i class="fa fa-github"></i></a>
+            title="{{project.repo.full_name}} on GitHub"><i class="fa fa-github"></i></a>-->
       </h3>
    </div>
    <div class="col-md-4 col-sm-4 col-xs-6">
