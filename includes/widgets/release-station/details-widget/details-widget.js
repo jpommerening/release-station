@@ -65,8 +65,8 @@ define( [
 
             patterns.resources.handlerFor( $scope )
                .registerResourceFromFeature( 'links.' + index, {
-                  onReplace: function( event ) {
-                     var links = event.data;
+                  onUpdateReplace: function( event ) {
+                     var links = $scope.resources[ link.resource ];
                      if( !links ) {
                         return;
                      }
