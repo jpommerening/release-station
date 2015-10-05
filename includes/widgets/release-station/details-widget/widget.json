@@ -44,19 +44,21 @@
                   "filter": {
                      "type": "object",
                      "description": "How to filter the events to display on this tab.",
-                     "required": [ "field", "value" ],
+                     "required": [ "fields", "values" ],
                      "properties": {
-                        "field": {
-                           "type": "string"
+                        "fields": {
+                           "type": [ "string", "array", "object" ],
+                           "description": "The field (JSON pointer) inside the details resource to compare."
                         },
-                        "value": {
-                           "type": [ "string", "number", "boolean" ]
+                        "values": {
+                           "type": [ "string", "array", "object", "number", "boolean" ]
                         }
                      }
                   },
                   "columns": {
                      "type": "array",
                      "description": "The list of rows to display for each event.",
+                     "required": [ "fields" ],
                      "items": {
                         "type": "object",
                         "properties": {
@@ -67,9 +69,21 @@
                               ],
                               "description": "The (internationalized) HTML title content."
                            },
-                           "field": {
-                              "type": "string",
+                           "i18nHtmlFormat": {
+                              "type": [
+                                 "string",
+                                 "object"
+                              ],
+                              "description": "How to format the fields taken from the event.",
+                              "default": "[0]"
+                           },
+                           "fields": {
+                              "type": [ "string", "array", "object" ],
                               "description": "The field (JSON pointer) inside the details resource to display."
+                           },
+                           "link": {
+                              "type": "string",
+                              "description": "The field (JSON pointer) to lookup in the links."
                            }
                         }
                      }
@@ -91,13 +105,18 @@
                      "description": "The name of the resource providing linked data.",
                      "format": "topic"
                   },
-                  "from": {
+                  "field": {
                      "type": "string",
-                     "description": "The field (JSON pointer) inside the details resource item to link."
+                     "description": "The field (JSON pointer) inside the linked resource item to link.",
+                     "default": "url"
                   },
-                  "to": {
-                     "type": "string",
-                     "description": "the field (JSON pointer) inside the linked resource to compare to."
+                  "i18nHtmlFormat": {
+                     "type": [
+                        "string",
+                        "object"
+                     ],
+                     "description": "How to format the link.",
+                     "default": "<a href=\"#\">[0]</a>"
                   }
                }
             }

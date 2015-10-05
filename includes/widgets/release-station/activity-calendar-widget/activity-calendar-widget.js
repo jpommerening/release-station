@@ -39,19 +39,36 @@ define( [
       $scope.visibleRows = 6;
       $scope.active = false;
 
+      var detailsPublisher = {
+         replace: patterns.resources.replacePublisherForFeature( $scope, 'details' ),
+         update: patterns.resources.updatePublisherForFeature( $scope, 'details' ),
+         action: patterns.actions.publisherForFeature( $scope, 'details' )
+      };
+      var unwatchDetails;
+
       $scope.details = function details( date ) {
          var day = eventBucket( $scope.resources.events, date );
          var details = Object.keys( day ).reduce( function( events, key ) {
-            return events.concat( day[ key ] || [] );
+            if( day[ key ] && day[ key ] instanceof Array ) {
+               return events.concat( day[ key ] );
+            } else {
+               return events;
+            }
          }, [] );
 
-         $scope.eventBus.publish( 'didReplace.' + $scope.features.details.resource, {
-            resource: $scope.features.details.resource,
-            data: details
-         } );
+         if( unwatchDetails ) {
+            unwatchDetails();
+         }
 
-         $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
-            action: $scope.features.details.action
+         detailsPublisher.replace( details ).then( function() {
+            detailsPublisher.action();
+
+            unwatchDetails = $scope.$watch( function( $scope ) {
+               return eventBucket( $scope.resources.events, date );
+            }, function( newValue, oldValue ) {
+               var patches = patterns.json.createPatch( oldValue, newValue );
+               detailsPublisher.update( patches );
+            }, true );
          } );
       };
 

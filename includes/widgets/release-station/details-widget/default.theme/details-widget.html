@@ -23,7 +23,9 @@
          </thead>
          <tbody>
             <tr ng-repeat="event in resources.details | tab:model.tab track by event.id">
-               <td ng-repeat="column in model.tab.columns track by $index">{{event | pointer:column.field}}</td>
+               <td ng-repeat="column in model.tab.columns track by $index"
+                   ng-bind-html="model.link(event, column) | axLocalize:i18n:(column.i18nHtmlFormat | axLocalizeFormat:i18n:model.fields(event, column))">
+               </td>
             </tr>
          </tbody>
       </table>

@@ -102,27 +102,32 @@
                         "en-US": "Commits"
                      },
                      "filter": {
-                        "field": "type",
-                        "value": "CommitEvent"
+                        "fields": "type",
+                        "values": "CommitEvent"
                      },
                      "columns": [
                         {
                            "i18nHtmlTitle": {
                               "en-US": "Repository"
                            },
-                           "field": "repo.name"
+                           "fields": "repo.name",
+                           "link": "repo.url"
                         },
                         {
                            "i18nHtmlTitle": {
                               "en-US": "SHA"
                            },
-                           "field": "payload.sha"
+                           "i18nHtmlFormat": {
+                              "en-US": "[0:%.6s]"
+                           },
+                           "fields": "payload.sha",
+                           "link": "payload.url"
                         },
                         {
                            "i18nHtmlTitle": {
                               "en-US": "Message"
                            },
-                           "field": "payload.message"
+                           "fields": "payload.message"
                         }
                      ]
                   },
@@ -131,21 +136,22 @@
                         "en-US": "Tags"
                      },
                      "filter": {
-                        "field": "payload.ref_type",
-                        "value": "tag"
+                        "fields": "payload.ref_type",
+                        "values": "tag"
                      },
                      "columns": [
                         {
                            "i18nHtmlTitle": {
                               "en-US": "Repository"
                            },
-                           "field": "repo.name"
+                           "fields": "repo.name",
+                           "link": "repo.url"
                         },
                         {
                            "i18nHtmlTitle": {
                               "en-US": "Name"
                            },
-                           "field": "payload.ref"
+                           "fields": "payload.ref"
                         }
                      ]
                   },
@@ -154,34 +160,41 @@
                         "en-US": "Issues"
                      },
                      "filter": {
-                        "field": "type",
-                        "value": "IssuesEvent"
+                        "fields": "type",
+                        "values": "IssuesEvent"
                      },
                      "columns": [
                         {
                            "i18nHtmlTitle": {
                               "en-US": "Repository"
                            },
-                           "field": "repo.name"
+                           "i18nHtmlFormat": {
+                              "en-US": "[repo]#[number]"
+                           },
+                           "fields": {
+                              "repo": "repo.name",
+                              "number": "payload.issue.number"
+                           },
+                           "link": "payload.issue.url"
                         }
                      ]
                   }
                ],
                "links": [
                   {
+                     "resource": "repos",
+                     "field": "url",
+                     "i18nHtmlFormat": "<a href=\"[html_url]\" title=\"[full_name]: [description]\">[0]</a>"
+                  },
+                  {
                      "resource": "commits",
-                     "from": "payload.url",
-                     "to": "url"
+                     "field": "url",
+                     "i18nHtmlFormat": "<a href=\"[html_url]\" title=\"[sha]\">[0]</a>"
                   },
                   {
                      "resource": "issues",
-                     "from": "payload.issues.url",
-                     "to": "url"
-                  },
-                  {
-                     "from": "repo.url",
-                     "to": "url",
-                     "resource": "repos"
+                     "field": "url",
+                     "i18nHtmlFormat": "<a href=\"[html_url]\" title=\"[title] ([state] [updated_at])\">[0]</a>"
                   }
                ]
             }
