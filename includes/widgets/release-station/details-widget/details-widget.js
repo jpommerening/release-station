@@ -67,13 +67,15 @@ define( [
                .registerResourceFromFeature( 'links.' + index, {
                   onReplace: function( event ) {
                      var links = event.data;
+                     if( !links ) {
+                        return;
+                     }
                      for( var i = 0; i < links.length; i++ ) {
                         if( links[ i ] ) {
                            var key = patterns.json.getPointer( links[ i ], pointer );
                            $scope.model.links[ key ] = $filter( 'axLocalizeFormat' )( i18nHtmlFormat, [], links[ i ] );
                         }
                      }
-                     console.log( 'link', links );
                   },
                   modelKey: link.resource
                } );

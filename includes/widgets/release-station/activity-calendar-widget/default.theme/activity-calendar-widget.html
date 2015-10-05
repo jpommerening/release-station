@@ -26,16 +26,11 @@
                             future: day.isFuture,
                             weekend: day.isWeekend,
                             'not-in-month': !day.isInMonth }">
-               <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.activity > 0 && details(day.date)" class="day" tabindex="0">
+               <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.events.length > 0 && details(day.date)" class="day" tabindex="0">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>
-                     <li ng-if="day.releases[0]">{{day.releases.length}} releases</li>
-                     <li ng-if="day.tags[0]">{{day.tags.length}} tags</li>
-                     <li ng-if="day.commits[0]">{{day.commits.length}} commits</li>
-                     <!--
-                     <li ng-if="day.issues_opened[0]">{{day.issues_opened.length}} issues opened</li>
-                     <li ng-if="day.issues_closed[0]">{{day.issues_closed.length}} issues closed</li>
-                     -->
+                     <li ng-if="(day.events | tags).length">{{(day.events | tags).length}} tags</li>
+                     <li ng-if="(day.events | commits).length">{{(day.events | commits).length}} commits</li>
                   </ul>
                </a>
             </td>

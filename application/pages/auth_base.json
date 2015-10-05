@@ -107,7 +107,7 @@
             "widget": "amd:laxar-headline-widget",
             "features": {
                "headline": {
-                  "level": 4,
+                  "level": 3,
                   "i18nHtmlText": {
                      "en-US": "Settings"
                   }

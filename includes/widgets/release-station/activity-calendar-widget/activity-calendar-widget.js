@@ -44,23 +44,23 @@ define( [
          update: patterns.resources.updatePublisherForFeature( $scope, 'details' ),
          action: patterns.actions.publisherForFeature( $scope, 'details' )
       };
+
       var unwatchDetails;
 
+      $scope.$on( '$destroy', function() {
+         if( unwatchDetails ) {
+            unwatchDetails();
+         }
+      } );
+
       $scope.details = function details( date ) {
-         var day = eventBucket( $scope.resources.events, date );
-         var details = Object.keys( day ).reduce( function( events, key ) {
-            if( day[ key ] && day[ key ] instanceof Array ) {
-               return events.concat( day[ key ] );
-            } else {
-               return events;
-            }
-         }, [] );
+         var events = eventBucket( $scope.resources.events, date );
 
          if( unwatchDetails ) {
             unwatchDetails();
          }
 
-         detailsPublisher.replace( details ).then( function() {
+         detailsPublisher.replace( events ).then( function() {
             detailsPublisher.action();
 
             unwatchDetails = $scope.$watch( function( $scope ) {
@@ -84,16 +84,15 @@ define( [
 
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
-               updateActivityData( $scope.resources.events );
+               updateActivityData( $scope.weeks );
             }
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
+         .classify( githubEvents.by.date )
          .filter( function( event ) {
             return searchFilter( $scope.resources.search, event );
-         } )
-         .classify( githubEvents.by.date )
-         .classify( classifyEventByType );
+         } );
 
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'repos' );
@@ -102,9 +101,9 @@ define( [
          .registerResourceFromFeature( 'search', {
             onUpdateReplace: function() {
                pipeline.replay();
-               updateActivityData( $scope.resources.events );
+               updateActivityData( $scope.weeks );
             }
-         } )
+         } );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
          var endOfDay = callTomorrow( function toNextDay() {
@@ -172,18 +171,37 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function constructDayObject( date ) {
-         var base = eventBucket( $scope.resources.events, date );
-         var object = Object.create( base );
+         var object = {};
          var parameters = {};
 
          parameters[ dateParameter ] = date.format( DATE_FORMAT );
 
+         object.events = eventBucket( $scope.resources.events, date );
          object.date = date;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
 
          object.isWeekend = date.day() % 6 === 0;
 
          return object;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function getDayObject( date, weeks ) {
+         var i;
+         var j;
+         if( weeks[ 0 ][ 0 ].date.isAfter( day ) ||
+             weeks[ weeks.length ][ weeks[ weeks.length ].length ].date.isBefore( day ) ) {
+            return;
+         }
+
+         for( i = 0; i < weeks.length; i++ ) {
+            for( j = 0; j < weeks[ i ].length; i++ ) {
+               if( weeks[ i ][ j ].date.isSame( date ) ) {
+                  return weeks[ i ][ j ];
+               }
+            }
+         }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +251,7 @@ define( [
 
    function eventBucket( buckets, timestamp ) {
       var key = timestamp.format( DATE_FORMAT );
-      return (buckets[ key ] = (buckets[ key ] || {}));
+      return (buckets[ key ] = (buckets[ key ] || []));
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,61 +285,64 @@ define( [
             day.isWorkingDay = day.isInMonth && !(day.isWeekend || day.isFuture);
          } );
       } );
+      updateActivityData( weeks );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function classifyEventByType( event ) {
-      var type = event.type;
-      var payload = event.payload;
-      switch( type ) {
-         case 'CommitEvent':
-            return 'commits';
-         case 'CreateEvent':
-            if( payload.ref_type === 'tag' ) {
-               return 'tags';
-            }
-            return;
-         case 'IssuesEvent':
-            if( payload.action === 'opened' || payload.action === 'reopened' ) {
-               return 'issues_opened';
-            } else if( payload.action === 'closed' ) {
-               return 'issues_closed';
-            }
-            return;
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function updateActivityData( buckets ) {
-      Object.keys( buckets ).forEach( function( key ) {
-         buckets[ key ].activity = getActivityEstimation( buckets[ key ] );
+   function updateActivityData( weeks ) {
+      weeks.forEach( function( week ) {
+         week.forEach( function( day ) {
+            var sum = day.events.reduce( function( sum, event ) {
+               var type = event.type;
+               var payload = event.payload;
+               var score = 0.05;
+               switch( type ) {
+                  case 'CommitEvent':
+                     score = 1;
+                  break;
+                  case 'CreateEvent':
+                     score = (payload.ref_type === 'tag') ? 1.5 : 0;
+                  break;
+                  case 'IssuesEvent':
+                     if( [ 'opened', 'reopened', 'closed' ].indexOf( payload.action ) >= 0 ) {
+                        score = 0.25;
+                     }
+                  break;
+               }
+               return sum + score;
+            }, 1 );
+            day.activity = 1 - (1 / (1 + Math.log(sum)));
+         } );
       } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function getActivityEstimation( day ) {
-      var sum = 0;
-      if( day.commits ) {
-         sum += day.commits.length;
-      }
-      if( day.tags ) {
-         sum += day.tags.length * 1.5;
-      }
-      if( day.issues_opened ) {
-         sum += day.issues_opened.length * 0.25;
-      }
-      if( day.issues_closed ) {
-         sum += day.issues_closed.length * 0.25;
-      }
-      return 1 - (1 / Math.log(1 + sum));
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    return ng.module( 'activityCalendarWidget', [] )
-            .controller( 'ActivityCalendarWidgetController', Controller );
+            .controller( 'ActivityCalendarWidgetController', Controller )
+            .filter( 'commits', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'CommitEvent';
+                  } );
+               };
+            } )
+            .filter( 'tags', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'CreateEvent' &&
+                        event.payload.ref_type === 'tag';
+                  } );
+               };
+            } )
+            .filter( 'issues', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'IssuesEvent' &&
+                        ( [ 'opened', 'reopened', 'closed' ].indexOf( event.payload.action ) >= 0 );
+                  } );
+               };
+            } );
 
 } );

@@ -275,7 +275,7 @@ define( [
    }
 
    EventPipeline.create = function create( context, feature, options ) {
-      return new EventPipeline( context, feature, options );
+      return new EventPipeline( context, feature, options || {} );
    };
 
    return EventPipeline.create;
