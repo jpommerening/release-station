@@ -52,7 +52,8 @@ body::before {
 .navbar-brand h1 + div.ax-local-intro-text {
    color: #999;
    font-size: 0.9rem;
-   margin-top: -0.2rem;
+   font-style: italic;
+   margin-top: -0.25rem;
 }
 
 .app-content h2 {

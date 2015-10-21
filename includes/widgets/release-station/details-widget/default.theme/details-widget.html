@@ -1,11 +1,11 @@
 <ul class="nav nav-tabs" role="tablist">
 
-   <li ng-repeat="tab in features.tabs track by $index"
-       ng-if="( resources.details | tab:tab ).length"
+   <li ng-repeat="tab in model.tabs track by $index"
        ng-class="{ active: model.selected === $index }"
        role="presentation">
-      <a ng-click="model.select($index)" href="#" role="tab">
-         {{tab.i18nHtmlTitle | axLocalize:i18n}}
+      <a ng-click="model.select($index)"
+         ng-bind-html="tab.i18nHtmlTitle | axLocalize:i18n"
+         href="#" role="tab">
       </a>
    </li>
 
@@ -18,11 +18,12 @@
       <table class="table">
          <thead>
             <tr>
-               <th ng-repeat="column in model.tab.columns track by $index">{{column.i18nHtmlTitle | axLocalize:i18n}}</th>
+               <th ng-repeat="column in model.tab.columns track by $index"
+                   ng-bind-html="column.i18nHtmlTitle | axLocalize:i18n"></th>
             </tr>
          </thead>
          <tbody>
-            <tr ng-repeat="event in resources.details | tab:model.tab track by event.id">
+            <tr ng-repeat="event in model.events | orderBy:'created_at' track by event.id">
                <td ng-repeat="column in model.tab.columns track by $index"
                    ng-bind-html="model.link(event, column) | axLocalize:i18n:(column.i18nHtmlFormat | axLocalizeFormat:i18n:model.fields(event, column))">
                </td>

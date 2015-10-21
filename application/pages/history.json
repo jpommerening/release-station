@@ -19,6 +19,22 @@
                   }
                }
             }
+         },
+         {
+            "widget": "amd:laxar-github/log-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "log": {
+                  "resource": "log",
+                  "sources": {
+                     "resource": "tags",
+                     "follow": "commit.url"
+                  }
+               }
+            }
          }
       ],
 
@@ -63,6 +79,9 @@
                },
                "tags": {
                   "resource": "tags"
+               },
+               "log": {
+                  "resource": "log"
                }
             }
          }

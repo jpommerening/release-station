@@ -165,13 +165,21 @@ define( function() {
     var nodes = [];
     var pivot = 0;
 
+    function sorted() {
+      return nodes.slice(0, pivot);
+    }
+
+    function unsorted() {
+      return nodes.slice(pivot);
+    }
+
     function sort() {
       var i = pivot, j, k;
       var ppivot = pivot, start;
       var node, time, parents;
 
       // First, record all sorted ids for easy lookup
-      var ids = nodes.slice(0, pivot).map(options.id);
+      var ids = sorted().map(options.id);
 
       // then, iterate through all unsorted nodes
       while (i < nodes.length) {
@@ -226,15 +234,13 @@ define( function() {
           i = ppivot = pivot;
         }
       }
-      return nodes.slice(0, pivot).reverse();
     }
 
-    function add() {
+    return function add() {
       nodes.push.apply(nodes, arguments);
-      return sort();
-    }
-
-    return add;
+      sort();
+      return sorted();
+    };
   }
 
   return {

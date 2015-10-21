@@ -35,7 +35,7 @@ define( [
                   var t2 = options.time(commit2);
                   var d = (t2 <= t1) ? 0 : Math.log( 1 + ((t2 - t1) / 86400000) ) * SPACING;
 
-                  if( graph.isParent(options, commit1, commit2) ) {
+                  if( options.parents(commit2).indexOf(options.id(commit1)) >= 0 ) {
                      return SPACING + (d / 3);
                   } else {
                      return (SPACING / 3) + d;
@@ -44,7 +44,7 @@ define( [
             };
 
             var lookup = options.lookup = graph.nodeResolver(options, scope.commits);
-            var commits = graph.nodelist(options).apply(null, scope.commits);
+            var commits = graph.nodelist(options).apply(null, scope.commits).reverse();
 
             var children = graph.childResolver(options);
             var distance = graph.distanceAccumulator(options, 0);
@@ -142,7 +142,7 @@ define( [
 
    function formatPath(from, to) {
       var radius = RADIUS;
-      var limit = SPACING + Math.log(Math.abs(to.y - from.y) * 2);
+      var limit = SPACING + Math.log(Math.pow(to.y - from.y, 2));
       var segments = [ move(from) ];
       var via;
 
@@ -155,7 +155,7 @@ define( [
       }
 
       function curve(from, to) {
-         var factor = Math.log(Math.pow(to.y - from.y, 2)) / Math.log(to.x - from.x);
+         var factor = Math.log(Math.pow(to.y - from.y, 2)) / Math.sqrt(to.x - from.x);
          return 'C' + ((from.x + factor*to.x) / (1+factor)) + ' ' + from.y + ', ' +
                       ((from.x*factor + to.x) / (1+factor)) + ' ' + to.y + ', ' +
                       (to.x - radius) + ' ' + to.y;

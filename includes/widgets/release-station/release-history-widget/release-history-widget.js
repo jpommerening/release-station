@@ -22,8 +22,8 @@ define( [
       $scope.eventBus.subscribe( 'endLifecycleRequest', endLifecycle );
 
       patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'repos' )
-         .registerResourceFromFeature( 'tags' );
+         .registerResourceFromFeature( 'tags' )
+         .registerResourceFromFeature( 'log' );
 
       $scope.commits = commitdata.filter(function (commit) {
          if (this[ commit.sha ]) return false;

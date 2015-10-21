@@ -39,6 +39,18 @@
                }
             }
          },
+         "log": {
+            "type": "object",
+            "description": "A resource providing commit data to display.",
+            "required": [ "resource" ],
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "description": "",
+                  "format": "topic"
+               }
+            }
+         },
          "semver": {
             "type": "object"
          }

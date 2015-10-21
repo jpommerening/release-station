@@ -26,7 +26,6 @@
                   "resource": "accessToken",
                   "flag": "authenticated"
                },
-               "log": "info",
                "data": {
                   "resource": "commits",
                   "sources": {
@@ -151,7 +150,13 @@
                            "i18nHtmlTitle": {
                               "en-US": "Name"
                            },
-                           "fields": "payload.ref"
+                           "i18nHtmlFormat": {
+                              "en-US": "<a href=\"#/history/[repo]/[ref]\">[ref]</a>"
+                           },
+                           "fields": {
+                              "repo": "repo.name",
+                              "ref": "payload.ref"
+                           }
                         }
                      ]
                   },
@@ -164,9 +169,9 @@
                         "values": "IssuesEvent"
                      },
                      "columns": [
-                        {
+                       {
                            "i18nHtmlTitle": {
-                              "en-US": "Repository"
+                              "en-US": "Issue"
                            },
                            "i18nHtmlFormat": {
                               "en-US": "[repo]#[number]"
@@ -176,6 +181,22 @@
                               "number": "payload.issue.number"
                            },
                            "link": "payload.issue.url"
+                        },
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Action"
+                           },
+                           "i18nHtmlFormat": "[actor] [action]",
+                           "fields": {
+                              "actor": "actor.login",
+                              "action": "payload.action"
+                           }
+                        },
+                        {
+                           "i18nHtmlTitle": {
+                              "en-US": "Summary"
+                           },
+                           "fields": "payload.issue.title"
                         }
                      ]
                   }
@@ -194,7 +215,7 @@
                   {
                      "resource": "issues",
                      "field": "url",
-                     "i18nHtmlFormat": "<a href=\"[html_url]\" title=\"[title] ([state] [updated_at])\">[0]</a>"
+                     "i18nHtmlFormat": "<a href=\"[html_url]\" title=\"#[number] ([state] [updated_at])\">[0]</a>"
                   }
                ]
             }
@@ -234,14 +255,36 @@
 
       "headline": [
          {
-            "widget": "amd:laxar-headline-widget",
+            "widget": "release-station/headline-selector-widget",
             "features": {
                "headline": {
                   "level": 2,
-                  "i18nHtmlText": {
-                     "en-US": "Activity Calendar"
+                  "i18nHtmlFormat": {
+                     "en-US": "Activity"
                   }
-               }
+               },
+
+               "selections": [
+                  {
+                     "resource": "month",
+                     "options": {
+                        "init": [
+                           { "value": 1, "i18nHtmlText": "January" },
+                           { "value": 2, "i18nHtmlText": "February" },
+                           { "value": 3, "i18nHtmlText": "March" },
+                           { "value": 4, "i18nHtmlText": "April" },
+                           { "value": 5, "i18nHtmlText": "May" },
+                           { "value": 6, "i18nHtmlText": "June" },
+                           { "value": 7, "i18nHtmlText": "July" },
+                           { "value": 8, "i18nHtmlText": "August" },
+                           { "value": 9, "i18nHtmlText": "September" },
+                           { "value": 10, "i18nHtmlText": "October" },
+                           { "value": 11, "i18nHtmlText": "November" },
+                           { "value": 12, "i18nHtmlText": "December" }
+                        ]
+                     }
+                  }
+               ]
             }
          }
       ],
