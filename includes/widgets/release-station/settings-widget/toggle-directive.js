@@ -37,8 +37,12 @@ define( function() {
             ngModelController.$render = render;
 
             function change( event ) {
-               ngModelController.$setViewValue( this.value, event );
-               ngModelController.$render();
+               if( !ngModelController.$isEmpty( this.value ) ) {
+                  ngModelController.$setViewValue( this.value, event );
+                  ngModelController.$render();
+                  ngModelController.$setPristine();
+               }
+               event.stopPropagation(); // omg, this is so important, rly
             }
 
             function render() {
