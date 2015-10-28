@@ -22,7 +22,7 @@
          }
       },
 
-      "history/:owner/:name/:version": {
+      "history/:owner/:repo/:version": {
          "page":  "history",
          "targets": {
             "cancel": "entry",

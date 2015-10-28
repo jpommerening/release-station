@@ -15,7 +15,25 @@
                   "resource": "tags",
                   "sources": {
                      "resource": "repos",
-                     "follow": "tags_url"
+                     "fields": "tags_url"
+                  }
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-github/contents-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "contents": {
+                  "resource": "changelog",
+                  "type": "html",
+                  "path": "CHANGELOG.md",
+                  "sources": {
+                     "resource": "repo",
+                     "fields": "contents_url"
                   }
                }
             }
@@ -58,14 +76,33 @@
 
       "headline": [
          {
-            "widget": "amd:laxar-headline-widget",
+            "widget": "release-station/headline-selector-widget",
             "features": {
                "headline": {
-                  "level": 2,
-                  "i18nHtmlText": {
-                     "en-US": "Release History"
+                  "level": 1,
+                  "i18nHtmlFormat": {
+                     "en-US": "History for [0]/[1]"
                   }
-               }
+               },
+
+               "selections": [
+                  {
+                     "parameter": "owner",
+                     "resource": "ownerrepos",
+                     "options": {
+                        "resource": "repos",
+                        "fields": "owner.login"
+                     }
+                  },
+                  {
+                     "parameter": "repo",
+                     "resource": "repo",
+                     "options": {
+                        "resource": "ownerrepos",
+                        "fields": "name"
+                     }
+                  }
+               ]
             }
          }
       ],
@@ -82,6 +119,15 @@
                },
                "log": {
                   "resource": "log"
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-html-display-widget",
+            "features": {
+               "content": {
+                  "resource": "changelog",
+                  "attribute": "0"
                }
             }
          }

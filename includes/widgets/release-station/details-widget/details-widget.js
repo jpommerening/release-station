@@ -7,15 +7,17 @@ define( [
    'angular',
    'laxar',
    'laxar-patterns',
-   'release-station/to-json-pointer'
-], function( ng, ax, patterns, toJsonPointer ) {
+   'release-station/to-json-pointer',
+   'release-station/extract-pointers',
+   'release-station/custom-localize'
+], function( ng, ax, patterns, toJsonPointer, extractPointers, customLocalize ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$filter' ];
+   Controller.$inject = [ '$scope' ];
 
-   function Controller( $scope, $filter ) {
+   function Controller( $scope ) {
 
       $scope.model = {
          tab: $scope.features.tabs[ 0 ],
@@ -28,23 +30,6 @@ define( [
          },
          events: [],
          links: {},
-         link: function( event, column ) {
-            if( column.link ) {
-               var pointer = toJsonPointer( column.link );
-               var value = patterns.json.getPointer( event, pointer );
-            }
-            return $scope.model.links[ value ] || '[0]';
-         },
-         fields: function( event, column ) {
-            var pointers = deepMapObject( column.fields, toJsonPointer );
-            return deepMapObject( pointers, function( pointer ) {
-               if( pointer === '/' ) {
-                  return event;
-               } else {
-                  return patterns.json.getPointer( event, pointer );
-               }
-            } );
-         }
       };
 
       $scope.resources = {
@@ -108,7 +93,7 @@ define( [
                      for( var i = 0; i < links.length; i++ ) {
                         if( links[ i ] ) {
                            var key = patterns.json.getPointer( links[ i ], pointer );
-                           $scope.model.links[ key ] = $filter( 'axLocalizeFormat' )( i18nHtmlFormat, [], links[ i ] );
+                           $scope.model.links[ key ] = customLocalize( i18nHtmlFormat, $scope.i18n, links[ i ] );
                         }
                      }
                   },
@@ -120,42 +105,15 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function mapObject( object, callback ) {
-      if( object instanceof Array ) {
-         return object.map( callback );
-      } else if( typeof object === 'object' ) {
-         var result = {};
-
-         for( var key in object ) {
-            if( object.hasOwnProperty( key ) ) {
-               result[ key ] = callback( object[ key ], key, object );
-            }
-         }
-         return result;
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function deepMapObject( object, callback ) {
-      function recurse( value, key, object ) {
-         return mapObject( value, recurse ) || callback( value, key, object );
-      }
-      return recurse( object )
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    function filterEventsForTab( events, tab ) {
       if( !tab.filter ) {
          return events;
       }
-      var pointers = deepMapObject( tab.filter.fields, toJsonPointer );
+
+      var fields = tab.filter.fields;
 
       return events.filter( function( event ) {
-         var values = deepMapObject( pointers, function( pointer ) {
-            return patterns.json.getPointer( event, pointer );
-         } );
+         var values = extractPointers( event, fields );
 
          return ng.equals( values, tab.filter.values );
       } );
@@ -163,41 +121,19 @@ define( [
 
    return ng.module( 'detailsWidget', [] )
             .controller( 'DetailsWidgetController', Controller )
-            .filter( 'axLocalizeFormat', function() {
+            .filter( 'axRenderColumn', function() {
+               return function( event, i18n, column, links ) {
+                  var fields = extractPointers( event, column.fields );
+                  var text = customLocalize( column.i18nHtmlFormat, i18n, fields );
 
-               var format = ax.string.createFormatter( {
-                  s: function( input, subSpecifierString ) {
-                     var precision = subSpecifierString.match( /^\.(\d)$/ );
-                     if( precision ) {
-                        return ('' + input).substr( 0, precision[1] );
-                     }
-                     return '' + input;
+                  if( column.link ) {
+                     var pointer = toJsonPointer( column.link );
+                     var value = patterns.json.getPointer( event, pointer );
                   }
-               } );
+                  var link = links[ value ] || '[0]';
 
-               return function( i18nValue, i18n ) {
-                  var args = [].slice.call( arguments, 2 );
-                  if( typeof args[ 0 ] !== 'object' ) {
-                     args[ 0 ] = [ args[ 0 ] ];
-                  } else if( !(args[ 0 ] instanceof Array) ) {
-                     args.unshift( [] );
-                  }
-
-                  if( typeof i18nValue !== 'object' ) {
-                     args.unshift( i18nValue );
-                  } else {
-                     if( !i18n || !i18n.locale || !i18n.tags ) {
-                        return undefined;
-                     }
-                     var languageTag = i18n.tags[ i18n.locale ];
-                     if( !languageTag ) {
-                        return undefined;
-                     }
-                     args.unshift( ax.i18n.localizer( languageTag )( i18nValue ) );
-                  }
-
-                  return format.apply( null, args );
-               }
+                  return customLocalize( link, i18n, text );
+               };
             } );
 
 } );

@@ -30,7 +30,7 @@
                   "resource": "commits",
                   "sources": {
                      "resource": "details",
-                     "follow": "payload.url"
+                     "fields": "payload.url"
                   }
                }
             }
@@ -46,7 +46,7 @@
                   "resource": "issues",
                   "sources": {
                      "resource": "details",
-                     "follow": "payload.issue.url"
+                     "fields": "payload.issue.url"
                   }
                }
             }
@@ -258,30 +258,20 @@
             "widget": "release-station/headline-selector-widget",
             "features": {
                "headline": {
-                  "level": 2,
+                  "level": 1,
                   "i18nHtmlFormat": {
-                     "en-US": "Activity"
+                     "en-US": "Activity in [0]"
                   }
                },
 
                "selections": [
                   {
-                     "resource": "month",
+                     "parameter": "date",
                      "options": {
-                        "init": [
-                           { "value": 1, "i18nHtmlText": "January" },
-                           { "value": 2, "i18nHtmlText": "February" },
-                           { "value": 3, "i18nHtmlText": "March" },
-                           { "value": 4, "i18nHtmlText": "April" },
-                           { "value": 5, "i18nHtmlText": "May" },
-                           { "value": 6, "i18nHtmlText": "June" },
-                           { "value": 7, "i18nHtmlText": "July" },
-                           { "value": 8, "i18nHtmlText": "August" },
-                           { "value": 9, "i18nHtmlText": "September" },
-                           { "value": 10, "i18nHtmlText": "October" },
-                           { "value": 11, "i18nHtmlText": "November" },
-                           { "value": 12, "i18nHtmlText": "December" }
-                        ]
+                        "resource": "navigation",
+                        "i18nHtmlFormat": "[0:%MMMMm]",
+                        "parameterFormat": "[0:%YYYY-MM-DDm]",
+                        "fields": "date"
                      }
                   }
                ]
@@ -293,8 +283,6 @@
          {
             "widget": "release-station/activity-calendar-widget",
             "features": {
-               "calendar": {
-               },
                "repos": {
                   "resource": "repos"
                },
@@ -319,6 +307,9 @@
                "details": {
                   "resource": "details",
                   "action": "openDetails"
+               },
+               "navigation": {
+                  "resource": "navigation"
                }
             }
          }

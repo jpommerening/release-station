@@ -104,6 +104,20 @@
                   "format": "topic"
                }
             }
+         },
+         "navigation": {
+            "type": "object",
+            "description": "Provide a resource representing navigation targets.",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               },
+               "interval": {
+                  "type": "string",
+                  "valid": [ "years", "months", "weeks", "days" ]
+               }
+            }
          }
       }
    }

@@ -43,7 +43,7 @@ define( [
          .registerResourceFromFeature( 'orgs' )
          .registerResourceFromFeature( 'repos', {
             onUpdateReplace: function() {
-               var repos = $scope.resources.repos;
+               var repos = $scope.resources.repos || [];
 
                $scope.model.settings.repos = repos.reduce( function( repos, repo ) {
                   var id = repo.id;

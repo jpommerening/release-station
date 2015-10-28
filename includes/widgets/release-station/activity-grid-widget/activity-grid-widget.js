@@ -21,7 +21,9 @@ define( [
    Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
 
    function Controller( $scope, $interval, axFlowService ) {
-      var date = moment().add( -30, 'days' );
+      var scopeParameter = $scope.features.scope.parameter;
+
+      var date;
 
       $scope.projects = [];
       $scope.resources = {
@@ -66,8 +68,10 @@ define( [
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
-         .filter( githubEvents.by.date.after( date ) )
          .filter( function( event ) {
+            if( date ) {
+               if( !githubEvents.by.date.after( date )( event ) ) return false;
+            }
             return searchFilter( $scope.resources.search, event );
          } )
          .classify( githubEvents.by.repository )
@@ -87,6 +91,23 @@ define( [
                updateActivityData( $scope.resources.events );
             }
          } )
+
+      $scope.eventBus.subscribe( 'didNavigate', function( event ) {
+         var place = axFlowService.place();
+         var scope = place.expectedParameters.indexOf( scopeParameter ) >= 0 ? event.data[ scopeParameter ] : '1 week';
+         var parts = scope.trim().split(/\s+/g);
+         var count = parseInt( parts[ 0 ], 10 );
+         var duration = count ? parts[ 1 ] : parts[ 0 ];
+
+         console.log( place, event );
+
+         date = moment().add( -(count || 1), duration );
+         console.log( date );
+         if( $scope.weeks ) {
+            pipeline.replay();
+            updateActivityData( $scope.weeks );
+         }
+      } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

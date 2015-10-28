@@ -58,7 +58,8 @@ define( [
                   parents: options.parents(commit),
                   children: children(commit),
                   track: track(commit),
-                  delta: distance(commit, prev)
+                  delta: distance(commit, prev),
+                  data: commit
                };
             } ).map( function( node, i, nodes ) {
                return {
@@ -66,7 +67,8 @@ define( [
                   parents: node.parents,
                   children: node.children,
                   x: Math.round( (nodes[ nodes.length - 1 ].delta) - node.delta ) + 0.5,
-                  y: node.track * SPACING
+                  y: node.track * SPACING,
+                  data: node.data
                };
             } );
 

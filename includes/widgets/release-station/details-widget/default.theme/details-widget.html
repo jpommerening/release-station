@@ -25,7 +25,7 @@
          <tbody>
             <tr ng-repeat="event in model.events | orderBy:'created_at' track by event.id">
                <td ng-repeat="column in model.tab.columns track by $index"
-                   ng-bind-html="model.link(event, column) | axLocalize:i18n:(column.i18nHtmlFormat | axLocalizeFormat:i18n:model.fields(event, column))">
+                   ng-bind-html="event | axRenderColumn:i18n:column:model.links">
                </td>
             </tr>
          </tbody>

@@ -26,6 +26,10 @@ define( [
       var today = moment().startOf( 'day' );
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
+      var range = {
+         min: moment( today ),
+         max: moment( today )
+      };
 
       $scope.weeks = [];
       $scope.resources = {
@@ -85,6 +89,7 @@ define( [
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
                updateActivityData( $scope.weeks );
+               publishNavigationTargets( selected, range.min, range.max );
             }
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
@@ -92,6 +97,14 @@ define( [
          .classify( githubEvents.by.date )
          .filter( function( event ) {
             return searchFilter( $scope.resources.search, event );
+         } ).forEach( function( event ) {
+            if( range.min.isAfter( event.created_at ) ) {
+               range.min = moment( event.created_at );
+            }
+
+            if( range.max.isBefore( event.created_at ) ) {
+               range.max = moment( event.created_at );
+            }
          } );
 
       patterns.resources.handlerFor( $scope )
@@ -110,8 +123,7 @@ define( [
             today = moment().startOf( 'day' );
             tomorrow = moment( today ).add( 1, 'day' );
 
-            // refresh
-            selectDate( selected );
+            selectDate( selected ); // refresh
 
             endOfDay = callTomorrow( toNextDay );
          } );
@@ -128,8 +140,18 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var date = event.data[ dateParameter ] ? moment( event.data[ dateParameter ] ) : today;
-         selectDate( date );
+         var date = event.data[ dateParameter ] && moment( event.data[ dateParameter ] );
+         var parameters = {};
+
+         if( dateParameter && !date ) {
+            parameters[ dateParameter ] = today.format( DATE_FORMAT );
+            $scope.eventBus.publish( 'navigateRequest', {
+               target: '_self',
+               data: parameters
+            } );
+         } else {
+            selectDate( date || today );
+         }
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +187,42 @@ define( [
             return;
          }
 
+         publishNavigationTargets( selected, range.min, range.max );
          triggerAnimation( today, startOfMonth, endOfMonth );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function publishNavigationTargets( date, min, max ) {
+         var resource;
+         var interval;
+         var next;
+
+         var targets = [ date ];
+
+         if( $scope.features.navigation ) {
+            resource = $scope.features.navigation.resource;
+            interval = $scope.features.navigation.interval || 'months';
+
+            next = date;
+            do {
+               next = moment( next ).add( -1, interval );
+               targets.unshift( next );
+            } while( next.isAfter( min ) );
+
+            next = date;
+            do {
+               next = moment( next ).add( 1, interval );
+               targets.push( next );
+            } while( next.isBefore( max ) );
+
+            $scope.eventBus.publish( 'didReplace.' + resource, {
+               resource: resource,
+               data: targets.map( function( date ) {
+                  return { date: date };
+               } )
+            } );
+         }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

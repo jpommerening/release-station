@@ -1,0 +1,17 @@
+<div ax-headline="features.headline.i18nHtmlFormat | axLocalize:i18n"
+     ax-headline-level="features.headline.level">
+   <span ax-replacement="$index"
+         ax-replacement-trigger="trigger"
+         ng-repeat="selection in model.selections track by $index">
+      <ul>
+         <li ng-repeat="choice in selection.choices track by $index">
+            <a ng-click="trigger( false ); selection.select( $index )"
+               ng-bind-html="choice.htmlText"
+               href></a>
+         </li>
+      </ul>
+      <a ng-bind-html="selection.selected.htmlText"
+         ng-click="trigger( true )"
+         href></a>
+   </span>
+</div>
