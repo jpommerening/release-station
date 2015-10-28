@@ -109,6 +109,12 @@ define( [
                'Authorization': 'token ' + accessToken
             }
          } ).then( function( response ) {
+            if( response.status < 400 ) {
+               return response;
+            } else {
+               return Promise.reject( response );
+            }
+         } ).then( function( response ) {
             var i18nHtmlMessage = {
                'en-US': 'Successfully validated access token <i>' + accessToken + '</i>. ' +
                         'Received authentication success from ' + htmlApiLink + '.'
