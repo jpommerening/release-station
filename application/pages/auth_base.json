@@ -142,31 +142,29 @@
          {
             "widget": "release-station/navigation-widget",
             "features": {
-               "navigation": {
-                  "items": [
-                     {
-                        "place": "grid",
-                        "icon": "fa-tachometer",
-                        "i18nHtmlLabel": {
-                           "en-US": "Grid"
-                        }
-                     },
-                     {
-                        "place": "calendar",
-                        "icon": "fa-calendar",
-                        "i18nHtmlLabel": {
-                           "en-US": "Calendar"
-                        }
-                     },
-                     {
-                        "place": "history",
-                        "icon": "fa-tags",
-                        "i18nHtmlLabel": {
-                           "en-US": "History"
-                        }
+               "navigation": [
+                  {
+                     "place": "grid",
+                     "icon": "fa-tachometer",
+                     "i18nHtmlLabel": {
+                        "en-US": "Grid"
                      }
-                  ]
-               }
+                  },
+                  {
+                     "place": "calendar",
+                     "icon": "fa-calendar",
+                     "i18nHtmlLabel": {
+                        "en-US": "Calendar"
+                     }
+                  },
+                  {
+                     "place": "history",
+                     "icon": "fa-tags",
+                     "i18nHtmlLabel": {
+                        "en-US": "History"
+                     }
+                  }
+               ]
             }
          },
          {

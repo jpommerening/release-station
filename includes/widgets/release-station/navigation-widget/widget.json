@@ -12,27 +12,23 @@
       "type": "object",
       "properties": {
          "navigation": {
-            "type": "object",
-            "description": "",
-            "properties": {
-               "items": {
-                  "type": "array",
-                  "items": {
-                     "type": "object",
-                     "properties": {
-                        "place": {
-                           "type": "string",
-                           "description": "The name of the place to navigate to when this navigation item is clicked."
-                        },
-                        "icon": {
-                           "type": "string",
-                           "description": "A FontAwesome (or compatible) icon class to use for this navigation item."
-                        },
-                        "i18nHtmlLabel": {
-                           "type": [ "string", "object" ],
-                           "description": "The (internationalized) label for this navigation item."
-                        }
-                     }
+            "type": "array",
+            "description": "Navigation items.",
+            "default": [],
+            "items": {
+               "type": "object",
+               "properties": {
+                  "place": {
+                     "type": "string",
+                     "description": "The name of the place to navigate to when this navigation item is clicked."
+                  },
+                  "icon": {
+                     "type": "string",
+                     "description": "A FontAwesome (or compatible) icon class to use for this navigation item."
+                  },
+                  "i18nHtmlLabel": {
+                     "type": [ "string", "object" ],
+                     "description": "The (internationalized) label for this navigation item."
                   }
                }
             }
