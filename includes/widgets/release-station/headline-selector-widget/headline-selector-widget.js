@@ -189,7 +189,7 @@ define( [
 
                      scope.select = function( index, value ) {
                         selector( active ).removeClass( 'active' );
-                        if( value ) {
+                        if( index !== active && value ) {
                            selector( index ).addClass( 'active' );
                            active = index;
                         } else {

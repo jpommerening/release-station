@@ -49,3 +49,25 @@
 .headline-selector-widget .active li {
    white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+
+   .headline-selector-widget span > span {
+      position: static;
+   }
+
+   .headline-selector-widget ul {
+      top: inherit;
+      width: 100%;
+      margin-top: 0.2em;
+   }
+
+   .headline-selector-widget .active > a {
+      visibility: visible;
+   }
+
+   .headline-selector-widget span:first-child > ul {
+      left: 0px;
+   }
+
+}
