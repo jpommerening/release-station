@@ -18,9 +18,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
+   Controller.$inject = [ '$scope', 'axFlowService' ];
 
-   function Controller( $scope, $interval, axFlowService ) {
+   function Controller( $scope, axFlowService ) {
       var scopeParameter = $scope.features.scope.parameter;
 
       var date;
@@ -94,19 +94,13 @@ define( [
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
          var place = axFlowService.place();
-         var scope = place.expectedParameters.indexOf( scopeParameter ) >= 0 ? event.data[ scopeParameter ] : '1 week';
-         var parts = scope.trim().split(/\s+/g);
-         var count = parseInt( parts[ 0 ], 10 );
-         var duration = count ? parts[ 1 ] : parts[ 0 ];
+         var scope = place.expectedParameters.indexOf( scopeParameter ) >= 0 ?
+                     event.data[ scopeParameter ] : 'week';
 
-         console.log( place, event );
+         date = moment().add( -1, duration );
 
-         date = moment().add( -(count || 1), duration );
-         console.log( date );
-         if( $scope.weeks ) {
-            pipeline.replay();
-            updateActivityData( $scope.weeks );
-         }
+         pipeline.replay();
+         updateActivityData( $scope.resources.events );
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

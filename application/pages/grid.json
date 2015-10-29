@@ -69,9 +69,9 @@
                         "parameterFormat": "[value]",
                         "i18nHtmlFormat": "[text]",
                         "init": [
-                           { "value": "3 months", "text": "last 3 months" },
-                           { "value": "1 month", "text": "last month" },
-                           { "value": "1 week", "text": "last week" }
+                           { "value": "quarter", "text": "last 3 months" },
+                           { "value": "month", "text": "last month" },
+                           { "value": "week", "text": "last week" }
                         ]
                      }
                   }

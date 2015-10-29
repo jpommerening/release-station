@@ -4,7 +4,7 @@
          "redirectTo": "grid"
       },
 
-      "grid": {
+      "grid/:scope": {
          "page":  "grid",
          "targets": {
             "cancel": "entry",
