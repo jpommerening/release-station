@@ -3,7 +3,7 @@
 <table>
    <thead>
       <tr>
-         <th ng-repeat="day in weeks[0] track by $index" class="day-of-week" ng-class="{ weekend: day.isWeekend }">
+         <th ng-repeat="day in model.weeks[0] track by $index" class="day-of-week" ng-class="{ weekend: day.isWeekend }">
             <span class="hidden-sm hidden-xs">{{day.date.format('dddd')}}</span>
             <span class="hidden-lg hidden-md">{{day.date.format('ddd')}}</span>
          </th>
@@ -11,13 +11,13 @@
    </thead>
 </table>
 <div>
-   <table ng-class="{ 'active': active,
-                      'push-4': pushedRows === 4,
-                      'push-5': pushedRows === 5,
-                      'unshift-4': unshiftedRows === 4,
-                      'unshift-5': unshiftedRows === 5 }">
+   <table ng-class="{ 'active': model.active,
+                      'push-4': model.pushedRows === 4,
+                      'push-5': model.pushedRows === 5,
+                      'unshift-4': model.unshiftedRows === 4,
+                      'unshift-5': model.unshiftedRows === 5 }">
       <tbody>
-         <tr ng-repeat="week in weeks track by week[0].date">
+         <tr ng-repeat="week in model.weeks track by week[0].date">
             <td ng-repeat="day in week track by day.date"
                 ng-style="{ 'background-color': day.isWorkingDay && scale(day.activity).hex() }"
                 ng-class="{ today: day.isToday,
@@ -26,7 +26,7 @@
                             future: day.isFuture,
                             weekend: day.isWeekend,
                             'not-in-month': !day.isInMonth }">
-               <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.events.length > 0 && details(day.date)" class="day" tabindex="0">
+               <a ng-href="{{day.url}}" ng-click="day.isInMonth && day.events.length > 0 && model.details(day.date)" class="day" tabindex="0">
                   <h3>{{day.date.format('D')}}</h3>
                   <ul>
                      <li ng-if="(day.events | tags).length">{{(day.events | tags).length}} tags</li>

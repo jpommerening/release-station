@@ -31,49 +31,33 @@ define( [
          max: moment( today )
       };
 
-      $scope.weeks = [];
+      $scope.model = {
+         weeks: [],
+         push: function( weeks ) {
+            this.weeks.push.apply( this.weeks, weeks );
+            this.pushedRows += weeks.length;
+         },
+         unshift: function( weeks ) {
+            this.weeks.unshift.apply( this.weeks, weeks );
+            this.unshiftedRows += weeks.length;
+         },
+         active: false,
+         visibleRows: 6,
+         pushedRows: 0,
+         unshiftedRows: 0,
+         details: publishDetails
+      };
+
       $scope.resources = {
          events: {},
          repos: [],
          search: ''
       };
 
-      $scope.pushedRows = 0;
-      $scope.unshiftedRows = 0;
-      $scope.visibleRows = 6;
-      $scope.active = false;
-
       var detailsPublisher = {
          replace: patterns.resources.replacePublisherForFeature( $scope, 'details' ),
          update: patterns.resources.updatePublisherForFeature( $scope, 'details' ),
          action: patterns.actions.publisherForFeature( $scope, 'details' )
-      };
-
-      var unwatchDetails;
-
-      $scope.$on( '$destroy', function() {
-         if( unwatchDetails ) {
-            unwatchDetails();
-         }
-      } );
-
-      $scope.details = function details( date ) {
-         var events = eventBucket( $scope.resources.events, date );
-
-         if( unwatchDetails ) {
-            unwatchDetails();
-         }
-
-         detailsPublisher.replace( events ).then( function() {
-            detailsPublisher.action();
-
-            unwatchDetails = $scope.$watch( function( $scope ) {
-               return eventBucket( $scope.resources.events, date );
-            }, function( newValue, oldValue ) {
-               var patches = patterns.json.createPatch( oldValue, newValue );
-               detailsPublisher.update( patches );
-            }, true );
-         } );
       };
 
       var searchFilter = objectFilter.create( {
@@ -88,7 +72,7 @@ define( [
 
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
-               updateActivityData( $scope.weeks );
+               updateActivityData( $scope.model.weeks );
                publishNavigationTargets( selected, range.min, range.max );
             }
          } )
@@ -114,7 +98,7 @@ define( [
          .registerResourceFromFeature( 'search', {
             onUpdateReplace: function() {
                pipeline.replay();
-               updateActivityData( $scope.weeks );
+               updateActivityData( $scope.model.weeks );
             }
          } );
 
@@ -140,10 +124,11 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
+         var place = flowService.place();
          var date = event.data[ dateParameter ] && moment( event.data[ dateParameter ] );
          var parameters = {};
 
-         if( dateParameter && !date ) {
+         if( dateParameter && !date && place.expectedParameters.indexOf( dateParameter ) >= 0 ) {
             parameters[ dateParameter ] = today.format( DATE_FORMAT );
             $scope.eventBus.publish( 'navigateRequest', {
                target: '_self',
@@ -170,25 +155,44 @@ define( [
 
          var weeks;
 
-         if( $scope.weeks.length === 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
+         if( $scope.model.weeks.length === 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
             weeks = initMonth( startOfMonth, endOfMonth );
-            $scope.weeks = weeks;
+            $scope.model.weeks = weeks;
          } else if( date.isBefore( startOfSelectedMonth ) ) {
-            weeks = previousMonth( startOfMonth, endOfMonth );
-            $scope.weeks.unshift.apply( $scope.weeks, weeks );
-            $scope.unshiftedRows = weeks.length;
+            weeks = previousMonth( $scope.model.weeks, startOfMonth, endOfMonth );
+            $scope.model.unshift( weeks );
          } else if( date.isAfter( endOfSelectedMonth ) ) {
-            weeks = nextMonth( startOfMonth, endOfMonth );
-            $scope.weeks.push.apply( $scope.weeks, weeks );
-            $scope.pushedRows = weeks.length;
+            weeks = nextMonth( $scope.model.weeks, startOfMonth, endOfMonth );
+            $scope.model.push( weeks );
          } else {
-            weeks = $scope.weeks;
+            weeks = $scope.model.weeks;
             updateMetaData( weeks, today, selected, startOfMonth, endOfMonth );
             return;
          }
 
          publishNavigationTargets( selected, range.min, range.max );
          triggerAnimation( today, startOfMonth, endOfMonth );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function publishDetails( date ) {
+         function getEvents( $scope ) {
+            return eventBucket( $scope.resources.events, date );
+         }
+
+         if( publishDetails.unwatch ) {
+            publishDetails.unwatch();
+         }
+
+         publishDetails.unwatch = $scope.$watch( getEvents, function( newValue, oldValue ) {
+            var patches = patterns.json.createPatch( oldValue, newValue );
+            detailsPublisher.update( patches );
+         }, true );
+
+         detailsPublisher.replace( getEvents( $scope ) ).then( function() {
+            detailsPublisher.action();
+         } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,34 +273,36 @@ define( [
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function previousMonth( startOfMonth, endOfMonth ) {
+      function previousMonth( weeks, startOfMonth, endOfMonth ) {
+         var currentStart = weeks[ 0 ][ 0 ].date;
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 1 ? 0 : -7 );
-         var endOfCalendar = moment( $scope.weeks[0][0].date );
+         var endOfCalendar = moment( currentStart );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function nextMonth( startOfMonth, endOfMonth ) {
-         var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add( 1, 'day' );
+      function nextMonth( weeks, startOfMonth, endOfMonth ) {
+         var currentEnd = weeks[ weeks.length - 1 ][ 6 ].date;
+         var startOfCalendar = moment( currentEnd ).add( 1, 'day' );
          var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 2 ? 14 : 7 );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
       function triggerAnimation( today, startOfMonth, endOfMonth ) {
          $timeout( function() {
-            $scope.active = true;
-            updateMetaData( $scope.weeks, today, selected, startOfMonth, endOfMonth );
+            $scope.model.active = true;
+            updateMetaData( $scope.model.weeks, today, selected, startOfMonth, endOfMonth );
          }, 0 );
 
          $timeout( function() {
-            if( $scope.pushedRows ) {
-               $scope.pushedRows = 0;
-               $scope.weeks.splice( 0, $scope.weeks.length - $scope.visibleRows );
+            if( $scope.model.pushedRows ) {
+               $scope.model.pushedRows = 0;
+               $scope.model.weeks.splice( 0, $scope.model.weeks.length - $scope.model.visibleRows );
             }
-            if( $scope.unshiftedRows ) {
-               $scope.unshiftedRows = 0;
-               $scope.weeks.splice( $scope.visibleRows );
+            if( $scope.model.unshiftedRows ) {
+               $scope.model.unshiftedRows = 0;
+               $scope.model.weeks.splice( $scope.model.visibleRows );
             }
-            $scope.active = false;
+            $scope.model.active = false;
          }, 750 );
       }
 
@@ -361,11 +367,13 @@ define( [
                   case 'CreateEvent':
                      score = (payload.ref_type === 'tag') ? 1.5 : 0;
                   break;
+                  /*
                   case 'IssuesEvent':
                      if( [ 'opened', 'reopened', 'closed' ].indexOf( payload.action ) >= 0 ) {
                         score = 0.25;
                      }
                   break;
+                  */
                }
                return sum + score;
             }, 1 );
