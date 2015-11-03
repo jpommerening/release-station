@@ -18,9 +18,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', 'axFlowService' ];
+   Controller.$inject = [ '$scope', '$location', 'axFlowService' ];
 
-   function Controller( $scope, flowService ) {
+   function Controller( $scope, $location, flowService ) {
       var scopeParameter = $scope.features.scope.parameter;
 
       var today = moment().startOf( 'day' );
@@ -98,10 +98,7 @@ define( [
 
          if( scopeParameter && !scope && place.expectedParameters.indexOf( scopeParameter ) >= 0 ) {
             parameters[ scopeParameter ] = 'week';
-            $scope.eventBus.publish( 'navigateRequest', {
-               target: '_self',
-               data: parameters
-            } );
+            $location.url( flowService.constructPath( '_self', parameters ) ).replace();
          } else {
             selectScope( scope || moment( today ).add( -1, 'week' ) );
          }

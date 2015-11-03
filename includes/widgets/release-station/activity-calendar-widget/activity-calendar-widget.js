@@ -18,9 +18,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$timeout', 'axFlowService' ];
+   Controller.$inject = [ '$scope', '$timeout', '$location', 'axFlowService' ];
 
-   function Controller( $scope, $timeout, flowService ) {
+   function Controller( $scope, $timeout, $location, flowService ) {
       var dateParameter = $scope.features.calendar.parameter;
 
       var today = moment().startOf( 'day' );
@@ -130,10 +130,7 @@ define( [
 
          if( dateParameter && !date && place.expectedParameters.indexOf( dateParameter ) >= 0 ) {
             parameters[ dateParameter ] = today.format( DATE_FORMAT );
-            $scope.eventBus.publish( 'navigateRequest', {
-               target: '_self',
-               data: parameters
-            } );
+            $location.url( flowService.constructPath( '_self', parameters ) ).replace();
          } else {
             selectDate( date || today );
          }
