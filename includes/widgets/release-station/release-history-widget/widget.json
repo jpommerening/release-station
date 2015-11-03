@@ -15,18 +15,6 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
-         "repos": {
-            "type": "object",
-            "description": "Which projects to display.",
-            "required": [ "resource" ],
-            "properties": {
-               "resource": {
-                  "type": "string",
-                  "description": "",
-                  "format": "topic"
-               }
-            }
-         },
          "tags": {
             "type": "object",
             "description": "",
@@ -50,9 +38,6 @@
                   "format": "topic"
                }
             }
-         },
-         "semver": {
-            "type": "object"
          }
       }
    }

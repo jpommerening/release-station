@@ -11,13 +11,14 @@ define( [
    var SPACING = 32;
    var RADIUS = 4;
 
-   var directive = function() {
+   var directive = [ 'axFlowService', function( flowService ) {
       return {
          restrict: 'AE',
          replace: true,
          template: template,
          scope: {
-            commits: '=axCommitGraph'
+            commits: '=axCommitGraph',
+            tags: '=axCommitGraphTags'
          },
          link: function( scope, element, attrs ) {
             var options = {
@@ -43,57 +44,107 @@ define( [
                }
             };
 
-            var lookup = options.lookup = graph.nodeResolver(options, scope.commits);
-            var commits = graph.nodelist(options).apply(null, scope.commits).reverse();
+            scope.$watch( 'commits', function() {
 
-            var children = graph.childResolver(options);
-            var distance = graph.distanceAccumulator(options, 0);
-            var track = graph.branchTracker(options, [ options.id( commits[ 0 ] ) ]);
+               var lookup = options.lookup = graph.nodeResolver(options, scope.commits);
+               var children = graph.childResolver(options);
+               var sorted = graph.nodelist(options).apply(null, scope.commits).reverse();
 
-            scope.nodes = commits.map( function( commit, i, commits ) {
-               var prev = i ? commits[ i - 1 ] : commit;
+               var display = {};
+               var tags = scope.tags.reduce( function( tags, tag ) {
+                  var id = options.id( tag.commit );
 
-               return {
-                  id: options.id(commit),
-                  parents: options.parents(commit),
-                  children: children(commit),
-                  track: track(commit),
-                  delta: distance(commit, prev),
-                  data: commit
-               };
-            } ).map( function( node, i, nodes ) {
-               return {
-                  id: node.id,
-                  parents: node.parents,
-                  children: node.children,
-                  x: Math.round( (nodes[ nodes.length - 1 ].delta) - node.delta ) + 0.5,
-                  y: node.track * SPACING,
-                  data: node.data
-               };
-            } );
-
-            scope.connections = [].concat.apply( [], scope.nodes.map( function( node ) {
-               node.parents.forEach( function( parent ) {
-                  if( !this[ parent ] ) {
-                     this[ parent ] = [];
+                  if( tags[ id ] ) {
+                     tags[ id ].push( tag );
+                  } else {
+                     tags[ id ] = [ tag ];
                   }
-                  this[ parent ].push( node );
-               }, this );
+                  return tags;
+               }, {} );
 
-               if( !this[ node.id ] ) {
-                  return [];
-               }
-               return this[ node.id ].map( function( child ) {
+               var track = graph.branchTracker({
+                  id: function(node) { return node.id; },
+                  parents: function(node) { return node.parents; }
+               });
+               var distance = graph.distanceAccumulator({
+                  id: function(node) { return node.id; },
+                  parents: function(node) { return node.parents; },
+                  distance: function(nodea, nodeb) {
+                     return options.distance(nodea.data, nodeb.data);
+                  }
+               });
+
+               scope.nodes = sorted.map( function( commit ) {
+                  var id = options.id( commit );
+                  var parents = options.parents( commit );
+                  var parent = parents[ 0 ];
+
+                  if( tags[ id ] ) {
+                     display[ id ] = true;
+                  }
+                  if( display[ id ] ) {
+                     display[ parent ] = true;
+                  }
+
                   return {
-                     from: node,
-                     to: child
+                     id: id,
+                     parents: parents,
+                     children: children( commit ),
+                     tags: tags[ id ],
+                     data: commit
                   };
-               } );
-            }, { /* map parent -> children */ } ) );
+               } ).filter( function( node ) {
+                  return display[ node.id ];
+               } ).map( function( node, i, nodes ) {
+                  var prev = i ? nodes[ i - 1 ] : node;
 
-            element.attr( {
-               width: scope.nodes[ 0 ].x + 19.5,
-               height: 200
+                  node.parents = node.parents.filter( function( id ) { return display[ id ]; } );
+                  node.children = node.children.filter( function( id ) { return display[ id ]; } );
+
+                  node.track = track(node);
+                  node.delta = distance(node, prev);
+
+                  return node;
+               } ).map( function( node, i, nodes ) {
+                  var params = {};
+
+                  if( node.tags && node.tags.length ) {
+                     params.version = node.tags[ 0 ].name;
+                  } else {
+                     params.version = node.id;
+                  }
+
+                  node.url = flowService.constructAbsoluteUrl( '_self', params );
+
+                  node.x = Math.round( nodes[ nodes.length - 1 ].delta - node.delta ) + 0.5;
+                  node.y = node.track * SPACING;
+
+                  return node;
+               } );
+
+               scope.connections = [].concat.apply( [], scope.nodes.map( function( node ) {
+                  node.parents.forEach( function( parent ) {
+                     if( !this[ parent ] ) {
+                        this[ parent ] = [];
+                     }
+                     this[ parent ].push( node );
+                  }, this );
+
+                  if( !this[ node.id ] ) {
+                     return [];
+                  }
+                  return this[ node.id ].map( function( child ) {
+                     return {
+                        from: node,
+                        to: child
+                     };
+                  } );
+               }, { /* map parent -> children */ } ) );
+
+               element.attr( {
+                  width: scope.nodes.length > 0 ? scope.nodes[ 0 ].x + 49.5 : 49.5,
+                  height: 200
+               } );
             } );
 
             scope.highlight = function ($event, value) {
@@ -130,15 +181,15 @@ define( [
                }
             };
 
-            scope.clk = function (node) {
+            scope.formatPath = formatPath;
+
+            scope.clk = function( node ) {
                console.log( node );
             };
-
-            scope.formatPath = formatPath;
          }
 
       };
-   };
+   } ];
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -196,11 +247,17 @@ define( [
                'ng-attr-d="{{formatPath(connection.from, connection.to)}}" ' +
                'data-from="{{connection.from.id}}" ' +
                'data-to="{{connection.to.id}}"/>' +
-            '<a ng-repeat="node in nodes" xlink:href="" ng-click="clk(node)" xlink:title="{{node.title}}">' +
+            '<a ng-repeat="node in nodes" ' +
+               'ng-click="clk(node)" ' +
+               'xlink:href="{{node.url}}" ' +
+               'xlink:title="{{node.title}}">' +
+               '<text ' +
+                  'ng-if="node.tags" ' +
+                  'ng-attr-x="{{node.x - 5}}" ng-attr-y="{{node.y + 15}}">{{node.tags[0].name}}</text>' +
                '<circle ' +
-                  'ng-attr-cx="{{node.x}}" ng-attr-cy="{{node.y}}" r="' + RADIUS + '" ' +
                   'ng-mouseenter="highlight($event, true)" ' +
                   'ng-mouseleave="highlight($event, false)" ' +
+                  'ng-attr-cx="{{node.x}}" ng-attr-cy="{{node.y}}" r="' + RADIUS + '" ' +
                   'data-node="{{node.id}}"/>' +
             '</a>' +
          '</g>' +

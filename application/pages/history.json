@@ -14,9 +14,10 @@
                "data": {
                   "resource": "tags",
                   "sources": {
-                     "resource": "repos",
+                     "resource": "repo",
                      "fields": "tags_url"
-                  }
+                  },
+                  "flatten": true
                }
             }
          },
@@ -49,7 +50,7 @@
                   "resource": "log",
                   "sources": {
                      "resource": "tags",
-                     "follow": "commit.url"
+                     "fields": "commit.url"
                   }
                }
             }
@@ -111,9 +112,6 @@
          {
             "widget": "release-station/release-history-widget",
             "features": {
-               "repos": {
-                  "resource": "repos"
-               },
                "tags": {
                   "resource": "tags"
                },

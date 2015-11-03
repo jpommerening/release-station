@@ -36,7 +36,9 @@ define( [
                   },
                   modelKey: resource
                } );
-         } else if( selection.options.init ) {
+         }
+
+         if( selection.options.init ) {
             $scope.model.selections[ index ] = provideSelection( selection, selection.options.init );
          }
       } );
@@ -118,7 +120,11 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var parameters = Object.assign( $scope.model.parameters, event.data );
+         for( var key in event.data ) {
+            if( event.data.hasOwnProperty( key ) ) {
+               $scope.model.parameters[ key ] = event.data[ key ];
+            }
+         }
          $scope.model.selections.forEach( function( selection ) {
             return selectFromParameters( selection );
          } );

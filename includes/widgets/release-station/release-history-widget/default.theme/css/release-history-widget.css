@@ -44,6 +44,10 @@
    fill: transparent;
 }
 
+.release-history-widget text {
+   fill: #626262;
+}
+
 .release-history-widget circle.highlight,
 .release-history-widget path.highlight.to {
    stroke: #dd7700;
