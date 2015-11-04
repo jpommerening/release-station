@@ -1,0 +1,44 @@
+{
+   "areas": {
+      "activities": [
+         {
+            "widget": "amd:laxar-developer-tools-widget",
+            "features": {
+               "button": {
+                  "enabled": false
+               }
+            }
+         },
+         {
+            "widget": "release-station/oauth-activity",
+            "features": {
+               "auth": {
+                  "token": "8288e8b6aad75f7ac8546a79740487f41ff9466a",
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               }
+            }
+         },
+         {
+            "widget": "amd:laxar-github/data-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "data": {
+                  "resource": "repos",
+                  "flatten": true,
+                  "sources": {
+                     "fields": "url",
+                     "init": [
+                        { "url": "https://api.github.com/orgs/LaxarJS/repos" },
+                        { "url": "https://api.github.com/orgs/LaxarApps/repos" }
+                     ]
+                  }
+               }
+            }
+         }
+      ]
+   }
+}

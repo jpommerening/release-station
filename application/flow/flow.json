@@ -7,16 +7,13 @@
       "grid/:scope": {
          "page":  "grid",
          "targets": {
-            "cancel": "entry",
-            "next": "calendar",
-            "repository": "history"
+            "next": "calendar"
          }
       },
 
       "calendar/:date": {
          "page":  "calendar",
          "targets": {
-            "cancel": "entry",
             "previous": "grid",
             "next": "history"
          }
@@ -25,7 +22,6 @@
       "history/:owner/:repo/:version": {
          "page":  "history",
          "targets": {
-            "cancel": "entry",
             "previous": "calendar"
          }
       }

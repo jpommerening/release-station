@@ -3,60 +3,6 @@
    "extends": "auth_base",
 
    "areas": {
-      "activities": [
-         {
-            "widget": "amd:laxar-github/data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
-                  "resource": "tags",
-                  "sources": {
-                     "resource": "repo",
-                     "fields": "tags_url"
-                  },
-                  "flatten": true
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-github/contents-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "contents": {
-                  "resource": "changelog",
-                  "type": "html",
-                  "path": "CHANGELOG.md",
-                  "sources": {
-                     "resource": "repo",
-                     "fields": "contents_url"
-                  }
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-github/log-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "log": {
-                  "resource": "log",
-                  "sources": {
-                     "resource": "tags",
-                     "fields": "commit.url"
-                  }
-               }
-            }
-         }
-      ],
-
       "header": [
          {
             "widget": "amd:laxar-headline-widget",
@@ -75,57 +21,16 @@
          }
       ],
 
-      "headline": [
-         {
-            "widget": "release-station/headline-selector-widget",
-            "features": {
-               "headline": {
-                  "level": 1,
-                  "i18nHtmlFormat": {
-                     "en-US": "History for [0]/[1]"
-                  }
-               },
-
-               "selections": [
-                  {
-                     "parameter": "owner",
-                     "resource": "ownerrepos",
-                     "options": {
-                        "resource": "repos",
-                        "fields": "owner.login"
-                     }
-                  },
-                  {
-                     "parameter": "repo",
-                     "resource": "repo",
-                     "options": {
-                        "resource": "ownerrepos",
-                        "fields": "name"
-                     }
-                  }
-               ]
-            }
-         }
-      ],
-
       "content": [
          {
-            "widget": "release-station/release-history-widget",
+            "composition": "history_composition",
             "features": {
-               "tags": {
-                  "resource": "tags"
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
                },
-               "log": {
-                  "resource": "log"
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-html-display-widget",
-            "features": {
-               "content": {
-                  "resource": "changelog",
-                  "attribute": "0"
+               "repos": {
+                  "resource": "repos"
                }
             }
          }

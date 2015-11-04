@@ -1,17 +1,19 @@
 /**
  * Override demo stuff
  */
-
 body {
-   background-image: none;
+   background: none;
 }
-
 body::before {
    border: none;
    display: none;
 }
-.app-content-wrapper {
-   margin-top: 90px;
+
+.app-content {
+   width: 100%;
+   border: none;
+   border-radius: 0;
+   box-shadow: none;
 }
 
 .app-content > div {
@@ -23,48 +25,11 @@ body::before {
    font-size: 24pt;
 }
 
-/**
- * http://laxarjs.org style navigation
- */
-
-.navbar-fixed-top {
-   background-color: #626262;
-   border: 1px solid #444;
-   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+.modal-backdrop {
+   background-color: #fff;
 }
-
-.navbar-inverse {
-   background-color: #626262;
-}
-.navbar-inverse .navbar-nav > li > a {
-   color: #fff;
-   line-height: 22px;
-   font-size: 16px;
-}
-.navbar-inverse .navbar-nav > li > a:focus,
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:focus,
-.navbar-inverse .navbar-nav > .open > a:hover {
-   color: #fff;
-   background-color: #ff9900;
-}
-.navbar-brand h1 {
-   font-size: 2rem;
-   font-weight: 300;
-   color: #fff;
-   margin: 0;
-   line-height: 22px;
-}
-.navbar-brand h1 span {
-   color: #ff9900;
-   font-weight: 200;
-}
-.navbar-brand h1 + div.ax-local-intro-text {
-   color: #999;
-   font-size: 0.9rem;
-   font-style: italic;
-   margin-top: -0.25rem;
+.modal-backdrop.in {
+   opacity: 0.7;
 }
 
 /**
@@ -88,6 +53,7 @@ h1 {
 h2 {
    font-size: 20pt;
 }
+
 
 .app-content h2 {
    margin-top: 0.4ex;
@@ -119,27 +85,6 @@ h2 {
 
 @media (max-width: 640px) {
 
-   .app-content-wrapper {
-      margin-top: 0;
-   }
-
-   .app-content {
-      padding-top: 60px;
-      border-radius: 0;
-   }
-
-   .app-footer {
-      padding-left: 5px;
-      padding-right: 5px;
-      margin-left: 0;
-      margin-right: 0;
-   }
-
-   body > div > div.container {
-      padding-left: 0;
-      padding-right: 0;
-   }
-
    .ax-popup > div > div.modal-dialog {
       padding: 0;
       margin: 0;
@@ -165,17 +110,6 @@ h2 {
               transform: scale(1, 1);
       -webkit-transform: scale3d(1, 1, 1);
               transform: scale3d(1, 1, 1);
-   }
-
-   body[style*="overflow:"] > div > div.container {
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-
-      -webkit-transform: scale(0.618, 0.618);
-              transform: scale(0.618, 0.618);
-      -webkit-transform: scale3d(0.618, 0.618, 1);
-              transform: scale3d(0.618, 0.618, 1);
-      -webkit-filter: blur(1px) brightness(0.9);
-              filter: blur(1px) brightness(0.9);
    }
 
    .modal {

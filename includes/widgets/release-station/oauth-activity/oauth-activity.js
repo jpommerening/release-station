@@ -84,7 +84,7 @@ define( [
                }
             } );
 
-            return ( failures.length == 0 && replies.length > 0 ) && data;
+            return ( failures.length == 0 ) && data;
          } );
       }
 

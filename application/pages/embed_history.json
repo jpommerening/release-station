@@ -1,0 +1,21 @@
+{
+   "layout": "embedded",
+   "extends": "embed_base",
+
+   "areas": {
+      "content": [
+         {
+            "composition": "history_composition",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "repos": {
+                  "resource": "repos"
+               }
+            }
+         }
+      ]
+   }
+}

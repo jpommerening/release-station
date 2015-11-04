@@ -43,22 +43,20 @@ define( [
          }
       } );
 
-      function selectFromParameters( selection, fallback ) {
-         var value = $scope.model.parameters[ selection.parameter ];
+      function selectFromParameters( parameters, selection ) {
+         var value = parameters[ selection.parameter ];
          var i;
          for( i = 0; i < selection.choices.length; i++ ) {
             if( selection.choices[ i ].value === value ) {
                return selection.select( i );
             }
          }
-         if( fallback !== undefined ) {
-            return selection.select( fallback );
-         }
       }
 
       function provideSelection( selection, choices ) {
          var resource = selection.resource;
          var parameter = selection.parameter;
+         var parameters = $scope.model.parameters;
          var parameterFormat = selection.options.parameterFormat;
          var i18nHtmlFormat = selection.options.i18nHtmlFormat;
          var fields = selection.options.fields;
@@ -88,7 +86,6 @@ define( [
             } ),
             select: function( index ) {
                var selected = result.selected = result.choices[ index ];
-               var parameters = $scope.model.parameters;
 
                if( !selected ) {
                   return;
@@ -112,7 +109,11 @@ define( [
             }
          };
 
-         selectFromParameters( result, 0 );
+         selectFromParameters( $scope.model.parameters, result );
+
+         if( parameter && !result.selected && result.choices.length ) {
+            result.select( 0 );
+         }
 
          return result;
       }
@@ -126,7 +127,7 @@ define( [
             }
          }
          $scope.model.selections.forEach( function( selection ) {
-            return selectFromParameters( selection );
+            selectFromParameters( $scope.model.parameters, selection );
          } );
       } );
 

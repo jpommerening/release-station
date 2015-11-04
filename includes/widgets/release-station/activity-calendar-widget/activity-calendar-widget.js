@@ -50,7 +50,6 @@ define( [
 
       $scope.resources = {
          events: {},
-         repos: [],
          search: ''
       };
 
@@ -90,9 +89,6 @@ define( [
                range.max = moment( event.created_at );
             }
          } );
-
-      patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'repos' );
 
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'search', {

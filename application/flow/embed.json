@@ -1,0 +1,22 @@
+{
+   "places": {
+      "entry": {
+         "redirectTo": "grid"
+      },
+
+      "grid/:scope": {
+         "page":  "embed_grid",
+         "targets": {}
+      },
+
+      "calendar/:date": {
+         "page":  "embed_calendar",
+         "targets": {}
+      },
+
+      "history/:owner/:repo/:version": {
+         "page":  "embed_history",
+         "targets": {}
+      }
+   }
+}
