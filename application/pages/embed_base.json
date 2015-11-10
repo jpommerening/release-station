@@ -13,7 +13,6 @@
             "widget": "release-station/oauth-activity",
             "features": {
                "auth": {
-                  "token": "8288e8b6aad75f7ac8546a79740487f41ff9466a",
                   "resource": "accessToken",
                   "flag": "authenticated"
                }
