@@ -26,8 +26,9 @@ define( [
 
       $scope.dropdown = {
          open: false,
-         toggle: function() {
+         toggle: function($event) {
             this.open = !this.open;
+            $event.stopPropagation();
          },
          click: function( item ) {
             if( item.action ) {

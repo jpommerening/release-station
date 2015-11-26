@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav navbar-right">
     <li class="dropdown" ng-class="{ open: dropdown.open}">
-      <a class="menu-item" ng-if="authenticated" ng-click="dropdown.toggle()" href="#">
+      <a class="menu-item" ng-if="authenticated" ng-click="dropdown.toggle($event)" href="#">
          <img class="circular icon" title="{{resources.user.name}}" ng-src="{{resources.user.avatar_url}}"/>
          <span class="hidden-sm">{{resources.user.name}}</span>
          <span class="caret"></span>

@@ -167,13 +167,13 @@ h2 {
               transform: scale3d(1, 1, 1);
    }
 
-   body[style*="overflow:"] > div > div.container {
+   body.modal-open > div.application-layout > div.container {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
-      -webkit-transform: scale(0.618, 0.618);
-              transform: scale(0.618, 0.618);
-      -webkit-transform: scale3d(0.618, 0.618, 1);
-              transform: scale3d(0.618, 0.618, 1);
+      -webkit-transform: scale(0.818, 0.818) translate(0, -30px);
+              transform: scale(0.818, 0.818) translate(0, -30px);
+      -webkit-transform: scale3d(0.818, 0.818, 1) translate3d(0, -30px, 0);
+              transform: scale3d(0.818, 0.818, 1) translate3d(0, -30px, 0);
       -webkit-filter: blur(1px) brightness(0.9);
               filter: blur(1px) brightness(0.9);
    }

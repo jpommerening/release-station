@@ -78,6 +78,9 @@
                "close": {
                   "onActions": [ "closeSettings" ]
                },
+               "backdropClose": {
+                 "enabled": true
+                },
                "closeIcon": {
                   "enabled": true
                }
