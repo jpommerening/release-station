@@ -11,11 +11,13 @@
                   "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
                   "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
                   "includes/widgets/release-station/github-login-widget/default.theme/css/github-login-widget.css",
+                  "includes/widgets/release-station/headline-selector-widget/default.theme/css/headline-selector-widget.css",
                   "includes/widgets/release-station/navigation-widget/default.theme/css/navigation-widget.css",
                   "includes/widgets/release-station/release-history-widget/default.theme/css/release-history-widget.css",
                   "includes/widgets/release-station/search-box-widget/default.theme/css/search-box-widget.css",
                   "includes/widgets/release-station/settings-widget/default.theme/css/settings-widget.css",
-                  "application/layouts/application/default.theme/css/application.css"
+                  "application/layouts/application/default.theme/css/application.css",
+                  "application/layouts/embedded/default.theme/css/embedded.css"
                ],
                "dest": "var/flows/main/dist/default.theme.css"
             },
@@ -28,11 +30,13 @@
                   "includes/widgets/release-station/activity-grid-widget/default.theme/css/activity-grid-widget.css",
                   "includes/widgets/release-station/details-widget/default.theme/css/details-widget.css",
                   "includes/widgets/release-station/github-login-widget/default.theme/css/github-login-widget.css",
+                  "includes/widgets/release-station/headline-selector-widget/default.theme/css/headline-selector-widget.css",
                   "includes/widgets/release-station/navigation-widget/default.theme/css/navigation-widget.css",
                   "includes/widgets/release-station/release-history-widget/default.theme/css/release-history-widget.css",
                   "includes/widgets/release-station/search-box-widget/default.theme/css/search-box-widget.css",
                   "includes/widgets/release-station/settings-widget/default.theme/css/settings-widget.css",
-                  "application/layouts/application/default.theme/css/application.css"
+                  "application/layouts/application/default.theme/css/application.css",
+                  "application/layouts/embedded/default.theme/css/embedded.css"
                ],
                "dest": "var/flows/main/dist/cube.theme.css"
             }

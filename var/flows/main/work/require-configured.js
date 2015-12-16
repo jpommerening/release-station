@@ -13,20 +13,14 @@ var require = {
          "main": "init"
       },
       { 
-         "name": "laxar", 
-         "location": "laxar", 
-         "main": "laxar"
-      },
-      { 
          "name": "moment", 
-         "location": "moment", 
-         "main": "moment"
+         "main": "moment", 
+         "location": "moment"
       }
    ], 
    "paths": { 
       "requirejs": "requirejs/require", 
       "jquery": "jquery/dist/jquery", 
-      "underscore": "underscore/underscore", 
       "angular": "angular/angular", 
       "angular-mocks": "angular-mocks/angular-mocks", 
       "angular-route": "angular-route/angular-route", 
@@ -34,9 +28,6 @@ var require = {
       "angular-animate": "angular-animate/angular-animate", 
       "jjv": "jjv/lib/jjv", 
       "jjve": "jjve/jjve", 
-      "socket.io": "socket.io-client/socket.io", 
-      "semver": "semver/semver.browser", 
-      "chroma-js": "chroma-js/chroma", 
       "jasmine": "jasmine/lib/jasmine-core/jasmine", 
       "jasmine2": "jasmine2/lib/jasmine-core/jasmine", 
       "q_mock": "q_mock/q", 
@@ -49,6 +40,9 @@ var require = {
       "bootstrap-tooltip": "bootstrap-sass-official/assets/javascripts/bootstrap/tooltip", 
       "bootstrap-affix": "bootstrap-sass-official/assets/javascripts/bootstrap/affix", 
       "trunk8": "trunk8/trunk8", 
+      "chroma-js": "chroma-js/chroma", 
+      "es6": "requirejs-babel/es6", 
+      "babel": "requirejs-babel/babel-5.8.22.min", 
       "release-station": "../includes/lib/release-station", 
       "laxar": "laxar/dist/laxar", 
       "laxar-uikit": "laxar-uikit/dist/laxar-uikit", 
@@ -62,7 +56,9 @@ var require = {
       "laxar-path-themes": "../includes/themes", 
       "laxar-path-flow": "../application/flow/flow.json", 
       "laxar-path-default-theme": "laxar-uikit/dist/themes/default.theme", 
-      "laxar-application-dependencies": "../var/static/laxar_application_dependencies"
+      "laxar-application-dependencies": "../var/static/laxar_application_dependencies", 
+      "socket.io": "socket.io-client/socket.io", 
+      "semver": "semver/semver.browser"
    }, 
    "shim": { 
       "angular": { 
@@ -117,9 +113,19 @@ var require = {
             return this._.noConflict();
          }
       }
+   }, 
+   "config": { 
+      "es6": { 
+         "sourceMap": "inline", 
+         "resolveModuleSource": function ( source ) {
+            // Assume relative paths from within an ES6 import are also ES6 modules
+            return ( source[0] === '.' ) ? 'es6!'+source : source;
+         }
+      }
    }
 };
 require.paths[ 'laxar-path-flow' ] = "../application/flow/flow.json";
+require.baseUrl = (typeof window !== "undefined" && window.laxar && window.laxar.amd && window.laxar.amd.baseUrl) || require.baseUrl;
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.20 Copyright (c) 2010-2015, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.

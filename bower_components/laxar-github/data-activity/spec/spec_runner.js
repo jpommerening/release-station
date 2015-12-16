@@ -6,7 +6,7 @@
 ( function( global ) {
    'use strict';
    global.laxarSpec = {
-      title: 'GitHubDataActivity Specification',
+      title: 'GithubDataActivity Specification',
       tests: [
          'github-data-activity.spec'
       ],

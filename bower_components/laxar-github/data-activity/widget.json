@@ -14,52 +14,71 @@
          "data": {
             "type": "object",
             "description": "Configuration for publishing GitHub data.",
-            "default": {},
+            "required": [ "resource", "sources" ],
             "properties": {
                "resource": {
                   "type": "string",
                   "description": "The name of the resource under which to publish resources.",
-                  "format": "topic",
-                  "default": "data"
+                  "format": "topic"
                },
                "sources": {
-                  "type": [ "array", "object" ],
-                  "description": "Event sources.",
-                  "default": [],
+                  "type": "object",
+                  "description": "Objects containing *_url fields to follow (see https://developer.github.com/v3/#hypermedia).",
                   "properties": {
                      "resource": {
                         "type": "string",
-                        "description": "The name of the resource supplying the the sources.",
+                        "description": "The name of the resource supplying the URLs.",
                         "format": "topic"
                      },
-                     "follow": {
+                     "fields": {
                         "type": [ "string", "array", "object" ],
                         "description": "Which fields to follow for URLs. Maps all leaves to resources.",
                         "default": "url"
+                     },
+                     "init": {
+                        "type": "array",
+                        "description": "Use this array as initial value."
                      }
-                  },
-                  "items": {
-                     "type": "object",
-                     "description": "The event source",
-                     "required": [],
+                  }
+               },
+               "expand": {
+                  "type": "object",
+                  "description": "A map of URL template parameters to expand.",
+                  "default": {},
+                  "additionalalProperties": {
+                     "type": [ "string", "object" ],
+                     "description": "Either a static string to use for expansion, or a resource object.",
                      "properties": {
-                        "follow": {
-                           "type": [ "string", "array", "object" ],
-                           "description": "Which fields to follow for URLs. Maps all leaves to resources.",
-                           "default": "url"
-                        },
-                        "url": {
+                        "parameter": {
                            "type": "string",
-                           "description": "The URL associated with the resource."
+                           "format": "topic"
                         },
                         "resource": {
                            "type": "string",
-                           "description": "The name under which to publish the resource.",
                            "format": "topic"
+                        },
+                        "fields": {
+                           "type": [ "string", "array", "object" ]
+                        },
+                        "init": {
+                           "type": "array"
                         }
                      }
                   }
+               },
+               "flatten": {
+                  "type": [ "boolean", "number" ],
+                  "description": "Flatten the given number (or 1, if `true`) of nested arrays of the result resource.",
+                  "default": false
                }
+            }
+         },
+         "messages": {
+            "type": "object",
+            "description": "Configuration of messages published via didEncounterError or didValidate events.",
+            "default": {},
+            "properties": {
+               "i18nFailedLoadingResource": { "type": [ "object", "string" ] }
             }
          },
          "auth": {

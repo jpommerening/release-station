@@ -31,7 +31,9 @@ define( [
             }
          }
          if( this.onError_ ) {
-            socket.on( 'error', this.onError_ );
+            socket.on( 'error', function( error ) {
+               return this.onError_( 'SOCKET_IO', 'i18nEncounteredSocketIOError', {}, error );
+            } );
          }
 
          this.socket_ = socket;

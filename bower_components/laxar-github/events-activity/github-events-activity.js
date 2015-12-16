@@ -4,14 +4,28 @@
  * http://laxarjs.org
  */
 define( [
-   'laxar-patterns',
-   '../lib/handle-auth',
-   '../lib/wait-for-event',
-   '../lib/extract-pointers',
-   '../lib/throttled-publisher',
+   'json!./widget.json',
+   'json-patch',
+   'es6!../lib/constants',
+   'es6!../lib/get-pointer',
+   'es6!../lib/handle-auth',
+   'es6!../lib/wait-for-event',
+   'es6!../lib/extract-pointers',
+   'es6!../lib/throttled-publisher',
    './http-event-stream',
    './socket-event-stream',
-], function( patterns, handleAuth, waitForEvent, extractPointers, throttledPublisherForFeature, HttpEventStream, SocketEventStream ) {
+], function(
+   spec,
+   jsonPatch,
+   constants,
+   getPointer,
+   handleAuth,
+   waitForEvent,
+   extractPointers,
+   throttledPublisherForFeature,
+   HttpEventStream,
+   SocketEventStream
+) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,39 +49,33 @@ define( [
       this.eventBus = eventBus;
       this.features = features;
 
+      var baseOptions = {
+         headers: {
+            Accept: constants.MEDIA_TYPE
+         },
+         events: features.events.types
+      };
+
       var streams = [];
-      var ready = handleAuth( eventBus, features, 'auth' )
-                     .then( setAuthHeader )
+      var queue = handleAuth( eventBus, features, 'auth' )
+                     .then( handleAuth.setAuthHeader( baseOptions.headers ) )
                      .then( waitForEvent( eventBus, 'beginLifecycleRequest' ) );
 
       var publisher = throttledPublisherForFeature( this, 'events' );
 
-      var baseOptions = {
-         headers: {},
-         onEvent: deduplicate( publisher.push ),
-         onError: eventBus.publish.bind( eventBus, 'didEncounterError.GITHUB_EVENTS' )
-      };
+      baseOptions.onEvent = deduplicate( publisher.push );
+      baseOptions.onError = publisher.error;
+
+      if( features.events.sources.init ) {
+         pushQueue( handleReplace, features.events.sources.init );
+      }
 
       if( features.events.sources.resource ) {
-         patterns.resources.handlerFor( this )
-            .registerResourceFromFeature( 'events.sources', {
-               onReplace: function( event ) {
-                  disconnectStreams( streams );
-                  publisher.replace( [] );
-                  streams = provideStreams( event.data );
-               },
-               onUpdate: function( event ) {
-                  var patches = event.patches.map( mapPatchValue.bind( null, provideStream ) );
-                  var removed = removedItems( streams, patches );
-                  disconnectStreams( removed );
-                  publisher.update( [] ); // TODO: determine removed indexes?
-                  patterns.json.applyPatch( streams, patches );
-               }
-            } );
-      } else if( features.events.sources.length ) {
-         ready.then( function() {
-            publisher.replace( [] );
-            streams = provideStreams( features.events.sources );
+         eventBus.subscribe( 'didReplace.' + features.events.sources.resource, function( event ) {
+            return pushQueue( handleReplace, event.data );
+         } );
+         eventBus.subscribe( 'didUpdate.' + features.events.sources.resource, function( event ) {
+            return pushQueue( handleUpdate, event.patches );
          } );
       }
 
@@ -78,6 +86,13 @@ define( [
          disconnectStreams( streams );
       } );
 
+      function pushQueue( callback ) {
+         var args = [].slice.call( arguments, 1 );
+         return queue = queue.then( function() {
+            return callback.apply( null, args );
+         } );
+      }
+
       function setAuthHeader( data ) {
          if( data && data.access_token ) {
             baseOptions.headers[ 'Authorization' ] = 'token ' + data.access_token;
@@ -86,24 +101,42 @@ define( [
          }
       }
 
+      function handleReplace( data ) {
+         disconnectStreams( streams );
+         streams = [];
+
+         publisher.replace( [] );
+         return Promise.all( streams = provideStreams( data ) );
+      }
+
+      function handleUpdate( patches ) {
+         var promises = [];
+         patches = patches.map( mapPatchValue.bind( null, function( source ) {
+            var promise = provideStream( source );
+            promises.push( promise );
+            return promise;
+         } ) );
+         var removed = removedItems( streams, patches );
+         disconnectStreams( removed );
+         publisher.update( [] ); // TODO: determine removed indexes?
+         jsonPatch.apply( streams, patches );
+         return Promise.all( promises );
+      }
+
       function provideStreams( sources ) {
          return sources.map( provideStream );
       }
 
       function provideStream( source ) {
          var options = Object.create( baseOptions );
-         var follow = source.follow || features.events.sources.follow;
+         var fields = features.events.sources.fields;
 
-         options.events = source.events;
-
-         return ready.then( function() {
-            return extractPointers( source, follow, function( url ) {
-               var match = /^(https?|wss?):/.exec( url );
-               var type = source.type || match[ 1 ];
-               var stream = new EventStream[ type ]( options );
-               stream.connect( url );
-               return stream;
-            } );
+         return extractPointers( source, fields, function( url ) {
+            var match = /^(https?|wss?):/.exec( url );
+            var proto = match[ 1 ] || 'http';
+            var stream = new EventStream[ proto ]( options );
+            stream.connect( url );
+            return stream;
          } );
       }
 
@@ -115,7 +148,7 @@ define( [
       return patches.filter( function( patch ) {
          return ( patch.op === 'remove' || patch.op === 'replace' );
       } ).map( function( patch ) {
-         return patterns.json.getPointer( items, patch.path );
+         return getPointer( items, patch.path );
       } );
    }
 
@@ -165,7 +198,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      name: 'github-events-activity',
+      name: spec.name,
       create: Controller.create,
       injections: Controller.injections
    };

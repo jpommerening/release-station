@@ -14,65 +14,50 @@
          "events": {
             "type": "object",
             "description": "Configuration for publishing GitHub events.",
-            "required": [ "resource" ],
-            "default": {},
+            "required": [ "resource", "sources" ],
             "properties": {
                "resource": {
                   "type": "string",
                   "description": "The name of the resource under which to publish events.",
-                  "format": "topic",
-                  "default": "events"
+                  "format": "topic"
                },
                "sources": {
-                  "type": [ "array", "object" ],
-                  "description": "Event sources.",
-                  "default": [],
+                  "type": "object",
+                  "description": "Objects containing *_url fields to follow (see https://developer.github.com/v3/#hypermedia).",
                   "properties": {
                      "resource": {
                         "type": "string",
-                        "description": "The name of the resource supplying the the sources.",
+                        "description": "The name of the resource supplying the URLs.",
                         "format": "topic"
                      },
-                     "follow": {
+                     "fields": {
                         "type": [ "string", "array", "object" ],
                         "description": "Which fields to follow for URLs. Maps all leaves to resources.",
                         "default": "events_url"
-                     }
-                  },
-                  "items": {
-                     "type": "object",
-                     "description": "The event source",
-                     "required": [ "url" ],
-                     "properties": {
-                        "follow": {
-                           "type": [ "string", "array", "object" ],
-                           "description": "Which fields to follow for URLs. Maps all leaves to resources.",
-                           "default": "url"
-                        },
-                        "url": {
-                           "type": "string",
-                           "description": "The URL associated with the resource."
-                        },
-                        "resource": {
-                           "type": "string",
-                           "description": "The name under which to publish the events.",
-                           "format": "topic"
-                        },
-                        "type": {
-                           "type": "string",
-                           "description": "The resource type. Either 'socket.io' or 'http'."
-                        },
-                        "events": {
-                           "type": "array",
-                           "description": "Which events to monitor. Refer to the 'Event names' (lower_case) listed at https://developer.github.com/v3/activity/events/types/ for details.",
-                           "items": {
-                              "type": "string"
-                           },
-                           "default": [ "*" ]
-                        }
+                     },
+                     "init": {
+                        "type": "array",
+                        "description": "If no resource was given use this array instead."
                      }
                   }
+               },
+               "types": {
+                  "type": "array",
+                  "description": "Which events to monitor. Refer to the 'Event names' (lower_case) listed at https://developer.github.com/v3/activity/events/types/ for details.",
+                  "items": {
+                     "type": "string"
+                  },
+                  "default": [ "*" ]
                }
+            }
+         },
+         "messages": {
+            "type": "object",
+            "description": "Configuration of messages published via didEncounterError or didValidate events.",
+            "default": {},
+            "properties": {
+               "i18nFailedLoadingResource": { "type": [ "object", "string" ] },
+               "i18nEncounteredSocketIOError": { "type": [ "object", "string" ] }
             }
          },
          "auth": {

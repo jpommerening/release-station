@@ -4,8 +4,8 @@
  * http://laxarjs.org
  */
 define( [
-   '../lib/parse-links'
-], function( parseLinks ) {
+   'es6!../lib/parse-links'
+], function( parseLinks, lru ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,9 +45,9 @@ define( [
          }
       },
 
-      handleErrors_: function( error ) {
+      handleErrors_: function( url, error ) {
          if( this.onError_ ) {
-            this.onError_( error );
+            this.onError_( 'HTTP_GET', 'i18nFailedLoadingResource', { url: url },  error );
          }
       },
 
@@ -57,7 +57,7 @@ define( [
          var etags = {};
 
          var handleEvents = this.handleEvents_.bind( this );
-         var handleErrors = this.handleErrors_.bind( this );
+         var handleErrors = this.handleErrors_.bind( this, url );
 
          var poll = this.client_.poll;
 

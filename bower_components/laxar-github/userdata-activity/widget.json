@@ -14,7 +14,6 @@
          "user": {
             "type": "object",
             "description": "Configuration for publishing GitHub user data.",
-            "default": {},
             "properties": {
                "url": {
                   "type": "string",
@@ -31,7 +30,6 @@
          "orgs": {
             "type": "object",
             "description": "Configuration for publishing a GitHub user's organizations.",
-            "default": {},
             "properties": {
                "url": {
                   "type": "string",
@@ -48,7 +46,6 @@
          "repos": {
             "type": "object",
             "description": "Configuration for publishing a GitHub user's repositories.",
-            "default": {},
             "properties": {
                "url": {
                   "type": "string",
@@ -92,7 +89,6 @@
          "keys": {
             "type": "object",
             "description": "Configuration for publishing a GitHub user's public keys.",
-            "default": {},
             "properties": {
                "resource": {
                   "type": "string",
@@ -104,7 +100,6 @@
          "followers": {
             "type": "object",
             "description": "Configuration for publishing a GitHub user's followers.",
-            "default": {},
             "properties": {
                "resource": {
                   "type": "string",
@@ -116,7 +111,6 @@
          "following": {
             "type": "object",
             "description": "Configuration for publishing the users a GitHub user is following.",
-            "default": {},
             "properties": {
                "resource": {
                   "type": "string",
@@ -128,7 +122,6 @@
          "starred": {
             "type": "object",
             "description": "Configuration for publishing a GitHub user's starred repositories.",
-            "default": {},
             "properties": {
                "sort": {
                   "type": "string",
@@ -146,6 +139,14 @@
                }
             }
          },
+         "messages": {
+            "type": "object",
+            "description": "Configuration of messages published via didEncounterError or didValidate events.",
+            "default": {},
+            "properties": {
+               "i18nFailedLoadingResource": { "type": [ "object", "string" ] }
+            }
+         },
          "auth": {
             "type": "object",
             "description": "Authorization with the GitHub API",
@@ -161,6 +162,11 @@
                   "format": "topic"
                }
             }
+         },
+         "log": {
+            "type": "string",
+            "description": "Loglevel to use",
+            "default": null
          }
       }
    }

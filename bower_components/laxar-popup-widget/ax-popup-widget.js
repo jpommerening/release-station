@@ -15,9 +15,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope' ];
+   Controller.$inject = [ '$scope', 'modalService' ];
 
-   function Controller( $scope ) {
+   function Controller( $scope, modalService ) {
 
       $scope.model = {
          popupLayerId: 'popupLayer',
@@ -47,6 +47,21 @@ define( [
             return;
          }
          $scope.$broadcast( 'closeLayerForced' );
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      $scope.model.handleBackdropClicked = function() {
+         if( !$scope.features.backdropClose.enabled ) {
+            return;
+         }
+         $scope.$broadcast( 'closeLayerForced' );
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      $scope.model.preventClosingPopup = function( event ) {
+         event.stopPropagation();
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +99,7 @@ define( [
             action: eventAction
          } );
          drawPopup( $scope );
+         modalService.setClassOnBody();
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +116,7 @@ define( [
                action: eventAction
             } );
          }
+         modalService.unsetClassOnBody();
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,6 +172,19 @@ define( [
    }
 
    module.controller( 'AxPopupWidgetController', Controller );
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   module.factory( 'modalService', [ '$document', function( $document ) {
+      return {
+         setClassOnBody: function() {
+            $document.find( 'body').addClass( 'modal-open' );
+         },
+         unsetClassOnBody: function() {
+            $document.find( 'body').removeClass( 'modal-open' );
+         }
+      };
+   } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

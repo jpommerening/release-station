@@ -1,6 +1,6 @@
 {
   "name": "laxar-popup-widget",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "license": "MIT",
   "repository": {
     "type": "https",
@@ -17,13 +17,13 @@
     "jasmine": "pivotal/jasmine#^1.3.x"
   },
   "homepage": "https://github.com/LaxarJS/ax-popup-widget",
-  "_release": "2.2.0",
+  "_release": "2.3.0",
   "_resolution": {
     "type": "version",
-    "tag": "v2.2.0",
-    "commit": "438de49c69f51d7d4dfa622d746140cda31e644c"
+    "tag": "v2.3.0",
+    "commit": "c9787af138609056d62c19c751b86ea49cc8b513"
   },
   "_source": "git://github.com/LaxarJS/ax-popup-widget.git",
-  "_target": "^2.2.0",
+  "_target": "^2.3.0",
   "_originalSource": "LaxarJS/ax-popup-widget"
 }

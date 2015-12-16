@@ -75,6 +75,8 @@ For full configuration options refer to the [widget.json](widget.json).
 *R1.3* If the popup is displayed, the page in the background MUST be blocked for interaction.
 The visual effect to display this MUST be implemented through the theme.
 
+*R1.4* If the popup is displayed, a CSS class on the body MUST be set.
+
 ### 2. Position on the Page (position)
 *R2.1* The widget MUST expect to be in a widget area which is upper than the normal page content but deeper than any popovers.
 
@@ -120,7 +122,7 @@ The widget MUST prevent the key default action.
 The style of the icon is determined by the theme.
 
 ### 7. Forced Close of the Popup (forcedClose)
-*R7.1* If the popup is closed by the close icon or the ESC key, a configured action MUST be triggered.
+*R7.1* If the popup is closed by the close icon or the ESC key or a backdrop click, a configured action MUST be triggered.
 The event MUST include the DOM ID which was used to create the popup.
 
 ### 8. Providing a Content Area (content)
@@ -148,6 +150,11 @@ The `tabindex` attribute of the child DOM elements MUST be considered.
 ### 11. Prevent the Body Scrolling (preventBodyScrolling)
 *R11.1* It MUST be configurable if the AxPopoverWidget prevents the scrolling of the body element when displaying its popover.
 The default is to prevent the scrolling.
+
+### 12. Closing the Popup by a Click of the Backdrop (backdropClose)
+*R12.1* The widget MUST allow to close the popup by clicking the backdrop.
+It MUST be possible to disable this feature.
+
 
 ## Integration
 ### Patterns

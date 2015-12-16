@@ -49,6 +49,7 @@ var require = {
       'bootstrap-tooltip': 'bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
       'bootstrap-affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
       trunk8: 'trunk8/trunk8',
+      'chroma-js': 'chroma-js/chroma',
 
       'es6': 'requirejs-babel/es6',
       'babel': 'requirejs-babel/babel-5.8.22.min',

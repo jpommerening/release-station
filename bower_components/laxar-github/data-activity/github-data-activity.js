@@ -4,13 +4,28 @@
  * http://laxarjs.org
  */
 define( [
-   'laxar-patterns',
-   '../lib/handle-auth',
-   '../lib/wait-for-event',
-   '../lib/extract-pointers',
-   '../lib/throttled-publisher',
-   '../lib/fetch-all'
-], function( patterns, handleAuth, waitForEvent, extractPointers, throttledPublisherForFeature, fetchAll ) {
+   'json!./widget.json',
+   'es6!../lib/constants',
+   'es6!../lib/expand-url',
+   'es6!../lib/extract-pointers',
+   'es6!../lib/fetch-all',
+   'es6!../lib/handle-auth',
+   'es6!../lib/resource-flattener',
+   'es6!../lib/throttled-publisher',
+   'es6!../lib/wait-for-event',
+   'es6!../lib/with-patch-value'
+], function(
+   spec,
+   constants,
+   expandUrl,
+   extractPointers,
+   fetchAll,
+   handleAuth,
+   resourceFlattener,
+   throttledPublisherForFeature,
+   waitForEvent,
+   withPatchValue
+) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,30 +42,36 @@ define( [
       this.eventBus = eventBus;
       this.features = features;
 
-      var ready = handleAuth( eventBus, features, 'auth' )
-                     .then( setAuthHeader )
+      var baseOptions = {
+         method: 'GET',
+         headers: {
+            Accept: constants.MEDIA_TYPE
+         }
+      };
+
+      var expand = Promise.resolve( {} );
+
+      var queue = handleAuth( eventBus, features, 'auth' )
+                     .then( handleAuth.setAuthHeader( baseOptions.headers ) )
                      .then( waitForEvent( eventBus, 'beginLifecycleRequest' ) );
 
       var publisher = throttledPublisherForFeature( this, 'data' );
 
-      var baseOptions = {
-         method: 'GET',
-         headers: {}
-      };
+      if( features.data.flatten ) {
+         publisher = resourceFlattener().wrap( publisher );
+      }
+
+      if( features.data.sources.init ) {
+         pushQueue( handleReplace, features.data.sources.init );
+      }
 
       if( features.data.sources.resource ) {
-         patterns.resources.handlerFor( this )
-            .registerResourceFromFeature( 'data.sources', {
-               onReplace: function( event ) {
-                  Promise.all( provideResources( event.data ) ).then( publisher.replace );
-               },
-               onUpdate: function( event ) {
-                  var patches = event.patches.map( mapPatchValue.bind( null, provideResource ) );
-                  Promise.all( patches.map( wrapPatchInPromise ) ).then( publisher.update );
-               }
-            } );
-      } else if( features.data.sources.length ) {
-         Promise.all( provideResources( features.data.sources ) ).then( publisher.replace );
+         eventBus.subscribe( 'didReplace.' + features.data.sources.resource, function( event ) {
+            return pushQueue( handleReplace, event.data );
+         } );
+         eventBus.subscribe( 'didUpdate.' + features.data.sources.resource, function( event ) {
+            return pushQueue( handleUpdate, event.patches );
+         } );
       }
 
       eventBus.subscribe( 'beginLifecycleRequest', function() {
@@ -59,12 +80,19 @@ define( [
       eventBus.subscribe( 'endLifecycleRequest', function() {
       } );
 
-      function setAuthHeader( data ) {
-         if( data && data.access_token ) {
-            baseOptions.headers[ 'Authorization' ] = 'token ' + data.access_token;
-         } else {
-            delete baseOptions.headers[ 'Authorization' ];
-         }
+      function pushQueue( callback ) {
+         var args = [].slice.call( arguments, 1 );
+         return queue = queue.then( function() {
+            return callback.apply( null, args );
+         } );
+      }
+
+      function handleReplace( data ) {
+         return Promise.all( provideResources( data ) ).then( publisher.replace );
+      }
+
+      function handleUpdate( patches ) {
+         return Promise.all( patches.map( withPatchValue( provideResource ) ) ).then( publisher.update );
       }
 
       function provideResources( sources ) {
@@ -73,11 +101,18 @@ define( [
 
       function provideResource( source ) {
          var options = Object.create( baseOptions );
-         var follow = source.follow || features.data.sources.follow;
+         var fields = features.data.sources.fields;
 
-         return ready.then( function() {
-            return extractPointers( source, follow, function( url ) {
-               return url && fetchAll( url, options );
+         return extractPointers( source, fields, function( template ) {
+            if( !template ) return null;
+
+            return expand.then( function( expansions ) {
+               return expandUrl( template, expansions ).toString();
+            } ).then( function( url ) {
+               return fetchAll( url, options );
+            } ).then( null, function( error ) {
+               publisher.error( 'HTTP_GET', 'i18nFailedLoadingResource', { url: url }, error );
+               return null;
             } );
          } );
       }
@@ -86,38 +121,8 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function mapPatchValue( callback, patch ) {
-      var result = {
-         op: patch.op,
-         path: patch.path
-      };
-      if( patch.from ) {
-         result.from = patch.from;
-      }
-      if( patch.value ) {
-         result.value = callback( patch.value );
-      }
-      return result;
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function wrapPatchInPromise( patch ) {
-      if( patch.value ) {
-         return patch.value.then( function( value ) {
-            return mapPatchValue( function() {
-               return value;
-            }, patch );
-         } );
-      } else {
-         return Promise.resolve( patch );
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    return {
-      name: 'github-data-activity',
+      name: spec.name,
       create: Controller.create,
       injections: Controller.injections
    };

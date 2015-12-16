@@ -1,111 +1,111 @@
-define( [
-   'laxar-patterns'
-], function( patterns ) {
-   'use strict';
+/**
+ * Copyright 2015 aixigo AG
+ * Released under the MIT license.
+ * http://laxarjs.org/license
+ */
+import { resources } from 'laxar-patterns';
+import errorPublisher from './error-publisher';
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var nullPublisher = {};
-   nullPublisher.replace = nullPublisher.update = nullPublisher.update = function() {};
+const nullPublisher = {};
+nullPublisher.replace = nullPublisher.update = nullPublisher.update = () => null;
 
-   function throttledPublisherForFeature( context, feature, options ) {
-      if( !(context.features[ feature ] && context.features[ feature ].resource) ) {
-         return nullPublisher;
-      }
-
-      var replace = throttleReplacements( patterns.resources.replacePublisherForFeature( context, feature ), options );
-      var update = throttleUpdates( patterns.resources.updatePublisherForFeature( context, feature ), options );
-
-      return {
-         replace: function( data ) {
-            update.flush();
-            replace( data );
-         },
-         update: function( patches ) {
-            replace.flush();
-            update( patches );
-         },
-         flush: function() {
-            replace.flush();
-            update.flush();
-         },
-         push: function( item ) {
-            update( [ { op: 'add', path: '/-', value: item } ] );
-         }
-      };
+export default function throttledPublisherForFeature( context, feature, options ) {
+   if( !(context.features[ feature ] && context.features[ feature ].resource) ) {
+      return nullPublisher;
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+   const replace = throttleReplacements( resources.replacePublisherForFeature( context, feature ), options );
+   const update = throttleUpdates( resources.updatePublisherForFeature( context, feature ), options );
+   const error = errorPublisher( context, options );
 
-   function throttleReplacements( publisher, options ) {
-      var timeout;
-      var buffer;
-      var maxLatency = (options || {}).maxLatency || 150;
+   return {
+      replace: function( data ) {
+         return update.flush().then( () => replace( data ) );
+      },
+      update: function( patches ) {
+         return replace.flush().then( () => update( patches ) );
+      },
+      flush: function() {
+         replace.flush();
+         update.flush();
+      },
+      push: ( item ) => update( [ { op: 'add', path: '/-', value: item } ] ),
+      error: error
+   };
+}
 
-      function replace() {
-         var data = buffer;
-         if( buffer ) {
-            publisher( buffer );
-            timeout = setTimeout( function() {
-               if( buffer !== data ) {
-                  publisher( buffer );
-               }
-               buffer = null;
-            }, maxLatency );
-         }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function throttleReplacements( publisher, options ) {
+   const maxLatency = (options || {}).maxLatency || 150;
+   let timeout;
+   let buffer;
+
+   function replace() {
+      const data = buffer;
+      if( buffer ) {
+         timeout = setTimeout( function() {
+            if( buffer !== data ) {
+               publisher( buffer );
+            }
+            buffer = null;
+         }, maxLatency );
+         return publisher( buffer );
+      } else {
+         return Promise.resolve();
       }
-
-      function handleReplacements( data ) {
-         var first = !buffer;
-
-         buffer = data;
-
-         if( first ) {
-            replace();
-         }
-      }
-
-      handleReplacements.flush = replace;
-
-      return handleReplacements;
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+   function handleReplacements( data ) {
+      const first = !buffer;
 
-   function throttleUpdates( publisher, options ) {
-      var timeout;
-      var batch = [];
-      var maxBatchSize = (options || {}).maxBatchSize || 20;
-      var maxLatency = (options || {}).maxLatency || 150;
+      buffer = data;
 
-      function update() {
-         if( batch.length ) {
-            publisher( batch );
-            batch = [];
-         }
-         if( timeout ) {
-            clearTimeout( timeout );
-            timeout = null;
-         }
+      if( first ) {
+         replace();
       }
-
-      function handleUpdates( patches ) {
-         batch.push.apply( batch, patches );
-
-         if( batch.length >= maxBatchSize ) {
-            update();
-         } else if( !timeout ) {
-            timeout = setTimeout( update, maxLatency );
-         }
-      }
-
-      handleUpdates.flush = update;
-
-      return handleUpdates;
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+   handleReplacements.flush = replace;
 
-   return throttledPublisherForFeature;
+   return handleReplacements;
+}
 
-} );
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function throttleUpdates( publisher, options ) {
+   const maxBatchSize = (options || {}).maxBatchSize || 20;
+   const maxLatency = (options || {}).maxLatency || 150;
+   let timeout;
+   let batch = [];
+
+   function update() {
+      const data = batch;
+      if( timeout ) {
+         clearTimeout( timeout );
+         timeout = null;
+      }
+      if( data.length ) {
+         batch = [];
+         return publisher( data );
+      } else {
+         return Promise.resolve();
+      }
+   }
+
+   function handleUpdates( patches ) {
+      batch.push.apply( batch, patches );
+
+      if( batch.length >= maxBatchSize ) {
+         update();
+      } else if( !timeout ) {
+         timeout = setTimeout( update, maxLatency );
+      }
+   }
+
+   handleUpdates.flush = update;
+
+   return handleUpdates;
+}

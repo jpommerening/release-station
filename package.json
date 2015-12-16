@@ -1,26 +1,26 @@
 {
-   "name": "release-station",
-   "version": "0.1.0",
-   "description": "All the repos, all the releases, all in one place",
-   "license": "MIT",
-   "scripts": {
-      "test": "grunt test --force",
-      "prepublish": "bower install && grunt optimize",
-      "dist": "grunt dist",
-      "start": "grunt start",
-      "optimize": "grunt optimize"
-   },
-   "devDependencies": {
-      "grunt": "~0.4.4",
-      "grunt-cli": "~0.1.13",
-      "bower": "~1.4.1",
-      "grunt-contrib-compass": "~0.7.2",
-      "grunt-contrib-compress": "~0.7.0",
-      "grunt-contrib-concat": "~0.5.1",
-      "grunt-contrib-cssmin": "~0.12.2",
-      "grunt-contrib-watch": "~0.6.1",
-
-      "grunt-laxar": "^1.1.0-alpha",
-      "load-grunt-tasks": "~3.2.0"
-   }
+  "name": "release-station",
+  "version": "0.1.0",
+  "description": "All the repos, all the releases, all in one place",
+  "license": "MIT",
+  "scripts": {
+    "test": "grunt test --force",
+    "prepublish": "bower install && grunt optimize",
+    "dist": "grunt dist",
+    "start": "grunt start",
+    "optimize": "grunt optimize"
+  },
+  "devDependencies": {
+    "bower": "~1.4.1",
+    "grunt": "~0.4.4",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-compass": "~0.7.2",
+    "grunt-contrib-compress": "~0.7.0",
+    "grunt-contrib-concat": "~0.5.1",
+    "grunt-contrib-cssmin": "~0.12.2",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-laxar": "^1.1.0",
+    "load-grunt-tasks": "~3.2.0",
+    "requirejs-babel": "0.0.8"
+  }
 }

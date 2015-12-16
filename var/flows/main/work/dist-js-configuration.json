@@ -2,7 +2,7 @@
    "concat": {
       "laxar-flow-main": {
          "options": {
-            "separator": "require.paths[ 'laxar-path-flow' ] = \"../application/flow/flow.json\";\n"
+            "separator": "require.paths[ 'laxar-path-flow' ] = \"../application/flow/flow.json\";\nrequire.baseUrl = (typeof window !== \"undefined\" && window.laxar && window.laxar.amd && window.laxar.amd.baseUrl) || require.baseUrl;\n"
          },
          "src": [
             "var/flows/main/require_config.js",
