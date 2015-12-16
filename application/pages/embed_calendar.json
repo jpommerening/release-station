@@ -1,0 +1,84 @@
+{
+   "layout": "embedded",
+   "extends": "embed_base",
+
+   "areas": {
+      "popups": [
+         {
+            "widget": "amd:laxar-popup-widget",
+            "id": "details",
+            "features": {
+               "content": {
+                  "layout": "popup"
+               },
+               "open": {
+                  "onActions": [ "openDetails" ]
+               },
+               "close": {
+                  "onActions": [ "closeDetails" ]
+               },
+               "backdropClose": {
+                  "enabled": true
+               },
+               "closeIcon": {
+                  "enabled": true
+               }
+            }
+         }
+      ],
+
+      "content": [
+         {
+            "composition": "calendar_composition",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "repos": {
+                  "resource": "repos"
+               },
+               "search": {
+                  "resource": "searchString"
+               },
+               "details": {
+                  "resource": "details",
+                  "action": "openDetails"
+               }
+            }
+         }
+      ],
+
+      "details.header": [
+         {
+            "widget": "amd:laxar-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 3,
+                  "i18nHtmlText": {
+                     "en-US": "Details"
+                  }
+               }
+            }
+         }
+      ],
+
+      "details.content": [
+         {
+            "composition": "event_details_composition",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "details": {
+                  "resource": "details"
+               },
+               "repos": {
+                  "resource": "repos"
+               }
+            }
+         }
+      ]
+  }
+}

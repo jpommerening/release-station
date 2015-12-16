@@ -1,5 +1,5 @@
 <ul class="nav navbar-nav">
-   <li ng-repeat="item in navigation">
+   <li ng-repeat="item in model.navigation track by $index">
       <a ng-href="{{item.url}}" ng-class="{ active: item.active }" class="menu-item">
          <i class="fa" ng-class="[ item.icon ]" ng-if="item.icon"></i><!--
       --><span class="hidden-sm" ng-bind-html="item.i18nHtmlLabel | axLocalize:i18n"></span>

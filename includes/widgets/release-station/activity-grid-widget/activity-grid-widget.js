@@ -18,10 +18,13 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$interval', 'axFlowService' ];
+   Controller.$inject = [ '$scope', '$location', 'axFlowService' ];
 
-   function Controller( $scope, $interval, axFlowService ) {
-      var date = moment().add( -30, 'days' );
+   function Controller( $scope, $location, flowService ) {
+      var scopeParameter = $scope.features.scope.parameter;
+
+      var today = moment().startOf( 'day' );
+      var scope = moment( today ).add( -1, 'week' );
 
       $scope.projects = [];
       $scope.resources = {
@@ -66,9 +69,9 @@ define( [
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
-         .filter( githubEvents.by.date.after( date ) )
          .filter( function( event ) {
-            return ( !$scope.resources.search ) || searchFilter( $scope.resources.search, event );
+            if( !githubEvents.by.date.after( scope )( event ) ) return false;
+            return searchFilter( $scope.resources.search, event );
          } )
          .classify( githubEvents.by.repository )
          .classify( classifyEventByType );
@@ -87,6 +90,27 @@ define( [
                updateActivityData( $scope.resources.events );
             }
          } )
+
+      $scope.eventBus.subscribe( 'didNavigate', function( event ) {
+         var place = flowService.place();
+         var scope = event.data[ scopeParameter ] && moment( today ).add( -1, event.data[ scopeParameter ] );
+         var parameters = {};
+
+         if( scopeParameter && !scope && place.expectedParameters.indexOf( scopeParameter ) >= 0 ) {
+            parameters[ scopeParameter ] = 'week';
+            $location.url( flowService.constructPath( '_self', parameters ) ).replace();
+         } else {
+            selectScope( scope || moment( today ).add( -1, 'week' ) );
+         }
+      }  );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function selectScope( date ) {
+         scope = date;
+         pipeline.replay();
+         updateActivityData( $scope.resources.events );
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

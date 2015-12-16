@@ -13,11 +13,16 @@ define( [
    Controller.$inject = [ '$scope', 'axFlowService' ];
 
    function Controller( $scope, axFlowService ) {
-      $scope.navigation = $scope.features.navigation.items.map( function( item ) {
-         item.url = axFlowService.constructAnchor( item.place, item.parameters );
-         item.active = axFlowService.place().targets._self === item.place;
-         return item;
-      } );
+      $scope.model = {
+         navigation: $scope.features.navigation.map( function( item ) {
+            return {
+               icon: item.icon,
+               i18nHtmlLabel: item.i18nHtmlLabel,
+               url: axFlowService.constructAnchor( item.place, item.parameters ),
+               active: ( axFlowService.place().targets._self === item.place )
+            };
+         } )
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

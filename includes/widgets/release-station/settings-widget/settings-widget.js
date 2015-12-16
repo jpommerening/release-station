@@ -43,8 +43,15 @@ define( [
          .registerResourceFromFeature( 'orgs' )
          .registerResourceFromFeature( 'repos', {
             onUpdateReplace: function() {
-               var repos = $scope.resources.repos.filter( enabled );
-               publisher.replace( repos );
+               var repos = $scope.resources.repos || [];
+
+               $scope.model.settings.repos = repos.reduce( function( repos, repo ) {
+                  var id = repo.id;
+                  repos[ id ] = ( settings.repositories.indexOf( id ) >= 0 );
+                  return repos;
+               }, {} );
+
+               publisher.replace( repos.filter( enabled ) );
             }
          } );
 
@@ -79,10 +86,6 @@ define( [
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function() {
          settings = restoreSettings();
-         $scope.model.settings.repos = settings.repositories.reduce( function( repos, repo ) {
-            repos[ repo ] = true;
-            return repos;
-         }, {} );
       } );
 
       $scope.eventBus.subscribe( 'endLifecycleRequest', function() {

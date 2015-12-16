@@ -1,9 +1,11 @@
 /**
  * Override demo stuff
  */
+
 body {
    background-image: none;
 }
+
 body::before {
    border: none;
    display: none;
@@ -12,9 +14,19 @@ body::before {
    margin-top: 90px;
 }
 
+.app-content > div {
+   padding: 0 20px;
+   margin: 0 -20px;
+}
+
+.modal-content > button.close {
+   font-size: 24pt;
+}
+
 /**
  * http://laxarjs.org style navigation
  */
+
 .navbar-fixed-top {
    background-color: #626262;
    border: 1px solid #444;
@@ -37,7 +49,6 @@ body::before {
    color: #fff;
    background-color: #ff9900;
 }
-
 .navbar-brand h1 {
    font-size: 2rem;
    font-weight: 300;
@@ -52,7 +63,30 @@ body::before {
 .navbar-brand h1 + div.ax-local-intro-text {
    color: #999;
    font-size: 0.9rem;
-   margin-top: -0.2rem;
+   font-style: italic;
+   margin-top: -0.25rem;
+}
+
+/**
+ * Content
+ */
+
+/* To override the colors scal globally, use:
+.app-content .ax-color-scale li.ax-color-stop-0 { background-color: #c4c3c0; }
+.app-content .ax-color-scale li.ax-color-stop-1 { background-color: #5890a0; }
+.app-content .ax-color-scale li.ax-color-stop-2 { background-color: #a0e070; }
+.app-content .ax-color-scale li.ax-color-stop-3 { background-color: #d0e070; }
+.app-content .ax-color-scale li.ax-color-stop-4 { background-color: #f0b050; }
+*/
+
+h1 {
+   margin-top: 0.3em;
+   margin-bottom: 0.2em;
+   font-size: 24pt;
+}
+
+h2 {
+   font-size: 20pt;
 }
 
 .app-content h2 {
@@ -70,15 +104,35 @@ body::before {
    height: auto !important;
 }
 
+.modal-header {
+   background-color: #626262;
+   border: 1px solid #444;
+   border-radius: 6px 6px 0 0;
+   margin: -1px -2px -4px -2px;
+   padding: 2px 7px 14px 7px;
+}
+
+.modal-header h3 {
+   color: #fff;
+   font-weight: 300;
+}
+
 @media (max-width: 640px) {
+
+   .app-content-wrapper {
+      margin-top: 0;
+   }
 
    .app-content {
       padding-top: 60px;
       border-radius: 0;
    }
 
-   .app-content-wrapper {
-      margin-top: 0;
+   .app-footer {
+      padding-left: 5px;
+      padding-right: 5px;
+      margin-left: 0;
+      margin-right: 0;
    }
 
    body > div > div.container {
@@ -113,13 +167,13 @@ body::before {
               transform: scale3d(1, 1, 1);
    }
 
-   body[style*="overflow:"] > div > div.container {
+   body.modal-open > div.application-layout > div.container {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
-      -webkit-transform: scale(0.618, 0.618);
-              transform: scale(0.618, 0.618);
-      -webkit-transform: scale3d(0.618, 0.618, 1);
-              transform: scale3d(0.618, 0.618, 1);
+      -webkit-transform: scale(0.818, 0.818) translate(0, -30px);
+              transform: scale(0.818, 0.818) translate(0, -30px);
+      -webkit-transform: scale3d(0.818, 0.818, 1) translate3d(0, -30px, 0);
+              transform: scale3d(0.818, 0.818, 1) translate3d(0, -30px, 0);
       -webkit-filter: blur(1px) brightness(0.9);
               filter: blur(1px) brightness(0.9);
    }

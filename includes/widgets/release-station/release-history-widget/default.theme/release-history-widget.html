@@ -1,6 +1,11 @@
 <div ax-color-scale="scale"></div>
 
-<ol class="v" ng-style="{ 'background-color': scale(1).brighten( 0.1 ) }">
+<div class="row" style="overflow-x: scroll">
+   <ul ax-commit-graph="model.commits" ax-commit-graph-tags="model.tags"></ul>
+</div>
+
+<!--
+<ol class="v row" ng-style="{ 'background-color': scale(1).brighten( 0.1 ) }">
    <li class="major" ng-style="{ 'background-color': scale(0.75 * 0.75).brighten( 0.1 ) }">
       <h3>v1.0.0</h3>
       2015-05-20
@@ -11,7 +16,7 @@
       <h3>v1.0.2</h3>
       2015-05-20
    </li>
-</ol><ol class="v" ng-style="{ 'background-color': scale(1).darken( 0.1 ) }">
+</ol><ol class="v row" ng-style="{ 'background-color': scale(1).darken( 0.1 ) }">
    <li class="minor" ng-style="{ 'background-color': scale(0.75 * 0.75 * 0.75 * 0.75).darken( 0.1 ) }">
       <h3>v1.1.0</h3>
       2015-05-20
@@ -29,22 +34,18 @@
       2015-05-20
    </li>
 </ol>
+-->
 
+<!--
 <div ng-repeat="repo in resources.repos">
-   <h3>{{repo.name}}</h3>
-   <ul ng-repeat="(major, track) in versions" class="semver-list inline">
-      <li ng-repeat="version in track"
-          ng-click="console.log( version )"
-          ng-if="!version.semver.prerelease.length && !version.semver.build.length"
+   <ol ng-repeat="(major, track) in versions[ repo.id ]" class="v">
+      <li ng-repeat="tag in track"
           ng-class="{
-             major: version.semver.minor == 0 && version.semver.patch == 0,
-             minor: version.semver.minor != 0 && version.semver.patch == 0,
-             patch: version.semver.patch != 0,
-             selected: version.isSelected
           }">
-          <a ng-href="{{version.url}}" class="version" tabindex="0">
-             <h3>{{version.name}}</h3>
+          <a ng-href="{{tag.html_url}}" class="version" tabindex="0">
+             <h3>{{tag.name}}</h3>
           </a>
       </li>
-   </ul>
+   </ol>
 </div>
+-->

@@ -16,23 +16,12 @@ var require = {
          name: 'laxar-application',
          location: '..',
          main: 'init'
-      },
-      {
-         name: 'laxar',
-         location: 'laxar',
-         main: 'laxar'
-      },
-      {
-         name: 'moment',
-         location: 'moment',
-         main: 'moment'
       }
    ],
    paths: {
       // LaxarJS Core:
       requirejs: 'requirejs/require',
       jquery: 'jquery/dist/jquery',
-      underscore: 'underscore/underscore',
       angular: 'angular/angular',
       'angular-mocks': 'angular-mocks/angular-mocks',
       'angular-route': 'angular-route/angular-route',
@@ -40,9 +29,6 @@ var require = {
       'angular-animate': 'angular-animate/angular-animate',
       jjv: 'jjv/lib/jjv',
       jjve: 'jjve/jjve',
-      'socket.io': 'socket.io-client/socket.io',
-      semver: 'semver/semver.browser',
-      'chroma-js': 'chroma-js/chroma',
 
       // LaxarJS Core Testing:
       jasmine: 'jasmine/lib/jasmine-core/jasmine',
@@ -63,6 +49,9 @@ var require = {
       'bootstrap-tooltip': 'bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
       'bootstrap-affix': 'bootstrap-sass-official/assets/javascripts/bootstrap/affix',
       trunk8: 'trunk8/trunk8',
+
+      'es6': 'requirejs-babel/es6',
+      'babel': 'requirejs-babel/babel-5.8.22.min',
 
       'release-station': '../includes/lib/release-station',
 
@@ -135,6 +124,15 @@ var require = {
          init: function () {
             'use strict';
             return this._.noConflict();
+         }
+      }
+   },
+   config: {
+      es6: {
+         sourceMap: 'inline',
+         resolveModuleSource: function( source ) {
+            // Assume relative paths from within an ES6 import are also ES6 modules
+            return ( source[0] === '.' ) ? 'es6!'+source : source;
          }
       }
    }

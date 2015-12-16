@@ -13,8 +13,8 @@
       "properties": {
          "provider": {
             "type": "object",
-            "description": "The OAuth2 endpoint configuration.",
-            "required": [ "url" ],
+            "description": "The OAuth2 endpoint configuration. If not set, uses application config.",
+            "required": [],
             "properties": {
                "url": {
                   "type": "string",

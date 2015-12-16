@@ -4,21 +4,6 @@
 
    "areas": {
       "activities": [
-         {
-            "widget": "amd:laxar-github/events-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "events": {
-                  "resource": "events",
-                  "sources": {
-                     "resource": "repos"
-                  }
-               }
-            }
-         }
       ],
 
       "popups": [
@@ -35,38 +20,15 @@
                "close": {
                   "onActions": [ "closeDetails" ]
                },
+               "backdropClose": {
+                 "enabled": true
+                },
                "closeIcon": {
                   "enabled": true
                }
             }
          }
       ],
-
-      "details.header": [
-         {
-            "widget": "amd:laxar-headline-widget",
-            "features": {
-               "headline": {
-                  "level": 3,
-                  "i18nHtmlText": {
-                     "en-US": "Details"
-                  }
-               }
-            }
-         }
-      ],
-
-      "details.content": [
-         {
-            "widget": "release-station/details-widget",
-            "features": {
-               "details": {
-                  "resource": "details"
-               }
-            }
-         }
-      ],
-
 
       "header": [
          {
@@ -98,46 +60,19 @@
          }
       ],
 
-      "headline": [
-         {
-            "widget": "amd:laxar-headline-widget",
-            "features": {
-               "headline": {
-                  "level": 2,
-                  "i18nHtmlText": {
-                     "en-US": "Activity Calendar"
-                  }
-               }
-            }
-         }
-      ],
-
       "content": [
          {
-            "widget": "release-station/activity-calendar-widget",
+            "composition": "calendar_composition",
             "features": {
-               "calendar": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
                },
                "repos": {
                   "resource": "repos"
                },
-               "events": {
-                  "resource": "events"
-               },
                "search": {
-                  "resource": "searchString",
-                  "fields": [
-                     "repo.name",
-                     "actor.login",
-                     "org.login",
-                     "payload.message",
-                     "payload.ref"
-                  ],
-                  "match": {
-                     "@([\\w-]+)": [ "actor.login" ],
-                     "#(\\d+)": [ "payload.issue.id" ],
-                     "([\\w-]+/[\\w.-]+)": [ "repo.name" ]
-                  }
+                  "resource": "searchString"
                },
                "details": {
                   "resource": "details",
@@ -147,7 +82,39 @@
          }
       ],
 
+      "details.header": [
+         {
+            "widget": "amd:laxar-headline-widget",
+            "features": {
+               "headline": {
+                  "level": 3,
+                  "i18nHtmlText": {
+                     "en-US": "Details"
+                  }
+               }
+            }
+         }
+      ],
+
+      "details.content": [
+         {
+            "composition": "event_details_composition",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "details": {
+                  "resource": "details"
+               },
+               "repos": {
+                  "resource": "repos"
+               }
+            }
+         }
+      ],
+
       "footer": [
       ]
-   }
+  }
 }

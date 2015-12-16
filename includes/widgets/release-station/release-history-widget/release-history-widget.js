@@ -6,8 +6,9 @@
 define( [
    'laxar-patterns',
    'angular',
-   'semver'
-], function( patterns, ng, semver ) {
+   'semver',
+   './commit-graph-directive'
+], function( patterns, ng, semver, commitGraph ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,69 +16,60 @@ define( [
    Controller.$inject = [ '$scope', 'axFlowService' ];
 
    function Controller( $scope, flowService ) {
-
-      var selected;
-
-      $scope.resources = {
-         repos: []
-      };
-
-      $scope.versions = {};
+      var versionParameter = 'version'; // $scope.features.version.parameter;
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', beginLifecycle );
       $scope.eventBus.subscribe( 'endLifecycleRequest', endLifecycle );
 
-      $scope.eventBus.subscribe( 'didReplace.tags', function( event ) {
-         $scope.versions = event.data.map( constructVersionObject ).reduce( function( versions, version ) {
-            var semver = version.semver;
-            var track = versions[ semver.major ] = ( versions[ semver.major ] || [] );
+      $scope.resources = {
+         tags: [],
+         log: []
+      };
 
-            track.push( version );
-            return versions;
-         }, {} );
-      } );
-
-      $scope.eventBus.publishAndGatherReplies( 'takeActionRequest.provide-resource-tags', {
-         action: 'provide-resource',
-         data: {
-            resource: 'tags',
-            url: 'https://api.github.com/repos/LaxarJS/laxar/tags'
-         }
-      } ).then( function() {
-      } );
-
-      $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var version = event.data[ 'version' ] ? event.data[ 'version' ] : '';
-         selectVersion( version );
-      } );
+      $scope.model = {
+         tags: [],
+         commits: []
+      };
 
       patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'repos', {
+         .registerResourceFromFeature( 'tags', {
             onUpdateReplace: function() {
-               $scope.projects = $scope.resources.repos.map( constructVersionObject );
+               $scope.model.tags = $scope.resources.tags.filter( function( tag ) {
+                  var version = semver.parse( tag.name );
+                  return version.version && version.prerelease.length === 0 && version.build.length === 0;
+               } );
+
+               var tags = $scope.model.tags;
+               var commits = $scope.model.commits;
+
+               /* if tags don't match commits... */
+               if( !tags.some( function( tag ) {
+                  return commits.some( function( commit ) {
+                     return tag.commit.sha === commit.sha;
+                  } );
+               } ) ) {
+                  $scope.model.commits = [];
+               }
+            }
+         } )
+         .registerResourceFromFeature( 'log', {
+            onUpdateReplace: function() {
+               $scope.model.commits = $scope.resources.log.filter( function( commit ) {;
+                  if( !commit ) return false;
+                  if( this[ commit.sha ] ) return false;
+                  return (this[ commit.sha ] = true);
+               }, {} );
             }
          } );
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+      $scope.eventBus.subscribe( 'didNavigate', function( event ) {
+         var place = flowService.place();
+         var version = event.data[ versionParameter ] && semver.parse( event.data[ versionParameter ] );
 
-      function selectVersion( version ) {
-         selected = version;
-         updateMetaData( $scope.versions, '', selected );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function constructVersionObject( tag ) {
-         var parameters = {};
-
-         tag.semver = semver.parse( tag.name );
-
-         parameters[ 'version' ] = tag.name;
-
-         tag.url = flowService.constructAbsoluteUrl( '_self', parameters );
-
-         return tag;
-      }
+         if( versionParameter && !version && place.expectedParameters.indexOf( versionParameter ) >= 0 ) {
+         } else if( version ){
+         }
+      } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,20 +87,8 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function updateMetaData( versions, latest, selected ) {
-      function updateVersion( version ) {
-         version.isSelected = version.name === selected;
-      }
-
-      for( var key in versions ) {
-         if( versions.hasOwnProperty( key ) ) {
-            versions[ key ].forEach( updateVersion );
-         }
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   return ng.module( 'releaseHistoryWidget', [] ).controller( 'ReleaseHistoryWidgetController', Controller );
+   return ng.module( 'releaseHistoryWidget', [] )
+            .controller( 'ReleaseHistoryWidgetController', Controller )
+            .directive( 'axCommitGraph', commitGraph.axCommitGraph );
 
 } );

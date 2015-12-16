@@ -4,28 +4,32 @@
  * http://laxarjs.org
  */
 define( [
+   'json!./widget.json',
    './helper'
-], function( helper ) {
+], function( spec, helper ) {
    'use strict';
+
+   var CONFIG_KEY = 'widgets.release-station.' + spec.name;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.injections = [ 'axEventBus', 'axFeatures', 'axFlowService' ];
+   Controller.injections = [ 'axEventBus', 'axFeatures', 'axFlowService', 'axConfiguration' ];
 
-   Controller.create = function create( eventBus, features, flowService ) {
-      return new Controller( eventBus, features, flowService );
+   Controller.create = function create( eventBus, features, flowService, configuration ) {
+      return new Controller( eventBus, features, flowService, configuration );
    };
 
-   function Controller( eventBus, features, flowService ) {
-      var oauthProvider = features.provider;
+   function Controller( eventBus, features, flowService, configuration ) {
+      var oauthProvider = features.provider || configuration.get( CONFIG_KEY + '.provider' );
       var oauthStorage = provideStorage( 'ax.oauth.' + oauthProvider.sessionStorageId + '.' );
 
       var authOnActions = features.auth.onActions;
       var dropAuthOnActions = features.auth.drop.onActions;
 
-      var authToken = features.auth.token;
+      var authToken = features.auth.token || configuration.get( CONFIG_KEY + '.token' );
       var authResourceName = features.auth.resource;
       var authFlagName = features.auth.flag;
+      console.log( authToken );
 
       var promise = new Promise( function( resolve, reject ) {
          var auth = authToken ? {
@@ -84,7 +88,7 @@ define( [
                }
             } );
 
-            return ( failures.length == 0 && replies.length > 0 ) && data;
+            return ( failures.length == 0 ) && data;
          } );
       }
 
@@ -229,7 +233,7 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return {
-      name: 'oauth-activity',
+      name: spec.name,
       create: Controller.create,
       injections: Controller.injections
    };

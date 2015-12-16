@@ -11,7 +11,15 @@ module.exports = function( grunt ) {
       'laxar-configure': {
          options: {
             flows: [
-               { target: 'main', src: 'application/flow/flow.json' }
+               {
+                  target: 'main',
+                  src: 'application/flow/flow.json'
+               },
+               {
+                  target: 'embed',
+                  src: 'application/flow/embed.json',
+                  init: '../init-embed'
+               }
             ],
             ports: {
                develop: 8000,

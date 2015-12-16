@@ -18,38 +18,45 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   Controller.$inject = [ '$scope', '$timeout', 'axFlowService' ];
+   Controller.$inject = [ '$scope', '$timeout', '$location', 'axFlowService' ];
 
-   function Controller( $scope, $timeout, flowService ) {
+   function Controller( $scope, $timeout, $location, flowService ) {
       var dateParameter = $scope.features.calendar.parameter;
 
       var today = moment().startOf( 'day' );
       var tomorrow = moment( today ).add( 1, 'day' );
       var selected = today;
+      var range = {
+         min: moment( today ),
+         max: moment( today )
+      };
 
-      $scope.weeks = [];
+      $scope.model = {
+         weeks: [],
+         push: function( weeks ) {
+            this.weeks.push.apply( this.weeks, weeks );
+            this.pushedRows += weeks.length;
+         },
+         unshift: function( weeks ) {
+            this.weeks.unshift.apply( this.weeks, weeks );
+            this.unshiftedRows += weeks.length;
+         },
+         active: false,
+         visibleRows: 6,
+         pushedRows: 0,
+         unshiftedRows: 0,
+         details: publishDetails
+      };
+
       $scope.resources = {
          events: {},
-         repos: [],
          search: ''
       };
 
-      $scope.pushedRows = 0;
-      $scope.unshiftedRows = 0;
-      $scope.visibleRows = 6;
-      $scope.active = false;
-
-      $scope.details = function details( date ) {
-         var details = getDateDetails( date );
-
-         $scope.eventBus.publish( 'didReplace.' + $scope.features.details.resource, {
-            resource: $scope.features.details.resource,
-            data: details
-         } );
-
-         $scope.eventBus.publish( 'takeActionRequest.' + $scope.features.details.action, {
-            action: $scope.features.details.action
-         } );
+      var detailsPublisher = {
+         replace: patterns.resources.replacePublisherForFeature( $scope, 'details' ),
+         update: patterns.resources.updatePublisherForFeature( $scope, 'details' ),
+         action: patterns.actions.publisherForFeature( $scope, 'details' )
       };
 
       var searchFilter = objectFilter.create( {
@@ -64,35 +71,39 @@ define( [
 
       var pipeline = eventPipeline( $scope, 'events', {
             onUpdateReplace: function() {
-               updateActivityData( $scope.resources.events );
+               updateActivityData( $scope.model.weeks );
+               publishNavigationTargets( selected, range.min, range.max );
             }
          } )
          .filter( githubEvents.by.type.in( 'PushEvent', 'CreateEvent', 'IssuesEvent' ) )
          .synthesize( githubEvents.generate.commits )
-         .filter( function( event ) {
-            return ( !$scope.resources.search ) || searchFilter( $scope.resources.search, event );
-         } )
          .classify( githubEvents.by.date )
-         .classify( classifyEventByType );
+         .filter( function( event ) {
+            return searchFilter( $scope.resources.search, event );
+         } ).forEach( function( event ) {
+            if( range.min.isAfter( event.created_at ) ) {
+               range.min = moment( event.created_at );
+            }
 
-      patterns.resources.handlerFor( $scope )
-         .registerResourceFromFeature( 'repos' );
+            if( range.max.isBefore( event.created_at ) ) {
+               range.max = moment( event.created_at );
+            }
+         } );
 
       patterns.resources.handlerFor( $scope )
          .registerResourceFromFeature( 'search', {
             onUpdateReplace: function() {
                pipeline.replay();
-               updateActivityData( $scope.resources.events );
+               updateActivityData( $scope.model.weeks );
             }
-         } )
+         } );
 
       $scope.eventBus.subscribe( 'beginLifecycleRequest', function( event ) {
          var endOfDay = callTomorrow( function toNextDay() {
             today = moment().startOf( 'day' );
             tomorrow = moment( today ).add( 1, 'day' );
 
-            // refresh
-            selectDate( selected );
+            selectDate( selected ); // refresh
 
             endOfDay = callTomorrow( toNextDay );
          } );
@@ -109,8 +120,16 @@ define( [
       } );
 
       $scope.eventBus.subscribe( 'didNavigate', function( event ) {
-         var date = event.data[ dateParameter ] ? moment( event.data[ dateParameter ] ) : today;
-         selectDate( date );
+         var place = flowService.place();
+         var date = event.data[ dateParameter ] && moment( event.data[ dateParameter ] );
+         var parameters = {};
+
+         if( dateParameter && !date && place.expectedParameters.indexOf( dateParameter ) >= 0 ) {
+            parameters[ dateParameter ] = today.format( DATE_FORMAT );
+            $location.url( flowService.constructPath( '_self', parameters ) ).replace();
+         } else {
+            selectDate( date || today );
+         }
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,60 +148,89 @@ define( [
 
          var weeks;
 
-         if( $scope.weeks.length === 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
+         if( $scope.model.weeks.length === 0 || date.isBefore( startOfPreviousMonth ) || date.isAfter( endOfNextMonth ) ) {
             weeks = initMonth( startOfMonth, endOfMonth );
-            $scope.weeks = weeks;
+            $scope.model.weeks = weeks;
          } else if( date.isBefore( startOfSelectedMonth ) ) {
-            weeks = previousMonth( startOfMonth, endOfMonth );
-            $scope.weeks.unshift.apply( $scope.weeks, weeks );
-            $scope.unshiftedRows = weeks.length;
+            weeks = previousMonth( $scope.model.weeks, startOfMonth, endOfMonth );
+            $scope.model.unshift( weeks );
          } else if( date.isAfter( endOfSelectedMonth ) ) {
-            weeks = nextMonth( startOfMonth, endOfMonth );
-            $scope.weeks.push.apply( $scope.weeks, weeks );
-            $scope.pushedRows = weeks.length;
+            weeks = nextMonth( $scope.model.weeks, startOfMonth, endOfMonth );
+            $scope.model.push( weeks );
          } else {
-            weeks = $scope.weeks;
+            weeks = $scope.model.weeks;
             updateMetaData( weeks, today, selected, startOfMonth, endOfMonth );
             return;
          }
 
+         publishNavigationTargets( selected, range.min, range.max );
          triggerAnimation( today, startOfMonth, endOfMonth );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function getDateDetails( date ) {
-         var day = eventBucket( $scope.resources.events, date );
-         var repos = {};
+      function publishDetails( date ) {
+         function getEvents( $scope ) {
+            return eventBucket( $scope.resources.events, date );
+         }
 
-         flatObjectValues( day ).forEach( function( event ) {
-            var repo = event.repo;
+         if( publishDetails.unwatch ) {
+            publishDetails.unwatch();
+         }
 
-            if( repo ) {
-               repos[ repo.id ] = true;
-            }
+         publishDetails.unwatch = $scope.$watch( getEvents, function( newValue, oldValue ) {
+            var patches = patterns.json.createPatch( oldValue, newValue );
+            detailsPublisher.update( patches );
+         }, true );
+
+         detailsPublisher.replace( getEvents( $scope ) ).then( function() {
+            detailsPublisher.action();
          } );
+      }
 
-         $scope.resources.repos.filter( function( repo ) {
-            if( repos.hasOwnProperty( repo.id ) ) {
-               repos[ repo.id ] = repo;
-            }
-         } );
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         day.repos = repos;
+      function publishNavigationTargets( date, min, max ) {
+         var resource;
+         var interval;
+         var next;
 
-         return day;
+         var targets = [ date ];
+
+         if( $scope.features.navigation ) {
+            resource = $scope.features.navigation.resource;
+            interval = $scope.features.navigation.interval || 'months';
+
+            next = date;
+            do {
+               next = moment( next ).add( -1, interval );
+               targets.unshift( next );
+            } while( next.isAfter( min ) );
+
+            next = date;
+            do {
+               next = moment( next ).add( 1, interval );
+               targets.push( next );
+            } while( next.isBefore( max ) );
+
+            $scope.eventBus.publish( 'didReplace.' + resource, {
+               resource: resource,
+               data: targets.map( function( date ) {
+                  return { date: date };
+               } )
+            } );
+         }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function constructDayObject( date ) {
-         var base = eventBucket( $scope.resources.events, date );
-         var object = Object.create( base );
+         var object = {};
          var parameters = {};
 
          parameters[ dateParameter ] = date.format( DATE_FORMAT );
 
+         object.events = eventBucket( $scope.resources.events, date );
          object.date = date;
          object.url = flowService.constructAbsoluteUrl( '_self', parameters );
 
@@ -193,40 +241,61 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      function getDayObject( date, weeks ) {
+         var i;
+         var j;
+         if( weeks[ 0 ][ 0 ].date.isAfter( day ) ||
+             weeks[ weeks.length ][ weeks[ weeks.length ].length ].date.isBefore( day ) ) {
+            return;
+         }
+
+         for( i = 0; i < weeks.length; i++ ) {
+            for( j = 0; j < weeks[ i ].length; i++ ) {
+               if( weeks[ i ][ j ].date.isSame( date ) ) {
+                  return weeks[ i ][ j ];
+               }
+            }
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function initMonth( startOfMonth, endOfMonth ) {
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 1 ? 0 : -7 );
          var endOfCalendar = moment( startOfCalendar ).add( 6, 'weeks' );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function previousMonth( startOfMonth, endOfMonth ) {
+      function previousMonth( weeks, startOfMonth, endOfMonth ) {
+         var currentStart = weeks[ 0 ][ 0 ].date;
          var startOfCalendar = moment( startOfMonth ).weekday( startOfMonth.weekday() > 1 ? 0 : -7 );
-         var endOfCalendar = moment( $scope.weeks[0][0].date );
+         var endOfCalendar = moment( currentStart );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
-      function nextMonth( startOfMonth, endOfMonth ) {
-         var startOfCalendar = moment( $scope.weeks[$scope.weeks.length-1][6].date ).add( 1, 'day' );
+      function nextMonth( weeks, startOfMonth, endOfMonth ) {
+         var currentEnd = weeks[ weeks.length - 1 ][ 6 ].date;
+         var startOfCalendar = moment( currentEnd ).add( 1, 'day' );
          var endOfCalendar = moment( endOfMonth ).weekday( endOfMonth.weekday() > 2 ? 14 : 7 );
          return generateCalendar( startOfCalendar, endOfCalendar, constructDayObject );
       }
 
       function triggerAnimation( today, startOfMonth, endOfMonth ) {
          $timeout( function() {
-            $scope.active = true;
-            updateMetaData( $scope.weeks, today, selected, startOfMonth, endOfMonth );
+            $scope.model.active = true;
+            updateMetaData( $scope.model.weeks, today, selected, startOfMonth, endOfMonth );
          }, 0 );
 
          $timeout( function() {
-            if( $scope.pushedRows ) {
-               $scope.pushedRows = 0;
-               $scope.weeks.splice( 0, $scope.weeks.length - $scope.visibleRows );
+            if( $scope.model.pushedRows ) {
+               $scope.model.pushedRows = 0;
+               $scope.model.weeks.splice( 0, $scope.model.weeks.length - $scope.model.visibleRows );
             }
-            if( $scope.unshiftedRows ) {
-               $scope.unshiftedRows = 0;
-               $scope.weeks.splice( $scope.visibleRows );
+            if( $scope.model.unshiftedRows ) {
+               $scope.model.unshiftedRows = 0;
+               $scope.model.weeks.splice( $scope.model.visibleRows );
             }
-            $scope.active = false;
+            $scope.model.active = false;
          }, 750 );
       }
 
@@ -236,21 +305,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function flatObjectValues( object ) {
-      return flatMapKeys( object, function( key ) { return object[ key ]; } );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function flatMapKeys( object, callback ) {
-      return [].concat.apply( [], Object.keys( object ).map( callback ) );
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    function eventBucket( buckets, timestamp ) {
       var key = timestamp.format( DATE_FORMAT );
-      return (buckets[ key ] = (buckets[ key ] || {}));
+      return (buckets[ key ] = (buckets[ key ] || []));
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,61 +341,66 @@ define( [
             day.isWorkingDay = day.isInMonth && !(day.isWeekend || day.isFuture);
          } );
       } );
+      updateActivityData( weeks );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function classifyEventByType( event ) {
-      var type = event.type;
-      var payload = event.payload;
-      switch( type ) {
-         case 'CommitEvent':
-            return 'commits';
-         case 'CreateEvent':
-            if( payload.ref_type === 'tag' ) {
-               return 'tags';
-            }
-            return;
-         case 'IssuesEvent':
-            if( payload.action === 'opened' || payload.action === 'reopened' ) {
-               return 'issues_opened';
-            } else if( payload.action === 'closed' ) {
-               return 'issues_closed';
-            }
-            return;
-      }
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function updateActivityData( buckets ) {
-      Object.keys( buckets ).forEach( function( key ) {
-         buckets[ key ].activity = getActivityEstimation( buckets[ key ] );
+   function updateActivityData( weeks ) {
+      weeks.forEach( function( week ) {
+         week.forEach( function( day ) {
+            var sum = day.events.reduce( function( sum, event ) {
+               var type = event.type;
+               var payload = event.payload;
+               var score = 0.05;
+               switch( type ) {
+                  case 'CommitEvent':
+                     score = 1;
+                  break;
+                  case 'CreateEvent':
+                     score = (payload.ref_type === 'tag') ? 1.5 : 0;
+                  break;
+                  /*
+                  case 'IssuesEvent':
+                     if( [ 'opened', 'reopened', 'closed' ].indexOf( payload.action ) >= 0 ) {
+                        score = 0.25;
+                     }
+                  break;
+                  */
+               }
+               return sum + score;
+            }, 1 );
+            day.activity = 1 - (1 / (1 + Math.log(sum)));
+         } );
       } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function getActivityEstimation( day ) {
-      var sum = 0;
-      if( day.commits ) {
-         sum += day.commits.length;
-      }
-      if( day.tags ) {
-         sum += day.tags.length * 1.5;
-      }
-      if( day.issues_opened ) {
-         sum += day.issues_opened.length * 0.25;
-      }
-      if( day.issues_closed ) {
-         sum += day.issues_closed.length * 0.25;
-      }
-      return 1 - (1 / Math.log(1 + sum));
-   }
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    return ng.module( 'activityCalendarWidget', [] )
-            .controller( 'ActivityCalendarWidgetController', Controller );
+            .controller( 'ActivityCalendarWidgetController', Controller )
+            .filter( 'commits', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'CommitEvent';
+                  } );
+               };
+            } )
+            .filter( 'tags', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'CreateEvent' &&
+                        event.payload.ref_type === 'tag';
+                  } );
+               };
+            } )
+            .filter( 'issues', function() {
+               return function( events ) {
+                  return events.filter( function( event ) {
+                     return event.type === 'IssuesEvent' &&
+                        ( [ 'opened', 'reopened', 'closed' ].indexOf( event.payload.action ) >= 0 );
+                  } );
+               };
+            } );
 
 } );

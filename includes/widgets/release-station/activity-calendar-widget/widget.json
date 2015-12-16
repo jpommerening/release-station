@@ -27,18 +27,6 @@
                }
             }
          },
-         "repos": {
-            "type": "object",
-            "description": "Which projects to display in the grid.",
-            "required": [ "resource" ],
-            "properties": {
-               "resource": {
-                  "type": "string",
-                  "description": "The name of the projects resource, a list of repository resources",
-                  "format": "topic"
-               }
-            }
-         },
          "events": {
             "type": "object",
             "description": "Which events to display in the calendar.",
@@ -102,6 +90,20 @@
                   "type": "string",
                   "description": "Which action to trigger when details shall be displayed.",
                   "format": "topic"
+               }
+            }
+         },
+         "navigation": {
+            "type": "object",
+            "description": "Provide a resource representing navigation targets.",
+            "properties": {
+               "resource": {
+                  "type": "string",
+                  "format": "topic"
+               },
+               "interval": {
+                  "type": "string",
+                  "valid": [ "years", "months", "weeks", "days" ]
                }
             }
          }

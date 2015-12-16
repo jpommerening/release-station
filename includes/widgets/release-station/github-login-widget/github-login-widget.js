@@ -26,8 +26,9 @@ define( [
 
       $scope.dropdown = {
          open: false,
-         toggle: function() {
+         toggle: function($event) {
             this.open = !this.open;
+            $event.stopPropagation();
          },
          click: function( item ) {
             if( item.action ) {
@@ -107,6 +108,12 @@ define( [
             method: 'head',
             headers: {
                'Authorization': 'token ' + accessToken
+            }
+         } ).then( function( response ) {
+            if( response.status < 400 ) {
+               return response;
+            } else {
+               return Promise.reject( response );
             }
          } ).then( function( response ) {
             var i18nHtmlMessage = {

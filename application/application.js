@@ -12,11 +12,6 @@ window.laxar = ( function() {
       theme: 'cube',
       useMergedCss: mode === 'RELEASE',
       useEmbeddedFileListings: mode === 'RELEASE',
-      fileListings: {
-         'application': 'var/listing/application_resources.json',
-         'bower_components': 'var/listing/bower_components_resources.json',
-         'includes': 'var/listing/includes_resources.json'
-      },
 
       i18n: {
          locales: {

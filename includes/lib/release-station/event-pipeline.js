@@ -64,8 +64,12 @@ define( [
          var incoming = [];
          var length = events.length;
 
-         jsonPatch.apply( incoming, event.patches );
-         jsonPatch.apply( events, event.patches );
+         try {
+            jsonPatch.apply( events, event.patches );
+            jsonPatch.apply( incoming, event.patches );
+         }
+         catch(e) {
+         }
 
          if( events.length === incoming.length + length ) {
             // only additions
@@ -275,7 +279,7 @@ define( [
    }
 
    EventPipeline.create = function create( context, feature, options ) {
-      return new EventPipeline( context, feature, options );
+      return new EventPipeline( context, feature, options || {} );
    };
 
    return EventPipeline.create;

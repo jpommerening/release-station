@@ -51,29 +51,39 @@
          }
       ],
 
-      "headline": [
+      "content": [
          {
-            "widget": "amd:laxar-headline-widget",
+            "widget": "release-station/headline-selector-widget",
             "features": {
                "headline": {
-                  "level": 2,
-                  "i18nHtmlText": {
-                     "en-US": "Activity Overview"
+                  "level": 1,
+                  "i18nHtmlFormat": {
+                     "en-US": "Activity for [0]"
                   }
                },
-               "intro": {
-                  "i18nHtmlText": {
-                     "en-US": "last 30 days"
-                  }
-               }
-            }
-         }
-      ],
 
-      "content": [
+               "selections": [
+                  {
+                     "parameter": "scope",
+                     "options": {
+                        "parameterFormat": "[value]",
+                        "i18nHtmlFormat": "[text]",
+                        "init": [
+                           { "value": "quarter", "text": "last 3 months" },
+                           { "value": "month", "text": "last month" },
+                           { "value": "week", "text": "last week" }
+                        ]
+                     }
+                  }
+               ]
+            }
+         },
          {
             "widget": "release-station/activity-grid-widget",
             "features": {
+               "scope": {
+                  "parameter": "scope"
+               },
                "events": {
                   "resource": "events"
                },

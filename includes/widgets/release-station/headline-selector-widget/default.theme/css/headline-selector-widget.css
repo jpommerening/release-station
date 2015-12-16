@@ -1,0 +1,73 @@
+.headline-selector-widget a,
+.headline-selector-widget ul + a:hover {
+   color: #f90;
+}
+
+.headline-selector-widget a:hover {
+   text-decoration: underline solid #f90;
+}
+
+.headline-selector-widget ul + a {
+   color: #555;
+   text-decoration: underline dashed #b8b8b8;
+}
+
+.headline-selector-widget span > span {
+   position: relative;
+}
+
+.headline-selector-widget ul {
+   list-style: none;
+   padding: 5px;
+   position: absolute;
+   left: 0px;
+   top: -4px;
+   display: none;
+   background-color: white;
+   background-color: rgba(255, 255, 255, 0.90);
+   z-index: 3;
+   border: 1px solid #efefef;
+   border-radius: 4px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   max-height: 500px;
+   overflow-y: auto;
+   overflow-x: hidden;
+}
+
+.headline-selector-widget span:first-child > ul {
+   left: -6px;
+}
+
+.headline-selector-widget .active ul {
+   display: block;
+}
+
+.headline-selector-widget .active > a {
+   visibility: hidden;
+}
+
+.headline-selector-widget .active li {
+   white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+
+   .headline-selector-widget span > span {
+      position: static;
+   }
+
+   .headline-selector-widget ul {
+      top: inherit;
+      width: 100%;
+      margin-top: 0.2em;
+   }
+
+   .headline-selector-widget .active > a {
+      visibility: visible;
+   }
+
+   .headline-selector-widget span:first-child > ul {
+      left: 0px;
+   }
+
+}

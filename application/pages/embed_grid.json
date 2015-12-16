@@ -1,0 +1,79 @@
+{
+   "layout": "embedded",
+   "extends": "embed_base",
+
+   "areas": {
+      "activities": [
+         {
+            "widget": "amd:laxar-github/events-activity",
+            "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
+               "events": {
+                  "resource": "events",
+                  "sources": {
+                     "resource": "repos"
+                  }
+               }
+            }
+         }
+      ],
+
+      "content": [
+         {
+            "widget": "release-station/headline-selector-widget",
+            "features": {
+               "headline": {
+                  "level": 1,
+                  "i18nHtmlFormat": {
+                     "en-US": "Activity for [0]"
+                  }
+               },
+
+               "selections": [
+                  {
+                     "parameter": "scope",
+                     "options": {
+                        "parameterFormat": "[value]",
+                        "i18nHtmlFormat": "[text]",
+                        "init": [
+                           { "value": "quarter", "text": "last 3 months" },
+                           { "value": "month", "text": "last month" },
+                           { "value": "week", "text": "last week" }
+                        ]
+                     }
+                  }
+               ]
+            }
+         },
+         {
+            "widget": "release-station/activity-grid-widget",
+            "features": {
+               "scope": {
+                  "parameter": "scope"
+               },
+               "events": {
+                  "resource": "events"
+               },
+               "repos": {
+                  "resource": "repos"
+               },
+               "search": {
+                  "resource": "searchString",
+                  "fields": [
+                     "repo.name",
+                     "actor.login",
+                     "org.login"
+                  ],
+                  "match": {
+                     "@([\\w-]+)": [ "actor.login" ],
+                     "([\\w-]+/[\\w.-]+)": [ "repo.name" ]
+                  }
+               }
+            }
+         }
+      ]
+   }
+}

@@ -3,40 +3,6 @@
    "extends": "auth_base",
 
    "areas": {
-      "activities": [
-         {
-            "widget": "amd:laxar-github/data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
-                  "resource": "data",
-                  "sources": {
-                     "resource": "dataSources"
-                  }
-               }
-            }
-         },
-         {
-            "widget": "amd:laxar-github/data-activity",
-            "features": {
-               "auth": {
-                  "resource": "accessToken",
-                  "flag": "authenticated"
-               },
-               "data": {
-                  "resource": "tags",
-                  "sources": {
-                     "resource": "data",
-                     "follow": "tags_url"
-                  }
-               }
-            }
-         }
-      ],
-
       "header": [
          {
             "widget": "amd:laxar-headline-widget",
@@ -55,26 +21,16 @@
          }
       ],
 
-      "headline": [
-         {
-            "widget": "amd:laxar-headline-widget",
-            "features": {
-               "headline": {
-                  "level": 2,
-                  "i18nHtmlText": {
-                     "en-US": "Release History"
-                  }
-               }
-            }
-         }
-      ],
-
       "content": [
          {
-            "widget": "release-station/release-history-widget",
+            "composition": "history_composition",
             "features": {
+               "auth": {
+                  "resource": "accessToken",
+                  "flag": "authenticated"
+               },
                "repos": {
-                  "resource": "data"
+                  "resource": "repos"
                }
             }
          }
