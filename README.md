@@ -65,6 +65,8 @@ For detailed instructions on how to setup authentication, refer to the
 
 ## License
 
+The _ReleaseStation_ is released under the terms of the [MIT license](LICENSE-MIT).
+
 [github-api]: https://developer.github.com/v3 "GitHub API v3"
 [rate-limit]: https://developer.github.com/v3/#rate-limiting "Rate Limiting – GitHub API v3"
 [oauth-flow]: https://developer.github.com/v3/oauth "OAuth – GitHub API v3"
