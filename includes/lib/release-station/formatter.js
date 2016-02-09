@@ -17,7 +17,7 @@ define( [
        * Add a "precision" parameter to strings to create substrings.
        * - `%.6s` only prints the first 6 characters.
        * - `%6s` skips the first 6 characters.
-       * - `%1.6` prints 6 characters starting at the second.
+       * - `%1.6s` prints 6 characters starting at the second.
        */
       s: function formatSubstring( input, subSpecifierString ) {
          var precision = subSpecifierString.match( /^(\d+)?(?:\.(\d+))$/ ) || [];

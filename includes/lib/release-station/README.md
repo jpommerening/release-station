@@ -112,3 +112,8 @@ toJsonPointer( 'a.1.c' );
 toJsonPointer( '/a/1/c' );
 // '/a/1/c'
 ```
+
+[observable]: https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md "Observable – RxJS"
+[eventbus]: https://github.com/LaxarJS/laxar/blob/master/docs/manuals/events.md#the-event-bus-api "The Event Bus API – LaxarJS"
+[jsonpointer]: https://tools.ietf.org/html/rfc6901 "RFC 6901 – JavaScript Object Notation (JSON) Pointer"
+[github-events]: https://developer.github.com/v3/activity/events/ "Events – GitHub Developer Guide"
