@@ -3,7 +3,7 @@
  * Released under the MIT license.
  * www.laxarjs.org
  */
-/*global module,__dirname,__filename */
+/*global module */
 module.exports = function( grunt ) {
    'use strict';
 
