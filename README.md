@@ -2,7 +2,7 @@
 
 > LaxarJS ReleaseStation – all projects, all releases, all in one place
 
-![screenshot](docs/screenshot-calendar.png)
+[![screenshot](docs/screenshot-calendar.png)][docs-pages]
 
 The _ReleaseStation_ is an application for seeing what's happening in your
 GitHub repositories.
@@ -15,8 +15,9 @@ files. Run `node -v` to find out which version your system is running. If the
 command reports anything newer than `v0.11.x` you should be ready to go.
 
 Hosting the application itself is very easy. All you need is a webserver that
-can serve static files. This may be your trusted Apache, nginx or something
-else. You can also [let _GitHub Pages_ do the hosting for you][docs-gh-pages].
+can serve static files. This may be your trusted [Apache][apache],
+[nginx][nginx] or something else. You can also [let _GitHub Pages_ do the
+hosting for you][docs-gh-pages].
 
 If you intend to process a significant amount of GitHub repositories with the
 _ReleaseStation_ you might want to run a backend for authenticating with the
@@ -61,15 +62,40 @@ For detailed instructions on how to setup authentication, refer to the
 
 ## Architecture
 
+The _ReleaseStation_ operates on GitHub events and its architecture is based
+on the observable stream principle. The flow of data starts with a GitHub
+[activity][ax-github] that queries the authenticated user's repositories and
+publishes it as a resource. From there, the widget that is responsible for
+storing and displaying a user's settings, allows the user to select which
+repositories to track and publishes the sub-set as another resource.
 
+This central list of repositories is what other activities can attach to, for
+querying repository events, such as commits and issues. These event streams
+then serve as the source for other streams that extract URLs from the events
+to fetch details. While this may sound complicated, it serves as a very
+powerful abstraction, with which it is easy to add other data to the system.
+
+The architecture relies on two basic primitives:
+
+- *Event streams*:  
+  Event streams are "free flowing". From a single "start URL", they produce a
+  list of events that keeps on growing as new events occur.
+- *Data streams*:  
+  Data streams attach to a specific URL field in the elements of other streams,
+  fetch data from the URL and publish that data as another stream.
 
 ## License
 
 The _ReleaseStation_ is released under the terms of the [MIT license](LICENSE-MIT).
 
+[apache]: https://httpd.apache.org/ "The Apache HTTP Server Project"
+[nginx]: http://nginx.org/ "nginx"
+[nodejs]: https://nodejs.org "Node.js"
 [github-api]: https://developer.github.com/v3 "GitHub API v3"
 [rate-limit]: https://developer.github.com/v3/#rate-limiting "Rate Limiting – GitHub API v3"
 [oauth-flow]: https://developer.github.com/v3/oauth "OAuth – GitHub API v3"
-[nodejs]: https://nodejs.org "Node.js"
+[ax-github]: https://github.com/jpommerening/ax-github "laxar-github"
+
+[docs-pages]: docs/pages.md "Pages – ReleaseStation"
 [docs-auth]: docs/authentication.md "Authentication – ReleaseStation"
 [docs-gh-pages]: docs/github-pages.md "Deploying on GitHub pages – ReleaseStation"
