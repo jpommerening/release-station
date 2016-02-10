@@ -3,7 +3,7 @@
 [GitHub pages][gh-pages] is a service by GitHub for hosting your website on
 GitHub's `github.io` domain. GitHub provides access to the working copy of
 the `gh-pages` branch in a Git repository. In addition to the files that are
-commited to this branch, GitHub can also [render static sites][jekyll] from
+commited to this branch, GitHub can also [render static sites][gh-jekyll] from
 Jekyll template files. We won't make use of that feature though.
 
 ## Creating the gh-pages branch
@@ -68,6 +68,7 @@ Branch gh-pages set up to track remote branch gh-pages from origin.
 
 ## Looking at the results
 
-[gh-pages-branch]: https://help.github.com/articles/creating-project-pages-manually/#create-a-gh-pages-branch "Creating Project Pages manually – GitHub User Documentation"
 [gh-pages]: https://pages.github.com "GitHub Pages"
 [gh-jekyll]: https://help.github.com/articles/using-jekyll-with-pages/ "Using Jekyll with Pages – GitHub User Documentation"
+[gh-pages-branch]: https://help.github.com/articles/creating-project-pages-manually/#create-a-gh-pages-branch "Creating Project Pages manually – GitHub User Documentation"
+[grunt-laxar]: https://github.com/LaxarJS/grunt-laxar "Grunt tasks for LaxarJS – GitHub"
