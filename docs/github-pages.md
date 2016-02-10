@@ -21,7 +21,7 @@ Switched to a new branch 'gh-pages'
 
 ## Which files to commit
 
-We now have an exact copy of the latest `master` copy at `gh-pages`. To run
+We now have an exact copy of the latest `master` commit at `gh-pages`. To run
 the application without _Grunt_ we need some more files that are usually not
 commited:
 
