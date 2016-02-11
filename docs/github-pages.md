@@ -66,7 +66,30 @@ Branch gh-pages set up to track remote branch gh-pages from origin.
 
 ## Updating the gh-pages branch
 
+Since `gh-pages` branches off from `master`, to get the latest changes, all we
+need to do is merging the changes from `master` and rebuild the application
+bundle:
+
+```console
+# On gh-pages, merge the changes from master (resolve any conflicts)
+$ git merge --no-ff master
+
+# Update dependencies and bundle the application
+$ npm install
+$ npm run-script optimize
+
+# Add and commit the files
+$ git add bower_components var
+$ git commit
+
+# Push the gh-pages branch to GitHub
+$ git push origin gh-pages
+```
+
 ## Looking at the results
+
+You application should now be available at
+_https://<yourusename>.github.io/release-station_.
 
 [gh-pages]: https://pages.github.com "GitHub Pages"
 [gh-jekyll]: https://help.github.com/articles/using-jekyll-with-pages/ "Using Jekyll with Pages – GitHub User Documentation"

@@ -26,8 +26,11 @@ of requirements.
 
 ## Setup
 
+To run an instance of the release station on your local maching, clone this
+repository, install the required dependencies and run `npm start`:
+
 ```console
-$ git clone git@github.com/LaxarApps/release-station.git
+$ git clone --recursive git@github.com/LaxarApps/release-station.git
 $ cd release-station
 $ npm install
 $ npm start
@@ -65,7 +68,7 @@ For detailed instructions on how to setup authentication, refer to the
 The _ReleaseStation_ operates on GitHub events and its architecture is based
 on the observable stream principle. The flow of data starts with a GitHub
 [activity][ax-github] that queries the authenticated user's repositories and
-publishes it as a resource. From there, the widget that is responsible for
+publishes them as a resource. From there, the widget, that is responsible for
 storing and displaying a user's settings, allows the user to select which
 repositories to track and publishes the sub-set as another resource.
 

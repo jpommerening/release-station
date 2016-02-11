@@ -1,5 +1,7 @@
 # Authentication
 
+Authentication with GitHub is done with the `oauth-activity`.
+
 ## Authenticating with a personal access token
 
-## Authentication with OAuth2
+## Authenticating with OAuth2
