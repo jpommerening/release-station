@@ -89,7 +89,7 @@ $ git push origin gh-pages
 ## Looking at the results
 
 You application should now be available at
-_https://<yourusename>.github.io/release-station_.
+_https:///&lt;yourusename&gt;.github.io/release-station_.
 
 [gh-pages]: https://pages.github.com "GitHub Pages"
 [gh-jekyll]: https://help.github.com/articles/using-jekyll-with-pages/ "Using Jekyll with Pages – GitHub User Documentation"
